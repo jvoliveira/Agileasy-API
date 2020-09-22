@@ -1,0 +1,15 @@
+export enum TipoStatus {
+  ativo,
+  suspenso,
+  desativado,
+  banido,
+}
+
+export interface UsuarioInterface {
+  nome: string
+  dataNascimento: Date
+  telefone: string
+  cpf: string
+  token: string
+  status: TipoStatus
+}
