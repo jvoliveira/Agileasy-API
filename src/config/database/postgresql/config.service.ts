@@ -11,14 +11,14 @@ import * as path from 'path'
 export class PgModelsConfigService {
   constructor(private configService: ConfigService) {}
 
-  get name(): string {
-    return this.configService.get<string>('pg-models.name')
+  get databaseName(): string {
+    return this.configService.get<string>('pg-models.databaseName')
   }
   get password(): string {
     return this.configService.get<string>('pg-models.password')
   }
-  get url(): string {
-    return this.configService.get<string>('pg-models.url')
+  get host(): string {
+    return this.configService.get<string>('pg-models.host')
   }
   get port(): number {
     return Number(this.configService.get<number>('pg-models.port'))
@@ -27,11 +27,11 @@ export class PgModelsConfigService {
   get getTypeORMConfig(): TypeOrmModuleOptions {
     return {
       type: 'postgres',
-      host: 'localhost',
+      host: this.host,
       port: 5432,
       username: 'postgres',
-      password: 'beribo',
-      database: 'delivery',
+      password: this.password,
+      database: this.databaseName,
       synchronize: false,
       dropSchema: false,
       logging: false,
