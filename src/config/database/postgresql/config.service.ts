@@ -28,7 +28,7 @@ export class PgModelsConfigService {
     return {
       type: 'postgres',
       host: this.host,
-      port: 5432,
+      port: this.port,
       username: 'postgres',
       password: this.password,
       database: this.databaseName,

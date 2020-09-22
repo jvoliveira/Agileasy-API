@@ -1,15 +1,15 @@
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { MetodoPagamento } from './metodo-pagamento.entity'
-import { JsonHelperModule } from '../../common/helpers/json.module'
-import { BaseModelModule } from '../basis/basis.module'
+import { PedidosEntityModule } from '../pedidos/pedidos.module'
+import { CartoesEntityModule } from '../cartoes/cartoes.module'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([MetodoPagamento]),
-    JsonHelperModule,
-    BaseModelModule,
+    forwardRef(() => PedidosEntityModule),
+    forwardRef(() => CartoesEntityModule),
   ],
   exports: [TypeOrmModule],
 })
-export class MetodosPagamentoModule {}
+export class MetodosPagamentoEntityModule {}

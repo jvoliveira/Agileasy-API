@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { PgModelsConfigModule } from './config/database/postgresql/config.module'
 import { AppConfigModule } from './config/app/config.module'
 import { PgModelsConfigService } from './config/database/postgresql/config.service'
+import { PrestadoresModule } from './prestadores/prestadores.module'
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PgModelsConfigService } from './config/database/postgresql/config.servi
     }),
     PgModelsConfigModule,
     AppConfigModule,
+    PrestadoresModule,
   ],
   controllers: [AppController],
   providers: [AppService],
