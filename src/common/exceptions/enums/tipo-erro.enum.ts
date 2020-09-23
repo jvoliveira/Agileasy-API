@@ -1,0 +1,15 @@
+import { TipoErro } from '../interfaces/tipo-erro-dados.interface'
+
+export enum TipoErro {
+  USUARIO_SEM_PERMISSAO = 0,
+  SEM_AUTENTICACAO = 1,
+  DOCUMENTO_NAO_ENCONTRADO = 2,
+  ERRO_CONEXAO_BD = 3,
+  SERVICO_INDISPONIVEL = 4,
+  ERRO_DE_COMUNICACAO = 5,
+  ID_NAO_ENCONTRADO = 6,
+  ERROR_AO_SALVAR = 7,
+  ERROR_AO_ATUALIZAR = 8,
+  ERROR_AO_DELETAR = 9,
+  ERROR_DESCONHECIDO = 10,
+}
