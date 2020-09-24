@@ -1,6 +1,6 @@
 import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { AllExceptionsFilter } from './common/exceptions/all-exceptions.filter'
-import { Module } from '@nestjs/common'
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
@@ -12,6 +12,8 @@ import { PrestadoresModule } from './prestadores/prestadores.module'
 import { RolesGuard } from './common/guards/roles.guard'
 import * as admin from 'firebase-admin'
 import { FIREBASE_CONFIG } from './common/constants/firebase'
+import { AuthMiddleware } from './common/middlewares/auth.middleware'
+import { PrestadoresController } from './prestadores/prestadores.controller'
 
 @Module({
   imports: [
@@ -43,4 +45,10 @@ import { FIREBASE_CONFIG } from './common/constants/firebase'
     AppService,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL })
+  }
+}
