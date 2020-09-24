@@ -26,14 +26,15 @@ export class BaseService<T extends BaseModel<T>> {
   }
 
   async getAll(): Promise<T[]> {
-    const cartoes: Array<T> = await this.repo.find({
+    const values: Array<T> = await this.repo.find({
       where: { ativo: true },
     })
 
-    if (!cartoes) {
+    if (!values) {
       throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
     }
-    return cartoes
+
+    return values
   }
 
   async update(obj: any): Promise<T> {

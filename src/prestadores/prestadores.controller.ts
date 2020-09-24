@@ -9,10 +9,27 @@ export class PrestadoresController {
   @Get()
   @Roles(0, 200)
   public async getAll() {
-    return this.serv.getAll()
+    const prestadores = await this.serv.getAll()
+
+    return {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestadores,
+      },
+    }
   }
   @Post('criar')
   public async create(@Body() createCatDto) {
-    return this.serv.create(createCatDto)
+    const prestador = await this.serv.create(createCatDto)
+    return {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
   }
 }
