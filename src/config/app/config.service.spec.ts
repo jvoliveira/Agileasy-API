@@ -11,6 +11,7 @@ describe('AppConfigService', () => {
     process.env = {
       HOST: 'localhost',
       PORT: '2503',
+      NODE_ENV: 'production',
     }
     const moduleRef: TestingModule = await Test.createTestingModule({
       imports: [AppConfigModule],
@@ -23,5 +24,6 @@ describe('AppConfigService', () => {
     expect(service).toBeDefined()
     expect(service.port).toBe(2503)
     expect(service.host).toBe('localhost')
+    expect(service.env).toBe('production')
   })
 })

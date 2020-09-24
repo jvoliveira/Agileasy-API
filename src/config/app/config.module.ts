@@ -16,6 +16,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
       validationSchema: Joi.object({
         HOST: Joi.string().default('localhost'),
         PORT: Joi.number().default(5432),
+        NODE_ENV: Joi.string().default('development'),
       }),
     }),
   ],

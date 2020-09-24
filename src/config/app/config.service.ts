@@ -12,7 +12,12 @@ export class AppConfigService {
   get host(): string {
     return this.configService.get<string>('app.host')
   }
+
   get port(): number {
-    return Number(this.configService.get<number>('app.port'))
+    return Number(this.configService.get<string>('app.port'))
+  }
+
+  get env(): string {
+    return this.configService.get<string>('app.env')
   }
 }
