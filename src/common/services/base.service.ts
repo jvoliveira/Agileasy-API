@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm'
-import { TipoErro } from '../exceptions/enums/tipo-erro.enum'
+import { TipoErro } from '../enums/tipo-erro.enum'
 import { AllException } from '../exceptions/all.exception'
 import { BaseModel } from '../../models/basis/base.entity'
 

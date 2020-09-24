@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common'
 import { AllException } from './all.exception'
-import { TipoErro } from './enums/tipo-erro.enum'
+import { TipoErro } from '../enums/tipo-erro.enum'
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {

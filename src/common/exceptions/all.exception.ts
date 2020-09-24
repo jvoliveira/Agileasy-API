@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common'
-import { TipoErro } from './enums/tipo-erro.enum'
+import { TipoErro } from '../enums/tipo-erro.enum'
 import { COMMON_ERRORS } from '../constants/exceptions'
 import { TipoErroDados } from './interfaces/tipo-erro-dados.interface'
 

@@ -1,5 +1,5 @@
 import { TipoErroDados } from '../exceptions/interfaces/tipo-erro-dados.interface'
-import { TipoErro } from '../exceptions/enums/tipo-erro.enum'
+import { TipoErro } from '../enums/tipo-erro.enum'
 import { HttpStatus } from '@nestjs/common'
 
 export const COMMON_ERRORS: TipoErroDados[] = [

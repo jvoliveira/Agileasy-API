@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 
 import { AllException } from './all.exception'
-import { TipoErro } from './enums/tipo-erro.enum'
+import { TipoErro } from '../enums/tipo-erro.enum'
 import { HttpStatus } from '@nestjs/common'
 
 // Caminho do arquivo de constantes
