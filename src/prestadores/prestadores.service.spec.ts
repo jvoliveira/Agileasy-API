@@ -23,7 +23,7 @@ describe('Prestadores Service', () => {
     service = module.get<PrestadoresService>(PrestadoresService)
   })
 
-  it('should be ok', async () => {
+  it('should be defined', async () => {
     expect(service).toBeDefined()
   })
 })
