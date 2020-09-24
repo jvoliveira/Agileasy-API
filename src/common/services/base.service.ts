@@ -3,7 +3,7 @@ import { TipoErro } from '../exceptions/enums/tipo-erro.enum'
 import { AllException } from '../exceptions/all.exception'
 import { BaseModel } from '../../models/basis/base.entity'
 
-export class BaseServiceHelper<T extends BaseModel<T>> {
+export class BaseService<T extends BaseModel<T>> {
   constructor(protected repo: Repository<T>) {}
 
   async create(obj: any): Promise<T> {
