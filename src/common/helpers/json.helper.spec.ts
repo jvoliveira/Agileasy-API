@@ -6,9 +6,10 @@ describe('Validation json helper', () => {
   })
 
   it('should be convert to array correct', () => {
-    const mockFromJsonFunction = jest.fn()
+    const mockFromJsonFunction = jest.fn().mockReturnValue('ok')
     const list = [{ nome: 'vini' }, { nome: 'bina' }]
-    JsonHelper.jsonToArray(list, mockFromJsonFunction)
+    const l = JsonHelper.jsonToArray(list, mockFromJsonFunction)
+    expect(l).toStrictEqual(['ok', 'ok'])
     expect(mockFromJsonFunction).toBeCalledTimes(2)
     expect(mockFromJsonFunction).toHaveBeenLastCalledWith({ nome: 'bina' })
   })
