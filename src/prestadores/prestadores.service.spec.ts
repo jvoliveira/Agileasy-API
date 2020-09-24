@@ -1,13 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { PrestadoresController } from './prestadores.controller'
 import { PrestadoresService } from './prestadores.service'
-import { PrestadoresEntityModule } from '../models/prestadores/prestadores.module'
 import { createMock } from '@golevelup/nestjs-testing'
 import { Prestador } from '../models/prestadores/prestador.entity'
 import { Repository } from 'typeorm'
 import { getRepositoryToken } from '@nestjs/typeorm'
+import { AllException } from '../common/exceptions/all.exception'
 
-describe('PrestadoresController', () => {
+describe('Prestadores Service', () => {
   let service: PrestadoresService
   const repo = createMock<Repository<Prestador>>()
 
@@ -25,7 +24,7 @@ describe('PrestadoresController', () => {
     service = module.get<PrestadoresService>(PrestadoresService)
   })
 
-  it('should be defined', async () => {
+  it('should be get all', async () => {
     const shouldReturn = [
       {
         nome: 'Vinicius Picanco',
@@ -36,5 +35,27 @@ describe('PrestadoresController', () => {
     repo.find.mockReturnValue(shouldReturn as any)
 
     expect(await service.getAll()).toBe(shouldReturn)
+
+    repo.find.mockClear()
+    repo.find.mockReturnValue(null)
+
+    expect(service.getAll()).rejects.toThrowError(AllException)
+  })
+
+  it('should be by id', async () => {
+    const shouldReturn = {
+      nome: 'Vinicius Picanco',
+    }
+
+    expect(service).toBeDefined()
+
+    repo.findOne.mockReturnValue(shouldReturn as any)
+
+    expect(await service.getByID(1)).toBe(shouldReturn)
+
+    repo.findOne.mockClear()
+    repo.findOne.mockReturnValue(null)
+
+    expect(service.getByID(1)).rejects.toThrowError(AllException)
   })
 })
