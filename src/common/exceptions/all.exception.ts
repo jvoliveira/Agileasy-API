@@ -16,7 +16,7 @@ export class AllException extends HttpException {
             httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
           }
         : {
-            errorId: TipoErro.ERROR_DESCONHECIDO,
+            errorId,
             message: 'Erro desconhecido',
             httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
           }

@@ -1,5 +1,5 @@
 import { APP_FILTER } from '@nestjs/core'
-import { AllExceptionsFilter } from './common/exceptions/all-exception.filter'
+import { AllExceptionsFilter } from './common/exceptions/all-exceptions.filter'
 import { Module } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
