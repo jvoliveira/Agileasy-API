@@ -3,9 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AllException } from './all.exception'
 import { TipoErro } from '../enums/tipo-erro.enum'
 import { HttpStatus } from '@nestjs/common'
-
-// Caminho do arquivo de constantes
-jest.mock('../constants/settings', () => {
+jest.mock('../constants/exceptions', () => {
   return {
     COMMON_ERRORS: [
       {
@@ -16,10 +14,8 @@ jest.mock('../constants/settings', () => {
     ],
   }
 })
-
 describe('Validation all exception', () => {
   beforeEach(async () => {
-    jest.clearAllMocks()
     const module: TestingModule = await Test.createTestingModule({
       imports: [AllException],
     }).compile()
