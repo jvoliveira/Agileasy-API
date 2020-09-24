@@ -56,7 +56,7 @@ describe('Base Service Test', () => {
       repo.find.mockClear()
       repo.find.mockReturnValue(null)
 
-      expect(service.getAll()).rejects.toThrow(AllException)
+      await expect(service.getAll()).rejects.toThrow(AllException)
     }
   })
 
@@ -80,7 +80,7 @@ describe('Base Service Test', () => {
       repo.findOne.mockClear()
       repo.findOne.mockReturnValue(null)
 
-      expect(service.getByID(1)).rejects.toThrow(AllException)
+      await expect(service.getByID(1)).rejects.toThrow(AllException)
     }
   })
 
@@ -108,7 +108,7 @@ describe('Base Service Test', () => {
       repo.save.mockClear()
       repo.save.mockReturnValue(null)
 
-      expect(service.create(createParam)).rejects.toThrow(AllException)
+      await expect(service.create(createParam)).rejects.toThrow(AllException)
     }
   })
 
@@ -136,7 +136,7 @@ describe('Base Service Test', () => {
       repo.save.mockClear()
       repo.save.mockReturnValue(null)
 
-      expect(service.update(updateParam)).rejects.toThrow(AllException)
+      await expect(service.update(updateParam)).rejects.toThrow(AllException)
     }
   })
 
@@ -175,7 +175,7 @@ describe('Base Service Test', () => {
       repo.save.mockClear()
       repo.save.mockReturnValue(null)
 
-      expect(service.delete(1)).rejects.toThrow(AllException)
+      await expect(service.delete(1)).rejects.toThrow(AllException)
     }
   })
 })

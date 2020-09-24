@@ -23,6 +23,7 @@ export class RolesGuard implements CanActivate {
     const ctx = context.switchToHttp()
     const request = ctx.getRequest<RequestAuth>()
     const auth = request.user
+
     // Verifica se aquele usuário possui um customClaim
     if (auth.customClaims !== undefined) {
       const claims = auth.customClaims as Claims

@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common'
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { RequestAuth } from '../interfaces/request-auth.interface'
 import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { AppConfigService } from '../../config/app/config.service'
@@ -20,6 +20,7 @@ export class AuthMiddleware implements NestMiddleware {
         // Lê o token enviado
         const authToken = authorization.substring(7)
         let uid = ''
+
         // Caso o ambiente seja de teste ele irá simplesmente pegar o auth como token ao invés de verificar na google
         if (this.appConfig.env === 'test') {
           uid = authToken
