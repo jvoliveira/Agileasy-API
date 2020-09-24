@@ -12,11 +12,12 @@ describe('Base Service Test', () => {
   const services: BaseService<any>[] = []
   const repos: DeepMocked<Repository<any>>[] = []
   beforeEach(async () => {
-    // Aqui coloca todos os services que utilizam o base.service
-    const servicesTemp = [PrestadoresService]
-    // Aqui coloca todos os models que utilizam o base.service nos seus services
-    const models = [Prestador]
+    const servicesTemp = [PrestadoresService] // Aqui coloca todos os services que utilizam o base.service
+
+    const models = [Prestador] // Aqui coloca todos os models que utilizam o base.service nos seus services
     const providers: Provider<any>[] = []
+    services.length = 0
+    repos.length = 0
     for (const model of models) {
       const repo = createMock<Repository<typeof model>>()
       providers.push({
