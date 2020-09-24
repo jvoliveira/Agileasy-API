@@ -1,5 +1,3 @@
-import { TipoErro } from '../interfaces/tipo-erro-dados.interface'
-
 export enum TipoErro {
   USUARIO_SEM_PERMISSAO = 0,
   SEM_AUTENTICACAO = 1,
