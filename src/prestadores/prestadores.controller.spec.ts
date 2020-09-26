@@ -47,7 +47,7 @@ describe('Prestadores Service', () => {
     jest
       .spyOn(service, 'getAll')
       .mockImplementation(() => getAllResponse.data['prestadores'])
-    expect(constroller.getAll()).resolves.toStrictEqual(getAllResponse)
+    await expect(constroller.getAll()).resolves.toStrictEqual(getAllResponse)
   })
 
   it('should return prestador by id', async () => {
@@ -58,7 +58,7 @@ describe('Prestadores Service', () => {
     jest
       .spyOn(service, 'getByID')
       .mockImplementation(() => getByIDResponse.data['prestador'])
-    expect(constroller.get(1)).resolves.toStrictEqual(getByIDResponse)
+    await expect(constroller.get(1)).resolves.toStrictEqual(getByIDResponse)
   })
 
   it('should create prestador', async () => {
