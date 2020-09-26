@@ -1,0 +1,65 @@
+import { Test, TestingModule } from '@nestjs/testing'
+import { PrestadoresService } from './prestadores.service'
+import { createMock } from '@golevelup/nestjs-testing'
+import { Prestador } from '../models/prestadores/prestador.entity'
+import { Repository } from 'typeorm'
+import { PrestadoresController } from './prestadores.controller'
+import { TipoErro } from '../common/enums/tipo-erro.enum'
+import { getRepositoryToken } from '@nestjs/typeorm'
+
+describe('Prestadores Service', () => {
+  let service: PrestadoresService
+  let constroller: PrestadoresController
+  const repo = createMock<Repository<Prestador>>()
+  const defaultResponse = {
+    data: {},
+    error: false,
+    error_id: TipoErro.SEM_ERROS,
+    message: 'Sucesso!',
+  }
+
+  beforeEach(async () => {
+    jest.resetAllMocks()
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [PrestadoresController],
+      providers: [
+        PrestadoresService,
+        {
+          provide: getRepositoryToken(Prestador),
+          useValue: repo,
+        },
+      ],
+    }).compile()
+    service = module.get<PrestadoresService>(PrestadoresService)
+    constroller = module.get<PrestadoresController>(PrestadoresController)
+  })
+
+  it('should be defined', async () => {
+    expect(service).toBeDefined()
+    expect(constroller).toBeDefined()
+  })
+
+  it('should return all prestadores', async () => {
+    const getAllResponse = defaultResponse
+    getAllResponse.data = {
+      prestadores: [{ nome: 'Vinicius' }],
+    }
+    jest
+      .spyOn(service, 'getAll')
+      .mockImplementation(() => getAllResponse.data['prestadores'])
+    expect(constroller.getAll()).resolves.toStrictEqual(getAllResponse)
+  })
+
+  it('should create prestador', async () => {
+    const createResponse = defaultResponse
+    createResponse.data = {
+      prestador: { id: 1, nome: 'Vinicius' },
+    }
+    jest
+      .spyOn(service, 'create')
+      .mockImplementation(() => createResponse.data['prestador'])
+    await expect(
+      constroller.create({ nome: 'Vinicius' } as any),
+    ).resolves.toStrictEqual(createResponse)
+  })
+})
