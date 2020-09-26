@@ -1,6 +1,11 @@
-import { APP_FILTER, APP_GUARD } from '@nestjs/core'
+import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core'
 import { AllExceptionsFilter } from './common/exceptions/all-exceptions.filter'
-import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common'
+import {
+  Module,
+  MiddlewareConsumer,
+  RequestMethod,
+  ValidationPipe,
+} from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
@@ -13,7 +18,6 @@ import { RolesGuard } from './common/guards/roles.guard'
 import * as admin from 'firebase-admin'
 import { FIREBASE_CONFIG } from './common/constants/firebase'
 import { AuthMiddleware } from './common/middlewares/auth.middleware'
-import { PrestadoresController } from './prestadores/prestadores.controller'
 
 @Module({
   imports: [
@@ -41,6 +45,10 @@ import { PrestadoresController } from './prestadores/prestadores.controller'
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
     },
     AppService,
   ],
