@@ -2,16 +2,12 @@ import { Injectable, NestMiddleware } from '@nestjs/common'
 import { Response } from 'express'
 import { RequestAuth } from '../interfaces/request-auth.interface'
 import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
-import { AppConfigService } from '../../config/app/config.service'
 import { AllException } from '../exceptions/all.exception'
 import { TipoErro } from '../enums/tipo-erro.enum'
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(
-    private firebaseAuth: FirebaseAuthenticationService,
-    private appConfig: AppConfigService,
-  ) {}
+  constructor(private firebaseAuth: FirebaseAuthenticationService) {}
 
   async use(req: RequestAuth, res: Response, next: () => void) {
     try {
