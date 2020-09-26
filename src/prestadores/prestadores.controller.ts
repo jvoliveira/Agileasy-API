@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param } from '@nestjs/common'
 import { PrestadoresService } from './prestadores.service'
 import { Roles } from '../common/decorators/roles.decorator'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
@@ -21,6 +21,20 @@ export class PrestadoresController {
       },
     }
   }
+
+  @Get(':id')
+  public async get(@Param('id') id: number) {
+    const prestador = await this.serv.getByID(id)
+    return {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
+  }
+
   @Post('criar')
   public async create(@Body() createPrestadorDto: CreatePrestadorDto) {
     createPrestadorDto.usuario.token = 'token-bom'

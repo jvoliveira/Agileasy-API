@@ -50,16 +50,34 @@ describe('Prestadores Service', () => {
     expect(constroller.getAll()).resolves.toStrictEqual(getAllResponse)
   })
 
+  it('should return prestador by id', async () => {
+    const getByIDResponse = defaultResponse
+    getByIDResponse.data = {
+      prestador: { nome: 'Vinicius' },
+    }
+    jest
+      .spyOn(service, 'getByID')
+      .mockImplementation(() => getByIDResponse.data['prestador'])
+    expect(constroller.get(1)).resolves.toStrictEqual(getByIDResponse)
+  })
+
   it('should create prestador', async () => {
     const createResponse = defaultResponse
     createResponse.data = {
-      prestador: { id: 1, nome: 'Vinicius' },
+      prestador: {
+        id: 1,
+        nome: 'Vinicius',
+        usuario: { id: 1, cpf: '133.568.145-56' },
+      },
     }
     jest
       .spyOn(service, 'create')
       .mockImplementation(() => createResponse.data['prestador'])
     await expect(
-      constroller.create({ nome: 'Vinicius' } as any),
+      constroller.create({
+        nome: 'Vinicius',
+        usuario: { cpf: '133.568.145-56' },
+      } as any),
     ).resolves.toStrictEqual(createResponse)
   })
 })
