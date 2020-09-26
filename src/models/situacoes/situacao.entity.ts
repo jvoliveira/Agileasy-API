@@ -10,7 +10,7 @@ export class Situacao extends BaseModel<Situacao> implements SituacaoInterface {
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
   @Column('int', { nullable: false })

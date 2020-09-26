@@ -20,7 +20,7 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
   @Column('text', { nullable: false })
   descricao!: string
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
   @Column('double precision', { nullable: false })

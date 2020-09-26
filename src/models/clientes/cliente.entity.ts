@@ -20,7 +20,7 @@ export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
   @OneToOne(

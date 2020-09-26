@@ -14,7 +14,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
   @Column('text', { nullable: false })
   nome!: string
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
   @Column('text', { name: 'nome_social', nullable: true })

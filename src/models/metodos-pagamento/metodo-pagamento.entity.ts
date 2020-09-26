@@ -19,7 +19,7 @@ export class MetodoPagamento extends BaseModel<MetodoPagamento>
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
   @Column('int', { nullable: false, name: 'tipo_pagamento' })

@@ -18,7 +18,7 @@ export class Categoria extends BaseModel<Categoria>
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
   @OneToOne(

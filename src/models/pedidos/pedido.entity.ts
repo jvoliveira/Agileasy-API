@@ -21,7 +21,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
   @Column('double precision', { nullable: false })

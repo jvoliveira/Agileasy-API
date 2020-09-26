@@ -15,7 +15,7 @@ export class Cartao extends BaseModel<Cartao> implements CartaoInterface {
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
   @Column({ type: 'text', nullable: false })

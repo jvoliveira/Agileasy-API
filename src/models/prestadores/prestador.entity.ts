@@ -32,7 +32,7 @@ export class Prestador extends BaseModel<Prestador>
   @Column('text', { nullable: true })
   cnpj!: string | null
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
   @Column('text', { nullable: true, name: 'razao_social' })

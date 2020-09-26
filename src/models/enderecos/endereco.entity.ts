@@ -18,7 +18,7 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
   @Column('text', { nullable: false })
