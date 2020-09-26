@@ -19,17 +19,9 @@ export class AuthMiddleware implements NestMiddleware {
         const authorization = req.headers['authorization'] as string
         // Lê o token enviado
         const authToken = authorization.substring(7)
-        let uid = ''
-
-        // Caso o ambiente seja de teste ele irá simplesmente pegar o auth como token ao invés de verificar na google
-        if (this.appConfig.env === 'test') {
-          uid = authToken
-        } else {
-          // Caso o ambiente não seja de teste ele verifica no firebase a validade daquele token
-          const decodeId = await this.firebaseAuth.verifyIdToken(authToken)
-          uid = decodeId.uid
-        }
-        const auth = await this.firebaseAuth.getUser(uid)
+        // Caso o ambiente não seja de teste ele verifica no firebase a validade daquele token
+        const decodeId = await this.firebaseAuth.verifyIdToken(authToken)
+        const auth = await this.firebaseAuth.getUser(decodeId.uid)
         req.user = auth
       }
     } catch (error) {

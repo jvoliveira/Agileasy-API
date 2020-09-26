@@ -36,7 +36,7 @@ describe('Testing auth middleware', () => {
     expect(service).toBeDefined()
   })
 
-  it('should not call with verify google', async () => {
+  it('should call with verify google - test', async () => {
     mockAppConfig.env = 'test'
     mockRequest.headers = { authorization: 'Bearer token-valido' }
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
@@ -48,11 +48,12 @@ describe('Testing auth middleware', () => {
     await service.use(mockRequest, mockResponse, mockNext)
 
     expect(mockFirebaseAuth.getUser).toBeCalledTimes(1)
-    expect(mockFirebaseAuth.getUser).toHaveBeenCalledWith('token-valido')
-    expect(mockFirebaseAuth.verifyIdToken).toBeCalledTimes(0)
+    expect(mockFirebaseAuth.getUser).toHaveBeenCalledWith('uid-valido')
+    expect(mockFirebaseAuth.verifyIdToken).toBeCalledTimes(1)
+    expect(mockFirebaseAuth.verifyIdToken).toHaveBeenCalledWith('token-valido')
   })
 
-  it('should call with verify google', async () => {
+  it('should call with verify google - development', async () => {
     mockAppConfig.env = 'development'
     mockRequest.headers = { authorization: 'Bearer token-valido' }
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
@@ -69,7 +70,7 @@ describe('Testing auth middleware', () => {
     expect(mockFirebaseAuth.verifyIdToken).toHaveBeenCalledWith('token-valido')
   })
 
-  it('should call with verify google', async () => {
+  it('should call with verify google - production', async () => {
     mockAppConfig.env = 'production'
     mockRequest.headers = { authorization: 'Bearer token-valido' }
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
