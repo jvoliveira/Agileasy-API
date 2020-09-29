@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Param } from '@nestjs/common'
 import { PrestadoresService } from './prestadores.service'
 import { Roles } from '../common/decorators/roles.decorator'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
+import { ResponseDefault } from '../common/interfaces/response-default.interface'
+import { TipoErro } from '../common/enums/tipo-erro.enum'
 
 @Controller('prestadores')
 export class PrestadoresController {
@@ -9,11 +11,10 @@ export class PrestadoresController {
 
   @Get()
   @Roles(0, 200)
-  public async getAll() {
+  public async getAll(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getAll()
-
     return {
-      error_id: -1,
+      error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
       error: false,
       data: {
@@ -23,10 +24,10 @@ export class PrestadoresController {
   }
 
   @Get(':id')
-  public async get(@Param('id') id: number) {
+  public async get(@Param('id') id: number): Promise<ResponseDefault> {
     const prestador = await this.serv.getByID(id)
     return {
-      error_id: -1,
+      error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
       error: false,
       data: {
@@ -36,11 +37,13 @@ export class PrestadoresController {
   }
 
   @Post('criar')
-  public async create(@Body() createPrestadorDto: CreatePrestadorDto) {
+  public async create(
+    @Body() createPrestadorDto: CreatePrestadorDto,
+  ): Promise<ResponseDefault> {
     createPrestadorDto.usuario.token = 'token-bom'
     const prestador = await this.serv.create(createPrestadorDto)
     return {
-      error_id: -1,
+      error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
       error: false,
       data: {
