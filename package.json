@@ -40,6 +40,7 @@
     "typeorm": "^0.2.26"
   },
   "devDependencies": {
+    "@devniel/nestjs-typeorm-testing": "0.1.0-alpha",
     "@golevelup/nestjs-testing": "^0.1.2",
     "@nestjs/cli": "^7.0.0",
     "@nestjs/schematics": "^7.0.0",
@@ -70,12 +71,18 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "testRegex": ".spec.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testTimeout": 5000,
+    "testPathIgnorePatterns": [
+      "<rootDir>/build/",
+      "<rootDir>/dist/",
+      "<rootDir>/node_modules/"
+    ]
   }
 }
