@@ -24,12 +24,16 @@ export class PgModelsConfigService {
     return Number(this.configService.get<number>('pg-models.port'))
   }
 
+  get user(): string {
+    return this.configService.get<string>('pg-models.user')
+  }
+
   get getTypeORMConfig(): TypeOrmModuleOptions {
     return {
       type: 'postgres',
       host: this.host,
       port: this.port,
-      username: 'postgres',
+      username: this.user,
       password: this.password,
       database: this.databaseName,
       synchronize: false,

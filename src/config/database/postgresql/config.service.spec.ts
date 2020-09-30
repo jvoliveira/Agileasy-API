@@ -9,10 +9,11 @@ describe('PgModelsConfigService', () => {
 
   beforeEach(async () => {
     process.env = {
-      PASSWORD_BD: 'beribo',
-      NAME_BD: 'delivery',
-      HOST_BD: '0.0.0.0',
-      PORT_BD: '5432',
+      POSTGRES_PASSWORD: 'beribo',
+      POSTGRES_DB: 'delivery',
+      POSTGRES_HOST: '0.0.0.0',
+      POSTGRES_PORT: '5432',
+      POSTGRES_USER: 'postgres',
     }
     const moduleRef: TestingModule = await Test.createTestingModule({
       imports: [PgModelsConfigModule],
@@ -27,5 +28,6 @@ describe('PgModelsConfigService', () => {
     expect(service.port).toBe(5432)
     expect(service.password).toBe('beribo')
     expect(service.host).toBe('0.0.0.0')
+    expect(service.user).toBe('postgres')
   })
 })

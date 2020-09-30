@@ -14,13 +14,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
       load: [configuration],
       envFilePath: `${process.env.NODE_ENV || 'development'}.env`,
       validationSchema: Joi.object({
-        PASSWORD_BD: Joi.string().default('beribo'),
+        POSTGRES_PASSWORD: Joi.string().default('beribo'),
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test')
           .default('development'),
-        HOST_BD: Joi.string().default('localhost'),
-        PORT_BD: Joi.number().default(5432),
-        NAME_BD: Joi.string().default('delivery'),
+        POSTGRES_HOST: Joi.string().default('localhost'),
+        POSTGRES_PORT: Joi.number().default(5432),
+        POSTGRES_DB: Joi.string().default('delivery'),
+        POSTGRES_USER: Joi.string().default('postgres'),
       }),
     }),
   ],
