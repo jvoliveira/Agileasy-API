@@ -1,0 +1,40 @@
+image: node:latest
+
+stages:
+  - build
+  - test
+cache:
+  paths:
+    - node_modules/
+
+install_dependencies:
+  stage: build
+  variables:
+    NODE_ENV: production
+  only:
+    - merge_requests
+  script:
+    - npm install --production
+    - npm run build
+  artifacts:
+    paths:
+      - node_modules/
+
+testing_testing:
+  stage: test
+  services:
+    - postgres:12.2-alpine
+  variables:
+    POSTGRES_DB: test
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: 'beribo'
+    POSTGRES_HOST_AUTH_METHOD: trust
+    POSTGRES_HOST: postgres
+    POSTGRES_PORT: 5432
+    HOST: 0.0.0.0
+    PORT: 2503
+    NODE_ENV: test
+  only:
+    - merge_requests
+
+  script: npm run test
