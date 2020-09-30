@@ -7,7 +7,7 @@ cache:
   paths:
     - node_modules/
 
-install_dependencies:
+build_production:
   stage: build
   variables:
     NODE_ENV: production
@@ -37,4 +37,6 @@ testing_testing:
   only:
     - merge_requests
 
-  script: npm run test
+  script:
+    - npm install
+    - npm run test
