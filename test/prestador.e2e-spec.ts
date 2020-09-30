@@ -8,7 +8,6 @@ import { getRepositoryToken } from '@nestjs/typeorm'
 import { Prestador } from '../src/models/prestadores/prestador.entity'
 import { Repository } from 'typeorm'
 import { TipoErro } from '../src/common/enums/tipo-erro.enum'
-import { TypeOrmTestModule } from '@devniel/nestjs-typeorm-testing'
 
 describe('PrestadorController (e2e)', () => {
   let app: INestApplication
@@ -17,12 +16,7 @@ describe('PrestadorController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        AppModule,
-        TypeOrmTestModule.forTest({
-          entities: [],
-        }),
-      ],
+      imports: [AppModule],
     })
       .overrideProvider(FirebaseAuthenticationService)
       .useValue(mockFirebaseAuth)

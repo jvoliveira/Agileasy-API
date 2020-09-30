@@ -40,7 +40,6 @@
     "typeorm": "^0.2.26"
   },
   "devDependencies": {
-    "@devniel/nestjs-typeorm-testing": "0.1.0-alpha",
     "@golevelup/nestjs-testing": "^0.1.2",
     "@nestjs/cli": "^7.0.0",
     "@nestjs/schematics": "^7.0.0",
