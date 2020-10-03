@@ -4,6 +4,8 @@
 
 *.env
 
+*.sql
+
 # Logs
 logs
 *.log
