@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common'
 import { PrestadoresService } from './prestadores.service'
 import { Roles } from '../common/decorators/roles.decorator'
+import { UserService } from '../common/services/user.service'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
 import { AddCategoriaDto } from './dto/add-categoria.dto'
 import { ResponseDefault } from '../common/interfaces/response-default.interface'
@@ -17,6 +18,7 @@ export class PrestadoresController {
   constructor(
     private serv: PrestadoresService,
     private auth: FirebaseAuthenticationService,
+    private userService: UserService,
   ) {}
 
   @Get()
@@ -89,10 +91,32 @@ export class PrestadoresController {
   }
   @Roles(0)
   @Post(':id/adicionar_categorias')
-  public async addCategoria(
+  public async addCategoriaAsAdmin(
     @Param('id') id: number,
     @Body() addCategoriasDto: AddCategoriaDto,
   ): Promise<ResponseDefault> {
+    const prestador = await this.serv.addCategoria(
+      id,
+      addCategoriasDto.categorias,
+    )
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
+  }
+
+  @Roles(100)
+  @Post('adicionar_categorias')
+  public async addCategoria(
+    @Body() addCategoriasDto: AddCategoriaDto,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    const prestadorFull = await this.userService.getPrestadorByToken(user.uid)
+    const id = prestadorFull.id
     const prestador = await this.serv.addCategoria(
       id,
       addCategoriasDto.categorias,

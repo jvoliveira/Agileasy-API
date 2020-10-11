@@ -8,12 +8,14 @@ import { TipoErro } from '../common/enums/tipo-erro.enum'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { RequestAuth } from '../common/interfaces/request-auth.interface'
 import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
-
+import { UserService } from '../common/services/user.service'
+import * as admin from 'firebase-admin'
 describe('Prestadores Service', () => {
   let service: PrestadoresService
   const mockFirebaseUser = createMock<FirebaseAuthenticationService>()
   let constroller: PrestadoresController
   const repo = createMock<Repository<Prestador>>()
+  const userService = createMock<UserService>()
   const defaultResponse = {
     data: {},
     error: false,
@@ -27,6 +29,10 @@ describe('Prestadores Service', () => {
       controllers: [PrestadoresController],
       providers: [
         PrestadoresService,
+        {
+          provide: UserService,
+          useValue: userService,
+        },
         {
           provide: getRepositoryToken(Prestador),
           useValue: repo,
@@ -115,7 +121,7 @@ describe('Prestadores Service', () => {
     })
   })
 
-  it('should add categoria prestador', async () => {
+  it('should add categoria prestador as admin', async () => {
     mockFirebaseUser.setCustomUserClaims.mockResolvedValue()
     const createResponse = defaultResponse
     createResponse.data = {
@@ -129,7 +135,29 @@ describe('Prestadores Service', () => {
       .spyOn(service, 'addCategoria')
       .mockImplementation(() => createResponse.data['prestador'])
     await expect(
-      constroller.addCategoria(1, { categorias: [1, 2] }),
+      constroller.addCategoriaAsAdmin(1, { categorias: [1, 2] }),
+    ).resolves.toStrictEqual(createResponse)
+    expect(service.addCategoria).toBeCalledWith(1, [1, 2])
+  })
+
+  it('should add categoria prestador', async () => {
+    mockFirebaseUser.setCustomUserClaims.mockResolvedValue()
+    const createResponse = defaultResponse
+    createResponse.data = {
+      prestador: {
+        id: 1,
+        nome: 'Vinicius',
+        usuario: { id: 1, cpf: '133.568.145-56' },
+      },
+    }
+    const mockUser = createMock<admin.auth.UserRecord>()
+    mockUser.uid = 'teste'
+    userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
+    jest
+      .spyOn(service, 'addCategoria')
+      .mockImplementation(() => createResponse.data['prestador'])
+    await expect(
+      constroller.addCategoria({ categorias: [1, 2] }, mockUser),
     ).resolves.toStrictEqual(createResponse)
     expect(service.addCategoria).toBeCalledWith(1, [1, 2])
   })
