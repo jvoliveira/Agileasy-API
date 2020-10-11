@@ -18,6 +18,7 @@ import { RolesGuard } from './common/guards/roles.guard'
 import * as admin from 'firebase-admin'
 import { FIREBASE_CONFIG } from './common/constants/firebase'
 import { AuthMiddleware } from './common/middlewares/auth.middleware'
+import { RegistrarModule } from './registrar/registrar.module';
 
 @Module({
   imports: [
@@ -35,6 +36,8 @@ import { AuthMiddleware } from './common/middlewares/auth.middleware'
     PgModelsConfigModule,
     AppConfigModule,
     PrestadoresModule,
+    RegistrarModule
+    
   ],
   controllers: [AppController],
   providers: [
@@ -57,6 +60,7 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
+      .exclude('registrar')
       .forRoutes({ path: '*', method: RequestMethod.ALL })
   }
 }

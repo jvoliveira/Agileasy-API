@@ -4,6 +4,8 @@ import { Roles } from '../common/decorators/roles.decorator'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
 import { ResponseDefault } from '../common/interfaces/response-default.interface'
 import { TipoErro } from '../common/enums/tipo-erro.enum'
+import { User } from '../common/decorators/user.decorator'
+import * as admin from 'firebase-admin'
 
 @Controller('prestadores')
 export class PrestadoresController {
@@ -39,8 +41,9 @@ export class PrestadoresController {
   @Post('criar')
   public async create(
     @Body() createPrestadorDto: CreatePrestadorDto,
+    @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
-    createPrestadorDto.usuario.token = 'token-bom'
+    createPrestadorDto.usuario.token = user.uid
     const prestador = await this.serv.create(createPrestadorDto)
     return {
       error_id: TipoErro.SEM_ERROS,

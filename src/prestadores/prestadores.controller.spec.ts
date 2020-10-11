@@ -6,6 +6,7 @@ import { Repository } from 'typeorm'
 import { PrestadoresController } from './prestadores.controller'
 import { TipoErro } from '../common/enums/tipo-erro.enum'
 import { getRepositoryToken } from '@nestjs/typeorm'
+import { RequestAuth } from '../common/interfaces/request-auth.interface'
 
 describe('Prestadores Service', () => {
   let service: PrestadoresService
@@ -70,14 +71,19 @@ describe('Prestadores Service', () => {
         usuario: { id: 1, cpf: '133.568.145-56' },
       },
     }
+    const mockRequest = createMock<RequestAuth>()
+    mockRequest.user = { uid: 'oi' } as any
     jest
       .spyOn(service, 'create')
       .mockImplementation(() => createResponse.data['prestador'])
     await expect(
-      constroller.create({
-        nome: 'Vinicius',
-        usuario: { cpf: '133.568.145-56' },
-      } as any),
+      constroller.create(
+        {
+          nome: 'Vinicius',
+          usuario: { cpf: '133.568.145-56' },
+        } as any,
+        mockRequest as any,
+      ),
     ).resolves.toStrictEqual(createResponse)
   })
 })
