@@ -58,7 +58,17 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     servicos => servicos.pedidos,
     { cascade: true },
   )
-  @JoinTable({ name: 'item' })
+  @JoinTable({
+    name: 'item',
+    joinColumn: {
+      name: 'id_pedido',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'id_servico',
+      referencedColumnName: 'id',
+    },
+  })
   servicos!: Servico[]
 
   constructor(
