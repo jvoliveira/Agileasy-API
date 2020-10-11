@@ -12,4 +12,5 @@ export interface UsuarioInterface {
   cpf: string
   token: string
   status: TipoStatus
+  foto: string
 }

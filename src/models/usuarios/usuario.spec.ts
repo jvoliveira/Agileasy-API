@@ -12,6 +12,7 @@ describe('Usuario', () => {
       '22999486347',
       '14582486722',
       'TOKETOP',
+      'foto_legal',
     )
     expect(JSON.parse(JSON.stringify(mockUsuario))).toStrictEqual(
       JSON.parse(JSON.stringify(expectedJSON())),
@@ -31,5 +32,6 @@ function expectedJSON() {
     telefone: '22999486347',
     cpf: '14582486722',
     token: 'TOKETOP',
+    foto: 'foto_legal',
   }
 }

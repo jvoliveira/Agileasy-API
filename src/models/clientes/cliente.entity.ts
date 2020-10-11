@@ -88,7 +88,7 @@ export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
   public static fromJson(json: any): Cliente {
     return new Cliente(
       0,
-      new Usuario(1, TipoStatus.ativo, 'a', 'a', moment(), 'a', 'a', 'a'),
+      new Usuario(1, TipoStatus.ativo, 'a', 'a', moment(), 'a', 'a', 'a', 'a'),
       [],
       [],
     ).fillFromJson(json)

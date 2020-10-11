@@ -37,6 +37,7 @@ describe('Prestador', () => {
       '22999496547',
       '14582486722',
       'TOKENTOP',
+      'foto_top',
     )
     const mockPrestador = new Prestador(
       1,
@@ -50,6 +51,7 @@ describe('Prestador', () => {
       e,
       [serv],
       [categoriaPai, categoriaFilho],
+      'logo_top',
     )
 
     expect(JSON.parse(JSON.stringify(mockPrestador))).toStrictEqual(
@@ -68,6 +70,7 @@ function expectedJSON() {
     documentoUrl: 'UrlDoDocumento',
     nomePublico: 'OLIVEIRA TECH',
     razaoSocial: 'Oliveira prestação de serviços',
+    logo: 'logo_top',
     tipoPessoa: 1,
     usuario: {
       ativo: true,
@@ -79,6 +82,7 @@ function expectedJSON() {
       telefone: '22999496547',
       cpf: '14582486722',
       token: 'TOKENTOP',
+      foto: 'foto_top',
     },
     endereco: {
       ativo: true,

@@ -35,6 +35,7 @@ describe('Cliente', () => {
       '22999486347',
       '14582486722',
       'TOKENTOP',
+      'foto_top',
     )
     const mockCliente = new Cliente(
       1,
@@ -64,6 +65,7 @@ function expectedJSON() {
       telefone: '22999486347',
       cpf: '14582486722',
       token: 'TOKENTOP',
+      foto: 'foto_top',
     },
     enderecos: [
       {

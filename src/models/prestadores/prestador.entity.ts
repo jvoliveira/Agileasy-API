@@ -42,6 +42,9 @@ export class Prestador extends BaseModel<Prestador>
   @Column('text', { nullable: false, name: 'nome_publico' })
   nomePublico!: string
 
+  @Column('text', { nullable: true })
+  logo!: string
+
   @Column('boolean', { nullable: false })
   delivery!: boolean
 
@@ -98,6 +101,7 @@ export class Prestador extends BaseModel<Prestador>
     endereco: Endereco,
     servicos: Servico[],
     categorias: Categoria[],
+    logo: string,
     ativo = true,
   ) {
     super(id, ativo)
@@ -108,6 +112,7 @@ export class Prestador extends BaseModel<Prestador>
     this.nomePublico = nomePublico
     this.razaoSocial = razaoSocial
     this.tipoPessoa = tipoPessoa
+    this.logo = logo
     this.endereco = endereco
     this.servicos = servicos
     this.categorias = categorias
@@ -125,6 +130,7 @@ export class Prestador extends BaseModel<Prestador>
     this.nomePublico = json.nomePublico
     this.razaoSocial = json.razaoSocial
     this.tipoPessoa = json.tipoPessoa
+    this.logo = json.logo
     this.endereco = Endereco.fromJson(json.endereco)
     this.servicos = JsonHelper.jsonToArray<Servico>(
       json.servicos,
@@ -151,6 +157,7 @@ export class Prestador extends BaseModel<Prestador>
       this.endereco,
       this.servicos,
       this.categorias,
+      this.logo,
       this.ativo,
     )
     prestador.dados = this.dados
@@ -160,7 +167,7 @@ export class Prestador extends BaseModel<Prestador>
   public static fromJson(json: any): Prestador {
     const prestador = new Prestador(
       0,
-      new Usuario(1, TipoStatus.ativo, 'a', 'a', moment(), 'a', 'a', 'a'),
+      new Usuario(1, TipoStatus.ativo, 'a', 'a', moment(), 'a', 'a', 'a', '1'),
       '2',
       true,
       't',
@@ -170,6 +177,7 @@ export class Prestador extends BaseModel<Prestador>
       new Endereco(1, 'r', 'e', 'r', 'd', 'f', 'f', 'f', 'f'),
       [],
       [],
+      '1',
     ).fillFromJson(json)
     return prestador
   }

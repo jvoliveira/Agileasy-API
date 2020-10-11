@@ -12,4 +12,5 @@ export interface PrestadorInterface {
   endereco: EnderecoInterface
   servicos: Array<ServicoInterface>
   categorias: Array<CategoriaInterface>
+  logo: string
 }

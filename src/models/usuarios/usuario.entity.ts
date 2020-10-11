@@ -29,6 +29,9 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
   @Column('text', { nullable: false })
   cpf!: string
 
+  @Column('text', { nullable: true })
+  foto!: string
+
   @Column('text', { nullable: false, name: 'token_acesso' })
   token!: string
 
@@ -58,6 +61,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
     telefone: string,
     cpf: string,
     token: string,
+    foto: string,
     ativo = true,
   ) {
     super(id, ativo)
@@ -68,6 +72,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
     this.cpf = cpf
     this.token = token
     this.status = status
+    this.foto = foto
   }
 
   fillFromJson(json: any, recursive?: string[] | undefined): Usuario {
@@ -81,6 +86,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
       .toDate()
     this.nomeSocial = json.nomeSocial as string
     this.nome = json.nome as string
+    this.foto = json.foto
     this.telefone = json.telefone as string
     this.token = json.token as string
     this.status = json.status as TipoStatus
@@ -98,6 +104,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
       this.telefone,
       this.cpf,
       this.token,
+      this.foto,
       this.ativo,
     )
     usuario.dados = this.dados
@@ -113,6 +120,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
       moment(),
       't',
       't',
+      '1',
       '1',
     ).fillFromJson(json)
   }
