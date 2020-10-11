@@ -6,8 +6,10 @@ import { createMock } from '@golevelup/nestjs-testing'
 import { AppModule } from '../src/app.module'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Prestador } from '../src/models/prestadores/prestador.entity'
-import { Repository } from 'typeorm'
+import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
 import { TipoErro } from '../src/common/enums/tipo-erro.enum'
+import { Categoria } from '../src/models/categorias/categoria.entity'
+import { report } from 'superagent'
 
 describe('PrestadorController (e2e)', () => {
   let app: INestApplication
@@ -55,6 +57,38 @@ describe('PrestadorController (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .get('/prestadores')
+      .auth('token-valido', { type: 'bearer' })
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/prestadores/:id/categoria (GET)', async () => {
+    const shouldReturn = {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestadores: [{ nome: 'oi' } as any],
+      },
+    }
+    const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
+    const mockQueryAtivo = createMock<SelectQueryBuilder<Prestador>>()
+    const mockRelation = createMock<RelationQueryBuilder<Categoria>>()
+    const mockQueryBuilder = createMock<RelationQueryBuilder<Categoria>>()
+    mockQuery.where.mockReturnValue(mockQueryAtivo)
+    mockRelation.of.mockReturnValue(mockQueryBuilder)
+    mockQueryAtivo.relation.mockReturnValue(mockRelation)
+    mockQueryBuilder.loadMany.mockResolvedValue(shouldReturn.data.prestadores)
+    mockService.createQueryBuilder.mockReturnValue(mockQuery)
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100, 200] },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .get('/prestadores/1/categoria')
       .auth('token-valido', { type: 'bearer' })
     expect(response.status).toBe(200)
     expect(response.body).toStrictEqual(shouldReturn)

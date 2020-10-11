@@ -45,6 +45,21 @@ export class PrestadoresController {
     }
   }
 
+  @Get(':id/categoria')
+  public async getPrestadorByCategoria(
+    @Param('id') id: number,
+  ): Promise<ResponseDefault> {
+    const prestadores = await this.serv.getPrestadorByCategoria(id)
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestadores,
+      },
+    }
+  }
+
   @Post('criar')
   public async create(
     @Body() createPrestadorDto: CreatePrestadorDto,

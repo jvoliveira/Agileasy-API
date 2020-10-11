@@ -57,6 +57,19 @@ describe('Prestadores Service', () => {
     await expect(constroller.getAll()).resolves.toStrictEqual(getAllResponse)
   })
 
+  it('should return all prestadores by categoria', async () => {
+    const getAllResponse = defaultResponse
+    getAllResponse.data = {
+      prestadores: [{ nome: 'Vinicius' }],
+    }
+    jest
+      .spyOn(service, 'getPrestadorByCategoria')
+      .mockImplementation(() => getAllResponse.data['prestadores'])
+    await expect(constroller.getPrestadorByCategoria(1)).resolves.toStrictEqual(
+      getAllResponse,
+    )
+  })
+
   it('should return prestador by id', async () => {
     const getByIDResponse = defaultResponse
     getByIDResponse.data = {
