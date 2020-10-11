@@ -10,6 +10,7 @@ describe('CategoriasService', () => {
   const repo = createMock<Repository<Categoria>>()
 
   beforeEach(async () => {
+    jest.resetAllMocks()
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CategoriasService,
@@ -25,5 +26,15 @@ describe('CategoriasService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined()
+  })
+
+  it('should get categoria pai', async () => {
+    const categorias = [{ descricao: 'Limpeza', catPai: null } as any]
+
+    repo.find.mockResolvedValue([{ descricao: 'Limpeza', catPai: null } as any])
+    await expect(service.getParents()).resolves.toStrictEqual(categorias)
+    expect(repo.find).toHaveBeenCalledWith({
+      where: { ativo: true, catPai: null },
+    })
   })
 })
