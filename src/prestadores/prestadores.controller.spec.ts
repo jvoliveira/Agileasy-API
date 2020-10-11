@@ -114,4 +114,23 @@ describe('Prestadores Service', () => {
       usuario: { cpf: '133.568.145-56', token: 'oi' },
     })
   })
+
+  it('should add categoria prestador', async () => {
+    mockFirebaseUser.setCustomUserClaims.mockResolvedValue()
+    const createResponse = defaultResponse
+    createResponse.data = {
+      prestador: {
+        id: 1,
+        nome: 'Vinicius',
+        usuario: { id: 1, cpf: '133.568.145-56' },
+      },
+    }
+    jest
+      .spyOn(service, 'addCategoria')
+      .mockImplementation(() => createResponse.data['prestador'])
+    await expect(
+      constroller.addCategoria(1, { categorias: [1, 2] }),
+    ).resolves.toStrictEqual(createResponse)
+    expect(service.addCategoria).toBeCalledWith(1, [1, 2])
+  })
 })

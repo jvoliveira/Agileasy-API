@@ -26,7 +26,7 @@ export class Categoria extends BaseModel<Categoria>
     catPai => catPai.catPai,
     { cascade: false },
   )
-  @JoinColumn()
+  @JoinColumn({ name: 'id_pai', referencedColumnName: 'id' })
   catPai: Categoria | null
 
   @Column('text', { nullable: false })
@@ -37,17 +37,6 @@ export class Categoria extends BaseModel<Categoria>
     prestador => prestador.categorias,
     { cascade: false },
   )
-  @JoinTable({
-    name: 'categoria_prestador',
-    joinColumn: {
-      name: 'id_categoria',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'id_prestador',
-      referencedColumnName: 'id',
-    },
-  })
   prestadores?: Prestador[]
 
   @ManyToMany(

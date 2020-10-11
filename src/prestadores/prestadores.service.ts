@@ -27,4 +27,28 @@ export class PrestadoresService extends BaseService<Prestador> {
 
     return values
   }
+
+  async addCategoria(
+    idPrestador: number,
+    categorias: number[],
+  ): Promise<Prestador> {
+    await this.repo
+      .createQueryBuilder()
+      .where({ ativo: true })
+      .limit(1)
+      .relation(Prestador, 'categorias')
+      .of(idPrestador)
+      .add(categorias)
+
+    const value = await this.repo.findOne(idPrestador, {
+      where: { ativo: true },
+      relations: ['categorias'],
+    })
+
+    if (!value) {
+      throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
+    }
+
+    return value
+  }
 }

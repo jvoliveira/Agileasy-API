@@ -52,4 +52,33 @@ describe('Prestadores Service', () => {
       'prestadores',
     )
   })
+
+  it('should add prestador with categoria', async () => {
+    const shouldReturn = { nome: 'Vinicius' }
+    const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
+    const mockQueryAtivo = createMock<SelectQueryBuilder<Prestador>>()
+    const mockQueryLimit = createMock<SelectQueryBuilder<Prestador>>()
+    const mockRelation = createMock<RelationQueryBuilder<Categoria>>()
+    const mockQueryBuilder = createMock<RelationQueryBuilder<Categoria>>()
+    mockQuery.where.mockReturnValue(mockQueryAtivo)
+    mockQueryAtivo.limit.mockReturnValue(mockQueryLimit)
+    mockRelation.of.mockReturnValue(mockQueryBuilder)
+    mockQueryLimit.relation.mockReturnValue(mockRelation)
+    mockQueryBuilder.add.mockResolvedValue()
+
+    repo.createQueryBuilder.mockReturnValue(mockQuery)
+
+    repo.findOne.mockResolvedValue(shouldReturn as any)
+
+    await expect(service.addCategoria(1, [1, 2, 3, 4])).resolves.toStrictEqual(
+      shouldReturn,
+    )
+
+    expect(mockQuery.where).toHaveBeenCalledWith({ ativo: true })
+    expect(mockRelation.of).toHaveBeenCalledWith(1)
+    expect(mockQueryLimit.relation).toHaveBeenCalledWith(
+      Prestador,
+      'categorias',
+    )
+  })
 })

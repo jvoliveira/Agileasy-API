@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param } from '@nestjs/common'
 import { PrestadoresService } from './prestadores.service'
 import { Roles } from '../common/decorators/roles.decorator'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
+import { AddCategoriaDto } from './dto/add-categoria.dto'
 import { ResponseDefault } from '../common/interfaces/response-default.interface'
 import { TipoErro } from '../common/enums/tipo-erro.enum'
 import { TipoUsuario } from '../common/enums/tipo-usuario.enum'
@@ -74,6 +75,25 @@ export class PrestadoresController {
     await this.auth.setCustomUserClaims(user.uid, claims)
 
     const prestador = await this.serv.create(createPrestadorDto)
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
+  }
+
+  @Post(':id/adicionar_categorias')
+  public async addCategoria(
+    @Param('id') id: number,
+    @Body() addCategoriasDto: AddCategoriaDto,
+  ): Promise<ResponseDefault> {
+    const prestador = await this.serv.addCategoria(
+      id,
+      addCategoriasDto.categorias,
+    )
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',

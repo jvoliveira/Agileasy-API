@@ -7,6 +7,7 @@ import {
   OneToMany,
   ManyToMany,
   JoinColumn,
+  JoinTable,
 } from 'typeorm'
 import { JsonHelper } from '../../common/helpers/json.helper'
 import { Usuario } from '../usuarios/usuario.entity'
@@ -72,6 +73,17 @@ export class Prestador extends BaseModel<Prestador>
     categorias => categorias.prestadores,
     { cascade: false },
   )
+  @JoinTable({
+    name: 'categoria_prestador',
+    joinColumn: {
+      name: 'id_categoria',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'id_prestador',
+      referencedColumnName: 'id',
+    },
+  })
   categorias!: Categoria[]
 
   constructor(
