@@ -1,6 +1,6 @@
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": true,
   },
   "eslint.validate": [
     "javascript",
@@ -8,5 +8,10 @@
     "typescript",
     "typescriptreact"
   ],
-  "typescript.preferences.importModuleSpecifier": "relative"
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "editor.formatOnSave": true,
+  "javascript.format.enable": true,
+  "typescript.format.enable": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+
 }
