@@ -9,7 +9,6 @@ import { Prestador } from '../src/models/prestadores/prestador.entity'
 import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
 import { TipoErro } from '../src/common/enums/tipo-erro.enum'
 import { Categoria } from '../src/models/categorias/categoria.entity'
-import { report } from 'superagent'
 
 describe('PrestadorController (e2e)', () => {
   let app: INestApplication
