@@ -34,6 +34,7 @@ export class PrestadoresController {
   }
 
   @Get(':id')
+  @Roles(0, 100, 200)
   public async get(@Param('id') id: number): Promise<ResponseDefault> {
     const prestador = await this.serv.getByID(id)
     return {
@@ -47,6 +48,7 @@ export class PrestadoresController {
   }
 
   @Get(':id/categoria')
+  @Roles(0, 200)
   public async getPrestadorByCategoria(
     @Param('id') id: number,
   ): Promise<ResponseDefault> {
@@ -62,6 +64,7 @@ export class PrestadoresController {
   }
 
   @Post('criar')
+  @Roles(0, 200)
   public async create(
     @Body() createPrestadorDto: CreatePrestadorDto,
     @User() user: admin.auth.UserRecord,
@@ -84,7 +87,7 @@ export class PrestadoresController {
       },
     }
   }
-
+  @Roles(0)
   @Post(':id/adicionar_categorias')
   public async addCategoria(
     @Param('id') id: number,

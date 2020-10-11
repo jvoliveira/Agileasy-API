@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common'
+import { Roles } from '../common/decorators/roles.decorator'
 import { TipoErro } from '../common/enums/tipo-erro.enum'
 import { ResponseDefault } from '../common/interfaces/response-default.interface'
 import { CategoriasService } from './categorias.service'
@@ -7,6 +8,7 @@ import { CategoriasService } from './categorias.service'
 export class CategoriasController {
   constructor(private serv: CategoriasService) {}
   @Get('pai')
+  @Roles(0, 100, 200)
   public async getCategoriaPai(): Promise<ResponseDefault> {
     const categorias = await this.serv.getParents()
     return {
