@@ -7,14 +7,16 @@ import { Prestador } from '../../models/prestadores/prestador.entity'
 import { AllException } from '../exceptions/all.exception'
 import { Provider } from '@nestjs/common'
 import { BaseService } from './base.service'
+import { Categoria } from '../../models/categorias/categoria.entity'
+import { CategoriasService } from '../../categorias/categorias.service'
 
 describe('Base Service Test', () => {
   const services: BaseService<any>[] = []
   const repos: DeepMocked<Repository<any>>[] = []
   beforeEach(async () => {
-    const servicesTemp = [PrestadoresService] // Aqui coloca todos os services que utilizam o base.service
+    const servicesTemp = [PrestadoresService, CategoriasService] // Aqui coloca todos os services que utilizam o base.service
 
-    const models = [Prestador] // Aqui coloca todos os models que utilizam o base.service nos seus services
+    const models = [Prestador, Categoria] // Aqui coloca todos os models que utilizam o base.service nos seus services
     const providers: Provider<any>[] = []
     services.length = 0
     repos.length = 0
@@ -32,7 +34,7 @@ describe('Base Service Test', () => {
     }).compile()
 
     for (const service of servicesTemp) {
-      services.push(module.get(service))
+      services.push(module.get(service as any))
     }
   })
 

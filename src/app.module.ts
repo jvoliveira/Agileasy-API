@@ -19,6 +19,7 @@ import * as admin from 'firebase-admin'
 import { FIREBASE_CONFIG } from './common/constants/firebase'
 import { AuthMiddleware } from './common/middlewares/auth.middleware'
 import { RegistrarModule } from './registrar/registrar.module';
+import { CategoriasModule } from './categorias/categorias.module';
 
 @Module({
   imports: [
@@ -36,7 +37,8 @@ import { RegistrarModule } from './registrar/registrar.module';
     PgModelsConfigModule,
     AppConfigModule,
     PrestadoresModule,
-    RegistrarModule
+    RegistrarModule,
+    CategoriasModule
     
   ],
   controllers: [AppController],
