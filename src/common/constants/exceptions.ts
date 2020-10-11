@@ -53,4 +53,9 @@ export const COMMON_ERRORS: TipoErroDados[] = [
     message: 'Erro ao deletar',
     httpStatus: HttpStatus.BAD_REQUEST,
   },
+  {
+    errorId: TipoErro.USUARIO_JA_EXISTE,
+    message: 'Usuário já existe',
+    httpStatus: HttpStatus.BAD_REQUEST,
+  },
 ]

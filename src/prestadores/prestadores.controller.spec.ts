@@ -7,9 +7,11 @@ import { PrestadoresController } from './prestadores.controller'
 import { TipoErro } from '../common/enums/tipo-erro.enum'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { RequestAuth } from '../common/interfaces/request-auth.interface'
+import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 
 describe('Prestadores Service', () => {
   let service: PrestadoresService
+  const mockFirebaseUser = createMock<FirebaseAuthenticationService>()
   let constroller: PrestadoresController
   const repo = createMock<Repository<Prestador>>()
   const defaultResponse = {
@@ -28,6 +30,10 @@ describe('Prestadores Service', () => {
         {
           provide: getRepositoryToken(Prestador),
           useValue: repo,
+        },
+        {
+          provide: FirebaseAuthenticationService,
+          useValue: mockFirebaseUser,
         },
       ],
     }).compile()
@@ -63,6 +69,7 @@ describe('Prestadores Service', () => {
   })
 
   it('should create prestador', async () => {
+    mockFirebaseUser.setCustomUserClaims.mockResolvedValue()
     const createResponse = defaultResponse
     createResponse.data = {
       prestador: {
@@ -72,7 +79,11 @@ describe('Prestadores Service', () => {
       },
     }
     const mockRequest = createMock<RequestAuth>()
-    mockRequest.user = { uid: 'oi' } as any
+    mockRequest.user = {
+      uid: 'oi',
+      customClaims: { roles: [200] },
+    } as any
+
     jest
       .spyOn(service, 'create')
       .mockImplementation(() => createResponse.data['prestador'])
@@ -82,8 +93,12 @@ describe('Prestadores Service', () => {
           nome: 'Vinicius',
           usuario: { cpf: '133.568.145-56' },
         } as any,
-        mockRequest as any,
+        mockRequest.user,
       ),
     ).resolves.toStrictEqual(createResponse)
+    expect(service.create).toBeCalledWith({
+      nome: 'Vinicius',
+      usuario: { cpf: '133.568.145-56', token: 'oi' },
+    })
   })
 })

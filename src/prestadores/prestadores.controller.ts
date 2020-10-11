@@ -4,12 +4,19 @@ import { Roles } from '../common/decorators/roles.decorator'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
 import { ResponseDefault } from '../common/interfaces/response-default.interface'
 import { TipoErro } from '../common/enums/tipo-erro.enum'
+import { TipoUsuario } from '../common/enums/tipo-usuario.enum'
 import { User } from '../common/decorators/user.decorator'
 import * as admin from 'firebase-admin'
+import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
+import { Claims } from '../common/guards/interfaces/claims.interface'
+import { AllException } from '../common/exceptions/all.exception'
 
 @Controller('prestadores')
 export class PrestadoresController {
-  constructor(private serv: PrestadoresService) {}
+  constructor(
+    private serv: PrestadoresService,
+    private auth: FirebaseAuthenticationService,
+  ) {}
 
   @Get()
   @Roles(0, 200)
@@ -44,6 +51,13 @@ export class PrestadoresController {
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
     createPrestadorDto.usuario.token = user.uid
+    const claims = user.customClaims as Claims
+    if (claims.roles.includes(TipoUsuario.PRESTADOR)) {
+      throw new AllException(TipoErro.USUARIO_JA_EXISTE)
+    }
+    claims.roles.push(TipoUsuario.PRESTADOR)
+    await this.auth.setCustomUserClaims(user.uid, claims)
+
     const prestador = await this.serv.create(createPrestadorDto)
     return {
       error_id: TipoErro.SEM_ERROS,

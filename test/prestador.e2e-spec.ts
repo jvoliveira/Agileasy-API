@@ -15,6 +15,7 @@ describe('PrestadorController (e2e)', () => {
   const mockFirebaseAuth = createMock<FirebaseAuthenticationService>()
 
   beforeAll(async () => {
+    jest.resetAllMocks()
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
@@ -117,11 +118,13 @@ describe('PrestadorController (e2e)', () => {
       },
     }
     mockService.save.mockResolvedValue(shouldReturn.data.prestador)
+    mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
       uid: 'uid-valido',
     } as any)
     mockFirebaseAuth.getUser.mockResolvedValue({
       customClaims: { roles: [0, 200] },
+      uid: 'oi',
     } as any)
 
     const response = await request(app.getHttpServer())
