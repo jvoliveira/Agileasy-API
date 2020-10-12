@@ -10,6 +10,7 @@ import { RequestAuth } from '../common/interfaces/request-auth.interface'
 import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { UserService } from '../common/services/user.service'
 import * as admin from 'firebase-admin'
+
 describe('Prestadores Service', () => {
   let service: PrestadoresService
   const mockFirebaseUser = createMock<FirebaseAuthenticationService>()
@@ -23,12 +24,17 @@ describe('Prestadores Service', () => {
     message: 'Sucesso!',
   }
 
+  const mockService = createMock<PrestadoresService>()
+
   beforeEach(async () => {
     jest.resetAllMocks()
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PrestadoresController],
       providers: [
-        PrestadoresService,
+        {
+          provide: PrestadoresService,
+          useValue: mockService,
+        },
         {
           provide: UserService,
           useValue: userService,
@@ -160,5 +166,13 @@ describe('Prestadores Service', () => {
       constroller.addCategoria({ categorias: [1, 2] }, mockUser),
     ).resolves.toStrictEqual(createResponse)
     expect(service.addCategoria).toBeCalledWith(1, [1, 2])
+  })
+
+  it('should return Prestador with Servicos', async () => {
+    const prestador = { nome: 'Vinicius' }
+    mockService.getServicosByPrestador.mockResolvedValue(prestador as any)
+
+    defaultResponse.data = { prestador }
+    expect(constroller.getServicos(1)).resolves.toStrictEqual(defaultResponse)
   })
 })

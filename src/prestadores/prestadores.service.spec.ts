@@ -28,6 +28,19 @@ describe('Prestadores Service', () => {
     expect(service).toBeDefined()
   })
 
+  it('should get servicos by prestador id', async () => {
+    const shouldReturn = { nome: 'Vinicius' } as any
+    repo.findOne.mockResolvedValue({ nome: 'Vinicius' } as any)
+
+    await expect(service.getServicosByPrestador(1)).resolves.toStrictEqual(
+      shouldReturn,
+    )
+    expect(repo.findOne).toBeCalledWith({
+      where: { id: 1 },
+      relations: ['servicos'],
+    })
+  })
+
   it('should get prestador by categoria id', async () => {
     const shouldReturn = [{ nome: 'Vinicius' }] as any
     const mockQuery = createMock<SelectQueryBuilder<Prestador>>()

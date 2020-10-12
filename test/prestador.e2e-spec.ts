@@ -306,4 +306,56 @@ describe('PrestadorController (e2e)', () => {
     expect(response.status).toBe(201)
     expect(response.body).toStrictEqual(shouldReturn)
   })
+
+  it('/prestadores/1/servicos (GET)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador: {
+          id: 1,
+          ativo: true,
+          usuario: {
+            id: 1,
+            ativo: true,
+            nome: 'Alice Medeiros',
+            nomeSocial: 'Lice',
+            dataNascimento: '1999-03-25T03:00:00.000Z',
+            telefone: '998047269',
+            cpf: '010.677.458-23',
+            token: '1I80WG9tuUTIRS3XW8Z6627XYkB2',
+            status: 0,
+            foto:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/maquiadora.jpg?alt=media&token=0189c4c4-0b85-4f48-931a-2c7ada025700',
+          },
+          cnpj: '',
+          delivery: true,
+          documentoUrl:
+            'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/Nova-Carteira-de-Identidade_site.jpg?alt=media&token=20e08eb3-ef65-416e-bf4d-32bf3991b650',
+          nomePublico: 'Unhas da Alice',
+          razaoSocial: '',
+          tipoPessoa: 0,
+          logo:
+            'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/unhas-decoradas-alice-no-pai%CC%81s-das-maravilhas-4.jpg?alt=media&token=4300f2bb-97f5-4aa5-8797-cb8e5ab22a26',
+          servicos: [],
+        },
+      },
+    }
+
+    mockService.findOne.mockResolvedValue(shouldReturn.data.prestador as any)
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 200] },
+      uid: 'oi',
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .get('/prestadores/1/servicos')
+      .auth('token-valido', { type: 'bearer' })
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
 })
