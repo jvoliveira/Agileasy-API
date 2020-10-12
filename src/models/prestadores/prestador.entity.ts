@@ -79,11 +79,11 @@ export class Prestador extends BaseModel<Prestador>
   @JoinTable({
     name: 'categoria_prestador',
     joinColumn: {
-      name: 'id_categoria',
+      name: 'id_prestador',
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: 'id_prestador',
+      name: 'id_categoria',
       referencedColumnName: 'id',
     },
   })

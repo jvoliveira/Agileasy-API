@@ -15,11 +15,14 @@ export class PrestadoresService extends BaseService<Prestador> {
 
   async getPrestadorByCategoria(idCategoria: number): Promise<Prestador[]> {
     const values: Array<Prestador> = await this.repo
-      .createQueryBuilder()
-      .where({ ativo: true })
-      .relation(Categoria, 'prestadores')
-      .of(idCategoria)
-      .loadMany()
+      .createQueryBuilder('prestador')
+      .leftJoinAndSelect('prestador.categorias', 'c')
+      .leftJoinAndSelect('prestador.servicos', 's')
+      .where(
+        'c.id = :idCategoria and prestador.ativo = true and c.ativo = true',
+        { idCategoria },
+      )
+      .getMany()
 
     if (!values) {
       throw new AllException(TipoErro.ID_NAO_ENCONTRADO)

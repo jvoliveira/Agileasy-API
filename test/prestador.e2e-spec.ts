@@ -75,13 +75,14 @@ describe('PrestadorController (e2e)', () => {
       },
     }
     const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
-    const mockQueryAtivo = createMock<SelectQueryBuilder<Prestador>>()
-    const mockRelation = createMock<RelationQueryBuilder<Categoria>>()
-    const mockQueryBuilder = createMock<RelationQueryBuilder<Categoria>>()
-    mockQuery.where.mockReturnValue(mockQueryAtivo)
-    mockRelation.of.mockReturnValue(mockQueryBuilder)
-    mockQueryAtivo.relation.mockReturnValue(mockRelation)
-    mockQueryBuilder.loadMany.mockResolvedValue(shouldReturn.data.prestadores)
+    const mockSelect1 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect2 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockMany = createMock<SelectQueryBuilder<Prestador>>()
+    mockQuery.leftJoinAndSelect.mockReturnValue(mockSelect1)
+    mockSelect1.leftJoinAndSelect.mockReturnValue(mockSelect2)
+    mockSelect2.where.mockReturnValue(mockMany)
+    mockMany.getMany.mockResolvedValue(shouldReturn.data.prestadores)
+
     mockService.createQueryBuilder.mockReturnValue(mockQuery)
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
       uid: 'uid-valido',
