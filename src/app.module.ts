@@ -20,6 +20,7 @@ import { FIREBASE_CONFIG } from './common/constants/firebase'
 import { AuthMiddleware } from './common/middlewares/auth.middleware'
 import { RegistrarModule } from './registrar/registrar.module';
 import { CategoriasModule } from './categorias/categorias.module';
+import { ServicosModule } from './servicos/servicos.module';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { CategoriasModule } from './categorias/categorias.module';
     AppConfigModule,
     PrestadoresModule,
     RegistrarModule,
-    CategoriasModule
+    CategoriasModule,
+    ServicosModule
     
   ],
   controllers: [AppController],
