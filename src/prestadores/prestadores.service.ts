@@ -54,4 +54,17 @@ export class PrestadoresService extends BaseService<Prestador> {
 
     return value
   }
+
+  async getServicosByPrestador(id: number): Promise<Prestador> {
+    const prestador = await this.repo.findOne({
+      where: { id: id },
+      relations: ['servicos'],
+    })
+
+    if (!prestador) {
+      throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
+    }
+
+    return prestador
+  }
 }

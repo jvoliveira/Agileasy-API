@@ -130,4 +130,19 @@ export class PrestadoresController {
       },
     }
   }
+
+  @Roles(TipoUsuario.CLIENTE)
+  @Get(':id/servicos')
+  public async getServicos(@Param('id') id: number): Promise<ResponseDefault> {
+    const prestador = await this.serv.getServicosByPrestador(id)
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
+  }
 }
