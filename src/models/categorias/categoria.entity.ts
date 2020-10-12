@@ -44,7 +44,17 @@ export class Categoria extends BaseModel<Categoria>
     servicos => servicos.categorias,
     { cascade: false },
   )
-  @JoinTable({ name: 'categoria_servico' })
+  @JoinTable({
+    name: 'categoria_servico',
+    inverseJoinColumn: {
+      name: 'id_categoria',
+      referencedColumnName: 'id',
+    },
+    joinColumn: {
+      name: 'id_servico',
+      referencedColumnName: 'id',
+    },
+  })
   servicos?: Servico[]
 
   constructor(
