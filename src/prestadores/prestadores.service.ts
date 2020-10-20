@@ -66,4 +66,17 @@ export class PrestadoresService extends BaseService<Prestador> {
 
     return prestador
   }
+
+  async getPrestadoresWithCategoria(): Promise<Prestador[]> {
+    const values: Array<Prestador> = await this.repo.find({
+      where: { ativo: true },
+      relations: ['categorias'],
+    })
+
+    if (!values) {
+      throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
+    }
+
+    return values
+  }
 }

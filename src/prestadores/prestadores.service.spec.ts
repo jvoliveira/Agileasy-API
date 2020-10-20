@@ -5,6 +5,7 @@ import { Prestador } from '../models/prestadores/prestador.entity'
 import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Categoria } from '../models/categorias/categoria.entity'
+import { AllException } from '../common/exceptions/all.exception'
 
 describe('Prestadores Service', () => {
   let service: PrestadoresService
@@ -100,6 +101,31 @@ describe('Prestadores Service', () => {
     expect(mockQueryLimit.relation).toHaveBeenCalledWith(
       Prestador,
       'categorias',
+    )
+  })
+
+  it('should be get prestador with categoria', async () => {
+    const shouldReturn = [
+      {
+        nome: 'Vinicius Picanco',
+      },
+    ]
+
+    expect(service).toBeDefined()
+
+    repo.find.mockReturnValue(shouldReturn as any)
+
+    expect(await service.getPrestadoresWithCategoria()).toBe(shouldReturn)
+    expect(repo.find).toHaveBeenCalledWith({
+      where: { ativo: true },
+      relations: ['categorias'],
+    })
+
+    repo.find.mockClear()
+    repo.find.mockReturnValue(null)
+
+    await expect(service.getPrestadoresWithCategoria()).rejects.toThrow(
+      AllException,
     )
   })
 })

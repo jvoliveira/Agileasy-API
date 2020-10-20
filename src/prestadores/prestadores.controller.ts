@@ -35,6 +35,20 @@ export class PrestadoresController {
     }
   }
 
+  @Get('categorias')
+  @Roles(0, 200)
+  public async getPrestadoresWithCategorias(): Promise<ResponseDefault> {
+    const prestadores = await this.serv.getPrestadoresWithCategoria()
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestadores,
+      },
+    }
+  }
+
   @Get(':id')
   @Roles(0, 100, 200)
   public async get(@Param('id') id: number): Promise<ResponseDefault> {

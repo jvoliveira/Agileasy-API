@@ -65,6 +65,30 @@ describe('PrestadorController (e2e)', () => {
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
+  it('/prestadores/categorias (GET)', async () => {
+    const shouldReturn = {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestadores: [{ nome: 'oi' } as any],
+      },
+    }
+    mockService.find.mockResolvedValue(shouldReturn.data.prestadores)
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100, 200] },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .get('/prestadores/categorias')
+      .auth('token-valido', { type: 'bearer' })
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
   it('/prestadores/:id/categoria (GET)', async () => {
     const shouldReturn = {
       error_id: TipoErro.SEM_ERROS,
