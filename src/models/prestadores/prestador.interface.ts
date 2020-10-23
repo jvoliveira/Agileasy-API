@@ -13,4 +13,6 @@ export interface PrestadorInterface {
   servicos: Array<ServicoInterface>
   categorias: Array<CategoriaInterface>
   logo: string
+  capa: string
+  nota: number
 }

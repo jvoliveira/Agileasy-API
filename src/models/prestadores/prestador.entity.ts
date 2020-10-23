@@ -42,6 +42,12 @@ export class Prestador extends BaseModel<Prestador>
   @Column('text', { nullable: false, name: 'nome_publico' })
   nomePublico!: string
 
+  @Column('double precision', { nullable: false, name: 'nota', default: 0 })
+  nota!: number
+
+  @Column('text', { nullable: true, name: 'capa' })
+  capa!: string
+
   @Column('text', { nullable: true })
   logo!: string
 
@@ -102,6 +108,8 @@ export class Prestador extends BaseModel<Prestador>
     servicos: Servico[],
     categorias: Categoria[],
     logo: string,
+    nota: number,
+    capa: string,
     ativo = true,
   ) {
     super(id, ativo)
@@ -116,6 +124,8 @@ export class Prestador extends BaseModel<Prestador>
     this.endereco = endereco
     this.servicos = servicos
     this.categorias = categorias
+    this.nota = nota
+    this.capa = capa
   }
 
   fillFromJson(json: any, recursive?: string[] | undefined): Prestador {
@@ -131,6 +141,8 @@ export class Prestador extends BaseModel<Prestador>
     this.razaoSocial = json.razaoSocial
     this.tipoPessoa = json.tipoPessoa
     this.logo = json.logo
+    this.nota = json.nota
+    this.capa = json.capa
     this.endereco = Endereco.fromJson(json.endereco)
     this.servicos = JsonHelper.jsonToArray<Servico>(
       json.servicos,
@@ -158,6 +170,8 @@ export class Prestador extends BaseModel<Prestador>
       this.servicos,
       this.categorias,
       this.logo,
+      this.nota,
+      this.capa,
       this.ativo,
     )
     prestador.dados = this.dados
@@ -178,6 +192,8 @@ export class Prestador extends BaseModel<Prestador>
       [],
       [],
       '1',
+      4.5,
+      'a',
     ).fillFromJson(json)
     return prestador
   }

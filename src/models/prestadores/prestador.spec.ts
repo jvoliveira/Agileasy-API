@@ -26,8 +26,18 @@ describe('Prestador', () => {
       'Pintura profissional',
       'URLDAFOTO',
     )
-    const categoriaPai = new Categoria(1, null, 'Manutenção Residencial')
-    const categoriaFilho = new Categoria(2, categoriaPai, 'Troca de Chuveiro')
+    const categoriaPai = new Categoria(
+      1,
+      null,
+      'Manutenção Residencial',
+      'icone_legal',
+    )
+    const categoriaFilho = new Categoria(
+      2,
+      categoriaPai,
+      'Troca de Chuveiro',
+      'icone_legal',
+    )
     const mockUsuario = new Usuario(
       1,
       TipoStatus.ativo,
@@ -52,6 +62,8 @@ describe('Prestador', () => {
       [serv],
       [categoriaPai, categoriaFilho],
       'logo_top',
+      4.2,
+      'capa_legal',
     )
 
     expect(JSON.parse(JSON.stringify(mockPrestador))).toStrictEqual(
@@ -71,6 +83,8 @@ function expectedJSON() {
     nomePublico: 'OLIVEIRA TECH',
     razaoSocial: 'Oliveira prestação de serviços',
     logo: 'logo_top',
+    nota: 4.2,
+    capa: 'capa_legal',
     tipoPessoa: 1,
     usuario: {
       ativo: true,
@@ -107,7 +121,13 @@ function expectedJSON() {
       },
     ],
     categorias: [
-      { ativo: true, id: 1, catPai: null, descricao: 'Manutenção Residencial' },
+      {
+        ativo: true,
+        id: 1,
+        catPai: null,
+        descricao: 'Manutenção Residencial',
+        icone: 'icone_legal',
+      },
       {
         ativo: true,
         id: 2,
@@ -116,8 +136,10 @@ function expectedJSON() {
           id: 1,
           catPai: null,
           descricao: 'Manutenção Residencial',
+          icone: 'icone_legal',
         },
         descricao: 'Troca de Chuveiro',
+        icone: 'icone_legal',
       },
     ],
   }

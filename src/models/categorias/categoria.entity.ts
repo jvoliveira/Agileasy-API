@@ -21,6 +21,9 @@ export class Categoria extends BaseModel<Categoria>
   @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
+  @Column({ type: 'text', nullable: true })
+  icone!: string
+
   @OneToOne(
     type => Categoria,
     catPai => catPai.catPai,
@@ -66,15 +69,17 @@ export class Categoria extends BaseModel<Categoria>
     id: number,
     catPai: Categoria | null,
     descricao: string,
+    icone: string,
     ativo = true,
   ) {
     super(id, ativo)
     this.catPai = catPai
     this.descricao = descricao
+    this.icone = icone
   }
 
   public static fromJson(json: any): Categoria {
-    return new Categoria(1, null, 'd').fillFromJson(json)
+    return new Categoria(1, null, 'd', 'd').fillFromJson(json)
   }
 
   fillFromJson(json?: any, recursive?: string[] | undefined): Categoria {
@@ -85,6 +90,7 @@ export class Categoria extends BaseModel<Categoria>
     this.catPai = json.catPai == null ? null : Categoria.fromJson(json.catPai)
     this.descricao = json.descricao as string
     this.ativo = json.ativo
+    this.icone = json.icone
     return this
   }
 
@@ -93,6 +99,7 @@ export class Categoria extends BaseModel<Categoria>
       this.id,
       this.catPai,
       this.descricao,
+      this.icone,
       this.ativo,
     )
     categoria.dados = this.dados
