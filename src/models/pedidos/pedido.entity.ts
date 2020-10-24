@@ -17,6 +17,7 @@ import { Servico } from '../servicos/servico.entity'
 import { JsonHelper } from '../../common/helpers/json.helper'
 import { TipoPagamento } from '../metodos-pagamento/metodo-pagamento.interface'
 import { Cliente } from '../clientes/cliente.entity'
+import { Prestador } from '../prestadores/prestador.entity'
 
 @Entity('pedido')
 export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
@@ -47,6 +48,14 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   )
   @JoinColumn({ name: 'id_cliente' })
   cliente!: Cliente
+
+  @ManyToOne(
+    type => Prestador,
+    prestador => prestador.pedidos,
+    { cascade: false },
+  )
+  @JoinColumn({ name: 'id_prestador' })
+  prestador!: Prestador
 
   @OneToMany(
     type => Situacao,

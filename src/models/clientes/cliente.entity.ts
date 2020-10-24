@@ -41,7 +41,7 @@ export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
 
   @OneToMany(
     type => Pedido,
-    pedidos => pedidos.metodoPagamento,
+    pedidos => pedidos.cliente,
   )
   pedidos!: Pedido[]
 

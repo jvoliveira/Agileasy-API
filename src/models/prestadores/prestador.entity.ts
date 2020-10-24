@@ -17,6 +17,7 @@ import { Endereco } from '../enderecos/endereco.entity'
 import { Servico } from '../servicos/servico.entity'
 import { Categoria } from '../categorias/categoria.entity'
 import { TipoStatus } from '../usuarios/usuario.interface'
+import { Pedido } from '../pedidos/pedido.entity'
 
 @Entity('prestador')
 export class Prestador extends BaseModel<Prestador>
@@ -53,6 +54,12 @@ export class Prestador extends BaseModel<Prestador>
 
   @Column('boolean', { nullable: false })
   delivery!: boolean
+
+  @OneToMany(
+    type => Pedido,
+    pedidos => pedidos.prestador,
+  )
+  pedidos!: Pedido[]
 
   @OneToOne(
     type => Usuario,
