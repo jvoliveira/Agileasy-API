@@ -21,6 +21,7 @@ import { AuthMiddleware } from './common/middlewares/auth.middleware'
 import { RegistrarModule } from './registrar/registrar.module';
 import { CategoriasModule } from './categorias/categorias.module';
 import { ServicosModule } from './servicos/servicos.module';
+import { PedidosModule } from './pedidos/pedidos.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { ServicosModule } from './servicos/servicos.module';
     PrestadoresModule,
     RegistrarModule,
     CategoriasModule,
-    ServicosModule
+    ServicosModule,
+    PedidosModule
     
   ],
   controllers: [AppController],
