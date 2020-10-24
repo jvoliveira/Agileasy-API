@@ -25,6 +25,11 @@ class ClienteDto {
   id: number
 }
 
+class PrestadorDto {
+  @IsNumber()
+  id: number
+}
+
 export class CreatePedidoDto {
   subtotal?: number
   observacao?: string
@@ -37,4 +42,6 @@ export class CreatePedidoDto {
   servicos: ServicoDto[]
   @IsDefined()
   cliente: ClienteDto
+  @IsDefined()
+  prestador: PrestadorDto
 }

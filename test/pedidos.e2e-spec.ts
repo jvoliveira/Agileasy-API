@@ -54,6 +54,9 @@ describe('PedidoController (e2e)', () => {
           metodoPagamento: {
             id: 1,
           },
+          prestador: {
+            id: 1,
+          },
           endereco: {
             id: 1,
           },
