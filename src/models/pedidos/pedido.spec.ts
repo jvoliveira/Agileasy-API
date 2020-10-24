@@ -42,7 +42,16 @@ describe('Pedido', () => {
       'Pintura profissional',
       'URLDAFOTO',
     )
-    const mockPedido = new Pedido(1, 150.0, 'Na casa verde', p, [s], e, [serv])
+    const mockPedido = new Pedido(
+      1,
+      150.0,
+      'Na casa verde',
+      p,
+      [s],
+      e,
+      [serv],
+      moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),
+    )
 
     expect(JSON.parse(JSON.stringify(mockPedido))).toStrictEqual(
       JSON.parse(JSON.stringify(expectedJSON())),
@@ -56,6 +65,7 @@ function expectedJSON() {
     ativo: true,
     id: 1,
     subtotal: 150,
+    dataHora: moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),
     observacao: 'Na casa verde',
     metodoPagamento: {
       ativo: true,

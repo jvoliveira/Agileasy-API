@@ -13,6 +13,8 @@ import { PedidoInterface } from './pedido.interface'
 import { MetodoPagamento } from '../metodos-pagamento/metodo-pagamento.entity'
 import { Situacao } from '../situacoes/situacao.entity'
 import { Endereco } from '../enderecos/endereco.entity'
+import { Moment } from 'moment-timezone'
+import * as moment from 'moment-timezone'
 import { Servico } from '../servicos/servico.entity'
 import { JsonHelper } from '../../common/helpers/json.helper'
 import { TipoPagamento } from '../metodos-pagamento/metodo-pagamento.interface'
@@ -26,6 +28,9 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
 
   @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
+
+  @Column('timestamptz', { nullable: false, name: 'data_hora' })
+  dataHora!: Date
 
   @Column('double precision', { nullable: false })
   subtotal!: number
@@ -98,6 +103,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     situacoes: Situacao[],
     endereco: Endereco,
     servicos: Servico[],
+    dataHora: Moment,
     ativo = true,
   ) {
     super(id, ativo)
@@ -107,6 +113,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     this.situacoes = situacoes
     this.endereco = endereco
     this.servicos = servicos
+    this.dataHora = moment(dataHora).toDate()
   }
 
   fillFromJson(json?: any, recursive?: string[] | undefined): Pedido {
@@ -116,6 +123,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     this.id = json.id
     this.subtotal = json.subtotal
     this.observacao = json.observacao
+    this.dataHora = moment(json.dataHora).toDate()
     this.metodoPagamento = MetodoPagamento.fromJson(json.metodoPagamento)
     this.situacoes = JsonHelper.jsonToArray<Situacao>(
       json.situacoes,
@@ -140,6 +148,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
       [],
       new Endereco(1, 'r', 'e', 'r', 'd', 'f', 'f', 'f', 'f'),
       [new Servico(1, 'f', 2, 'r', 'd')],
+      moment(),
     ).fillFromJson(json)
   }
 
@@ -152,6 +161,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
       this.situacoes,
       this.endereco,
       this.servicos,
+      moment(this.dataHora),
       this.ativo,
     )
     pedido.dados = this.dados
