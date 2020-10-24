@@ -9,6 +9,7 @@ import { Repository } from 'typeorm'
 import { Usuario } from '../src/models/usuarios/usuario.entity'
 import { Pedido } from '../src/models/pedidos/pedido.entity'
 import { Servico } from '../src/models/servicos/servico.entity'
+import * as moment from 'moment-timezone'
 
 describe('PedidoController (e2e)', () => {
   let app: INestApplication
@@ -51,6 +52,9 @@ describe('PedidoController (e2e)', () => {
       data: {
         pedido: {
           observacao: 'Quero que faça isso com urgência',
+          dataHora: moment()
+            .add(10, 'minutes')
+            .format(),
           metodoPagamento: {
             id: 1,
           },

@@ -1,4 +1,4 @@
-import { IsDefined, IsNumber } from 'class-validator'
+import { IsDateString, IsDefined, IsNumber } from 'class-validator'
 
 class SituacaoDto {
   estado: number
@@ -34,6 +34,8 @@ export class CreatePedidoDto {
   subtotal?: number
   observacao?: string
   situacoes?: SituacaoDto[]
+  @IsDateString()
+  dataHora: Date
   @IsDefined()
   metodoPagamento: MetodoPagamentoDto
   @IsDefined()

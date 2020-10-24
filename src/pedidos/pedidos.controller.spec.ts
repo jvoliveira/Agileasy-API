@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { ServicosService } from '../servicos/servicos.service'
 import { PedidosController } from './pedidos.controller'
 import { PedidosService } from './pedidos.service'
+import * as moment from 'moment-timezone'
 
 describe('PedidosController', () => {
   let controller: PedidosController
@@ -39,6 +40,9 @@ describe('PedidosController', () => {
       data: {
         pedido: {
           observacao: 'Quero que faça isso com urgência',
+          dataHora: moment()
+            .add(10, 'minutes')
+            .format(),
           metodoPagamento: {
             id: 1,
           },
