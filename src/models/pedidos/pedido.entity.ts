@@ -6,6 +6,7 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  JoinColumn,
 } from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
 import { PedidoInterface } from './pedido.interface'
@@ -15,6 +16,7 @@ import { Endereco } from '../enderecos/endereco.entity'
 import { Servico } from '../servicos/servico.entity'
 import { JsonHelper } from '../../common/helpers/json.helper'
 import { TipoPagamento } from '../metodos-pagamento/metodo-pagamento.interface'
+import { Cliente } from '../clientes/cliente.entity'
 
 @Entity('pedido')
 export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
@@ -27,9 +29,6 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   @Column('double precision', { nullable: false })
   subtotal!: number
 
-  @Column('int', { nullable: false, name: 'tipo_pagamento' })
-  tipoPagamento!: number
-
   @Column('text', { nullable: true })
   observacao!: string | null
 
@@ -38,11 +37,21 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     metodoPagamento => metodoPagamento.pedidos,
     { cascade: false },
   )
+  @JoinColumn({ name: 'id_metodo_pagamento' })
   metodoPagamento!: MetodoPagamento
+
+  @ManyToOne(
+    type => Cliente,
+    cliente => cliente.pedidos,
+    { cascade: false },
+  )
+  @JoinColumn({ name: 'id_cliente' })
+  cliente!: Cliente
 
   @OneToMany(
     type => Situacao,
     situacoes => situacoes.pedido,
+    { cascade: true },
   )
   situacoes!: Situacao[]
 
@@ -51,6 +60,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     endereco => endereco.pedidos,
     { cascade: false },
   )
+  @JoinColumn({ name: 'id_endereco' })
   endereco!: Endereco
 
   @ManyToMany(
@@ -74,7 +84,6 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   constructor(
     id: number,
     subtotal: number,
-    tipoPagamento: number,
     observacao: string | null,
     metodoPagamento: MetodoPagamento,
     situacoes: Situacao[],
@@ -84,7 +93,6 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   ) {
     super(id, ativo)
     this.subtotal = subtotal
-    this.tipoPagamento = tipoPagamento
     this.observacao = observacao
     this.metodoPagamento = metodoPagamento
     this.situacoes = situacoes
@@ -98,7 +106,6 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     }
     this.id = json.id
     this.subtotal = json.subtotal
-    this.tipoPagamento = json.tipoPagamento
     this.observacao = json.observacao
     this.metodoPagamento = MetodoPagamento.fromJson(json.metodoPagamento)
     this.situacoes = JsonHelper.jsonToArray<Situacao>(
@@ -119,7 +126,6 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     return new Pedido(
       1,
       1,
-      2,
       'df',
       new MetodoPagamento(1, TipoPagamento.cartaoCreditoEntrega, null),
       [],
@@ -132,7 +138,6 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     const pedido = new Pedido(
       this.id,
       this.subtotal,
-      this.tipoPagamento,
       this.observacao,
       this.metodoPagamento,
       this.situacoes,

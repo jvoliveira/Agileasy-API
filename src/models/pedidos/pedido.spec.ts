@@ -42,9 +42,7 @@ describe('Pedido', () => {
       'Pintura profissional',
       'URLDAFOTO',
     )
-    const mockPedido = new Pedido(1, 150.0, 2, 'Na casa verde', p, [s], e, [
-      serv,
-    ])
+    const mockPedido = new Pedido(1, 150.0, 'Na casa verde', p, [s], e, [serv])
 
     expect(JSON.parse(JSON.stringify(mockPedido))).toStrictEqual(
       JSON.parse(JSON.stringify(expectedJSON())),
@@ -58,7 +56,6 @@ function expectedJSON() {
     ativo: true,
     id: 1,
     subtotal: 150,
-    tipoPagamento: 2,
     observacao: 'Na casa verde',
     metodoPagamento: {
       ativo: true,
