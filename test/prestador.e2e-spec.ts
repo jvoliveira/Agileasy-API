@@ -10,6 +10,7 @@ import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
 import { TipoErro } from '../src/common/enums/tipo-erro.enum'
 import { Categoria } from '../src/models/categorias/categoria.entity'
 import { Usuario } from '../src/models/usuarios/usuario.entity'
+import { Servico } from '../src/models/servicos/servico.entity'
 
 describe('PrestadorController (e2e)', () => {
   let app: INestApplication
@@ -211,6 +212,84 @@ describe('PrestadorController (e2e)', () => {
       .post('/prestadores/adicionar_categorias')
       .auth('token-valido', { type: 'bearer' })
       .send({ categorias: [1, 2] })
+    expect(response.status).toBe(201)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/prestadores/adicionar_servicos (POST)', async () => {
+    jest.resetAllMocks()
+    const shouldReturn = {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador: {
+          usuario: {
+            status: 0,
+            nome: 'João Oliveira',
+            dataNascimento: '2020-09-10T18:51:22.931Z',
+            telefone: '22999496547',
+            cpf: '14582486722',
+          },
+          cnpj: '30419000166',
+          delivery: true,
+          documentoUrl: 'http://storage.google.com',
+          nomePublico: 'OLIVEIRA TECH',
+          razaoSocial: 'Oliveira prestação de serviços',
+          tipoPessoa: 1,
+          endereco: {
+            apelido: 'Casa',
+            endereco: 'Rua Alvaro Tinoco Lanes',
+            complemento: 'Baixos',
+            numero: '105',
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300000',
+            referencia: null,
+          },
+        } as any,
+      },
+    }
+
+    mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [100] },
+      uid: 'oi',
+    } as any)
+
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.prestador)
+    mockService.save.mockResolvedValue(shouldReturn.data.prestador)
+
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { id: 1, nome: 'Vinicius' },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .post('/prestadores/adicionar_servicos')
+      .auth('token-valido', { type: 'bearer' })
+      .send({
+        servicos: [
+          {
+            descricao: 'Esse serviço é novo',
+            valor: 256.6,
+            nome: 'Novo serviço',
+            urlFoto: 'www.fotourl.com.br',
+          },
+        ],
+      })
+
+    shouldReturn.data.prestador.servicos = [
+      {
+        descricao: 'Esse serviço é novo',
+        valor: 256.6,
+        nome: 'Novo serviço',
+        urlFoto: 'www.fotourl.com.br',
+      },
+    ]
+
     expect(response.status).toBe(201)
     expect(response.body).toStrictEqual(shouldReturn)
   })

@@ -4,6 +4,7 @@ import { Roles } from '../common/decorators/roles.decorator'
 import { UserService } from '../common/services/user.service'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
 import { AddCategoriaDto } from './dto/add-categoria.dto'
+import { AddServicoDto } from './dto/add-servico.dto'
 import { ResponseDefault } from '../common/interfaces/response-default.interface'
 import { TipoErro } from '../common/enums/tipo-erro.enum'
 import { TipoUsuario } from '../common/enums/tipo-usuario.enum'
@@ -12,6 +13,7 @@ import * as admin from 'firebase-admin'
 import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { Claims } from '../common/guards/interfaces/claims.interface'
 import { AllException } from '../common/exceptions/all.exception'
+import { Servico } from '../models/servicos/servico.entity'
 
 @Controller('prestadores')
 export class PrestadoresController {
@@ -135,6 +137,31 @@ export class PrestadoresController {
       id,
       addCategoriasDto.categorias,
     )
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
+  }
+
+  @Roles(100)
+  @Post('adicionar_servicos')
+  public async addServicos(
+    @Body() addServicosDto: AddServicoDto,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    const prestadorFull = await this.userService.getPrestadorByToken(user.uid)
+    const id = prestadorFull.id
+    const servicos = []
+    // Converte os json dos serviços em uma identidade
+    for (const servico of addServicosDto.servicos) {
+      servicos.push(Servico.fromJson(servico))
+    }
+
+    const prestador = await this.serv.addServicos(id, servicos)
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',

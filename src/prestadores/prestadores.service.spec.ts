@@ -6,6 +6,7 @@ import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Categoria } from '../models/categorias/categoria.entity'
 import { AllException } from '../common/exceptions/all.exception'
+import { Servico } from '../models/servicos/servico.entity'
 
 describe('Prestadores Service', () => {
   let service: PrestadoresService
@@ -102,6 +103,21 @@ describe('Prestadores Service', () => {
       Prestador,
       'categorias',
     )
+  })
+
+  it('should add prestador with servicos', async () => {
+    const shouldReturn = { nome: 'Vinicius', servicos: [] }
+    repo.findOneOrFail.mockReturnValue(shouldReturn as any)
+
+    repo.save.mockResolvedValue(shouldReturn as any)
+
+    await expect(
+      service.addServicos(1, [
+        {
+          descricao: 'Serviço interessante',
+        } as any,
+      ]),
+    ).resolves.toStrictEqual(shouldReturn)
   })
 
   it('should be get prestador with categoria', async () => {
