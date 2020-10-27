@@ -23,6 +23,7 @@ import { CategoriasModule } from './categorias/categorias.module';
 import { ServicosModule } from './servicos/servicos.module';
 import { PedidosModule } from './pedidos/pedidos.module';
 import { EnderecosModule } from './enderecos/enderecos.module';
+import { ClientesModule } from './clientes/clientes.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { EnderecosModule } from './enderecos/enderecos.module';
     CategoriasModule,
     ServicosModule,
     PedidosModule,
-    EnderecosModule
+    EnderecosModule,
+    ClientesModule
     
   ],
   controllers: [AppController],
