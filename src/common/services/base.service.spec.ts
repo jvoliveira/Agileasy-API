@@ -11,14 +11,21 @@ import { Categoria } from '../../models/categorias/categoria.entity'
 import { CategoriasService } from '../../categorias/categorias.service'
 import { PedidosService } from '../../pedidos/pedidos.service'
 import { Pedido } from '../../models/pedidos/pedido.entity'
+import { ServicosService } from '../../servicos/servicos.service'
+import { Servico } from '../../models/servicos/servico.entity'
 
 describe('Base Service Test', () => {
   const services: BaseService<any>[] = []
   const repos: DeepMocked<Repository<any>>[] = []
   beforeEach(async () => {
-    const servicesTemp = [PrestadoresService, CategoriasService, PedidosService] // Aqui coloca todos os services que utilizam o base.service
+    const servicesTemp = [
+      PrestadoresService,
+      CategoriasService,
+      PedidosService,
+      ServicosService,
+    ] // Aqui coloca todos os services que utilizam o base.service
 
-    const models = [Prestador, Categoria, Pedido] // Aqui coloca todos os models que utilizam o base.service nos seus services
+    const models = [Prestador, Categoria, Pedido, Servico] // Aqui coloca todos os models que utilizam o base.service nos seus services
     const providers: Provider<any>[] = []
     services.length = 0
     repos.length = 0

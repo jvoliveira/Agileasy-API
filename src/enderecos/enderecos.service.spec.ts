@@ -1,0 +1,29 @@
+import { Test, TestingModule } from '@nestjs/testing'
+import { Repository } from 'typeorm'
+import { Endereco } from '../models/enderecos/endereco.entity'
+import { EnderecosService } from './enderecos.service'
+import { createMock } from '@golevelup/nestjs-testing'
+import { getRepositoryToken } from '@nestjs/typeorm'
+
+describe('EnderecosService', () => {
+  let service: EnderecosService
+  const repo = createMock<Repository<Endereco>>()
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        EnderecosService,
+        {
+          provide: getRepositoryToken(Endereco),
+          useValue: repo,
+        },
+      ],
+    }).compile()
+
+    service = module.get<EnderecosService>(EnderecosService)
+  })
+
+  it('should be defined', () => {
+    expect(service).toBeDefined()
+  })
+})

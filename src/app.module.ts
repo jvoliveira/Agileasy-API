@@ -22,6 +22,7 @@ import { RegistrarModule } from './registrar/registrar.module';
 import { CategoriasModule } from './categorias/categorias.module';
 import { ServicosModule } from './servicos/servicos.module';
 import { PedidosModule } from './pedidos/pedidos.module';
+import { EnderecosModule } from './enderecos/enderecos.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { PedidosModule } from './pedidos/pedidos.module';
     RegistrarModule,
     CategoriasModule,
     ServicosModule,
-    PedidosModule
+    PedidosModule,
+    EnderecosModule
     
   ],
   controllers: [AppController],
