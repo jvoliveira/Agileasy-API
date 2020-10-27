@@ -9,4 +9,9 @@ export class EnderecosService extends BaseService<Endereco> {
   constructor(@InjectRepository(Endereco) repo: Repository<Endereco>) {
     super(repo)
   }
+
+  async getByIdWithCliente(id: number): Promise<Endereco> {
+    const servico = this.repo.findOneOrFail(id, { relations: ['cliente'] })
+    return servico
+  }
 }
