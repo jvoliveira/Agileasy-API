@@ -22,9 +22,9 @@ export class PrestadoresController {
     private auth: FirebaseAuthenticationService,
     private userService: UserService,
   ) {}
-
+  /** Rotas para nível cliente */
   @Get()
-  @Roles(0, 200)
+  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   public async getAll(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getAll()
     return {
@@ -52,7 +52,7 @@ export class PrestadoresController {
   }
 
   @Get(':id')
-  @Roles(0, 100, 200)
+  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   public async get(@Param('id') id: number): Promise<ResponseDefault> {
     const prestador = await this.serv.getByID(id)
     return {
@@ -66,7 +66,7 @@ export class PrestadoresController {
   }
 
   @Get(':id/categoria')
-  @Roles(0, 200)
+  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   public async getPrestadorByCategoria(
     @Param('id') id: number,
   ): Promise<ResponseDefault> {
@@ -82,7 +82,7 @@ export class PrestadoresController {
   }
 
   @Post('criar')
-  @Roles(0, 200)
+  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   public async create(
     @Body() createPrestadorDto: CreatePrestadorDto,
     @User() user: admin.auth.UserRecord,
@@ -105,7 +105,24 @@ export class PrestadoresController {
       },
     }
   }
-  @Roles(0)
+
+  @Roles(TipoUsuario.CLIENTE)
+  @Get(':id/servicos')
+  public async getServicos(@Param('id') id: number): Promise<ResponseDefault> {
+    const prestador = await this.serv.getServicosByPrestador(id)
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
+  }
+
+  /** Rotas para nível administrador */
+  @Roles(TipoUsuario.ADMIN)
   @Post(':id/adicionar_categorias')
   public async addCategoriaAsAdmin(
     @Param('id') id: number,
@@ -125,7 +142,8 @@ export class PrestadoresController {
     }
   }
 
-  @Roles(100)
+  /** Rotas para nível prestador */
+  @Roles(TipoUsuario.PRESTADOR)
   @Post('adicionar_categorias')
   public async addCategoria(
     @Body() addCategoriasDto: AddCategoriaDto,
@@ -147,7 +165,7 @@ export class PrestadoresController {
     }
   }
 
-  @Roles(100)
+  @Roles(TipoUsuario.PRESTADOR)
   @Post('adicionar_servicos')
   public async addServicos(
     @Body() addServicosDto: AddServicoDto,
@@ -162,21 +180,6 @@ export class PrestadoresController {
     }
 
     const prestador = await this.serv.addServicos(id, servicos)
-    return {
-      error_id: TipoErro.SEM_ERROS,
-      message: 'Sucesso!',
-      error: false,
-      data: {
-        prestador,
-      },
-    }
-  }
-
-  @Roles(TipoUsuario.CLIENTE)
-  @Get(':id/servicos')
-  public async getServicos(@Param('id') id: number): Promise<ResponseDefault> {
-    const prestador = await this.serv.getServicosByPrestador(id)
-
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
