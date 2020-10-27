@@ -58,4 +58,9 @@ export const COMMON_ERRORS: TipoErroDados[] = [
     message: 'Usuário já existe',
     httpStatus: HttpStatus.BAD_REQUEST,
   },
+  {
+    errorId: TipoErro.DADOS_INVALIDOS,
+    message: 'Dados inválidos',
+    httpStatus: HttpStatus.BAD_REQUEST,
+  },
 ]
