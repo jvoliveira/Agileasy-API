@@ -19,8 +19,8 @@ export class ClientesController {
   public async getAllInformation(
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
-    const usuario = await this.userService.getClienteByToken(user.uid)
-    const cliente = await this.serv.getAllInformation(usuario.id)
+    const clienteIncompleto = await this.userService.getClienteByToken(user.uid)
+    const cliente = await this.serv.getAllInformation(clienteIncompleto.id)
 
     return {
       error_id: TipoErro.SEM_ERROS,
