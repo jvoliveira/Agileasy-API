@@ -10,12 +10,14 @@ import { Usuario } from '../src/models/usuarios/usuario.entity'
 import { Pedido } from '../src/models/pedidos/pedido.entity'
 import { Servico } from '../src/models/servicos/servico.entity'
 import * as moment from 'moment-timezone'
+import { Endereco } from '../src/models/enderecos/endereco.entity'
 
 describe('PedidoController (e2e)', () => {
   let app: INestApplication
   const mockService = createMock<Repository<Pedido>>()
   const mockUsuarioRepo = createMock<Repository<Usuario>>()
   const mockServicosRepo = createMock<Repository<Servico>>()
+  const mockEnderecoRepo = createMock<Repository<Endereco>>()
   const mockFirebaseAuth = createMock<FirebaseAuthenticationService>()
 
   beforeAll(async () => {
@@ -31,6 +33,8 @@ describe('PedidoController (e2e)', () => {
       .useValue(mockUsuarioRepo)
       .overrideProvider(getRepositoryToken(Servico))
       .useValue(mockServicosRepo)
+      .overrideProvider(getRepositoryToken(Endereco))
+      .useValue(mockEnderecoRepo)
       .compile()
     app = moduleFixture.createNestApplication()
     app.init()
@@ -88,7 +92,17 @@ describe('PedidoController (e2e)', () => {
     }
     mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
     mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
-    mockServicosRepo.findOne.mockResolvedValue({ valor: 25, id: 1 } as any)
+    mockServicosRepo.findOneOrFail.mockResolvedValue({
+      valor: 25,
+      id: 1,
+      prestador: { id: 1 },
+    } as any)
+    mockEnderecoRepo.findOneOrFail.mockResolvedValue({
+      endereco1: 'Rua não sei o que',
+      cliente: {
+        id: 1,
+      },
+    } as any)
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
       uid: 'uid-valido',
     } as any)
@@ -96,7 +110,9 @@ describe('PedidoController (e2e)', () => {
       customClaims: { roles: [0, 200] },
       uid: 'oi',
     } as any)
-
+    mockUsuarioRepo.findOne.mockReturnValue({
+      cliente: { id: 1, nome: 'Vinicius' },
+    } as any)
     const response = await request(app.getHttpServer())
       .post('/pedidos/novo')
       .auth('token-valido', { type: 'bearer' })
