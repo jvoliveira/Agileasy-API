@@ -25,4 +25,26 @@ describe('ServicosService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined()
   })
+
+  it('should be get prestador with categoria', async () => {
+    const shouldReturn = [
+      {
+        descricao: 'Vinicius Picanco',
+      },
+    ]
+
+    expect(service).toBeDefined()
+
+    repo.findOneOrFail.mockReturnValue(shouldReturn as any)
+
+    expect(await service.getByIdWithPrestador(1)).toBe(shouldReturn)
+    expect(repo.findOneOrFail).toHaveBeenCalledWith(1, {
+      relations: ['prestador'],
+    })
+
+    repo.findOneOrFail.mockClear()
+    repo.findOneOrFail.mockRejectedValue(new Error())
+
+    await expect(service.getByIdWithPrestador(1)).rejects.toThrow(Error)
+  })
 })
