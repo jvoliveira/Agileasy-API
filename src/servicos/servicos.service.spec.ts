@@ -26,7 +26,7 @@ describe('ServicosService', () => {
     expect(service).toBeDefined()
   })
 
-  it('should be get prestador with categoria', async () => {
+  it('should be get servicos with prestador', async () => {
     const shouldReturn = [
       {
         descricao: 'Vinicius Picanco',
