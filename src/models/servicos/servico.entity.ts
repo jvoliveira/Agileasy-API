@@ -5,12 +5,15 @@ import {
   Column,
   PrimaryGeneratedColumn,
   JoinColumn,
+  OneToMany,
 } from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
 import { ServicoInterface } from './servico.interface'
 import { Prestador } from '../prestadores/prestador.entity'
 import { Categoria } from '../categorias/categoria.entity'
 import { Pedido } from '../pedidos/pedido.entity'
+import { VariacaoServico } from '../servico-variacao/variacao-servico.entity'
+import { Alternativa } from '../alternativa/alternativa.entity'
 
 @Entity('servico')
 export class Servico extends BaseModel<Servico> implements ServicoInterface {
@@ -53,6 +56,13 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
   )
   categorias?: Categoria[]
 
+  @OneToMany(
+    type => VariacaoServico,
+    variacao => variacao.servico,
+    { cascade: true },
+  )
+  variacao: VariacaoServico
+
   constructor(
     id: number,
     descricao: string,
@@ -60,12 +70,14 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
     nome: string,
     urlFoto: string,
     ativo = true,
+    variacao: VariacaoServico,
   ) {
     super(id, ativo)
     this.descricao = descricao
     this.valor = valor
     this.nome = nome
     this.urlFoto = urlFoto
+    this.variacao = variacao
   }
 
   fillFromJson(json: any, recursive?: string[] | undefined): Servico {
@@ -78,12 +90,23 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
     this.nome = json.nome
     this.urlFoto = json.urlFoto
     this.ativo = json.ativo
+    this.variacao = VariacaoServico.fromJson(json.variacao)
 
     return this
   }
 
   public static fromJson(json: any): Servico {
-    return new Servico(1, 't', 1, 't', 'r').fillFromJson(json)
+    return new Servico(
+      1,
+      '',
+      1,
+      '',
+      '',
+      true,
+      new VariacaoServico(1, 1, 'Escolha o modelo', true, 1, 1, [
+        new Alternativa(1, 'ALTERNATIVA 1', 1),
+      ]),
+    ).fillFromJson(json)
   }
 
   copy(): Servico {
@@ -94,6 +117,7 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
       this.nome,
       this.urlFoto,
       this.ativo,
+      this.variacao,
     )
     servico.dados = this.dados
     return servico

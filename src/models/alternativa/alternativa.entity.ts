@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
+import { VariacaoServico } from '../servico-variacao/variacao-servico.entity'
 import { AlternativaInterface } from './alternativa.interface'
 
 @Entity('alternativa')
@@ -13,6 +14,13 @@ export class Alternativa extends BaseModel<Alternativa>
 
   @Column('int', { nullable: false })
   idVariacao: number
+
+  @ManyToOne(
+    type => VariacaoServico,
+    variacaoServico => variacaoServico.alternativas,
+    { cascade: false },
+  )
+  variacaoServico: VariacaoServico
 
   constructor(id: number, descricao: string, idVariacao: number) {
     super(id, true)

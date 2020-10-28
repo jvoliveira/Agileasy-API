@@ -1,8 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
 import { VariacaoServicoInterface } from './variacao-servico.interface'
 import { JsonHelper } from '../../common/helpers/json.helper'
 import { Alternativa } from '../alternativa/alternativa.entity'
+import { Servico } from '../servicos/servico.entity'
 
 @Entity('variacaoServico')
 export class VariacaoServico extends BaseModel<VariacaoServico>
@@ -25,8 +32,21 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
   @Column('int', { nullable: false })
   qtsMaxima: number
 
-  @Column('int', { nullable: false })
+  @OneToMany(
+    type => Alternativa,
+    alternativas => alternativas.variacaoServico,
+    {
+      cascade: true,
+    },
+  )
   alternativas: Alternativa[]
+
+  @ManyToOne(
+    type => Servico,
+    servico => servico.variacao,
+    { cascade: false },
+  )
+  servico: Servico
 
   constructor(
     id: number,
