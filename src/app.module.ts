@@ -1,10 +1,12 @@
-import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core'
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { AllExceptionsFilter } from './common/exceptions/all-exceptions.filter'
 import {
   Module,
   MiddlewareConsumer,
   RequestMethod,
   ValidationPipe,
+  CacheModule,
+  CacheInterceptor,
 } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -18,9 +20,9 @@ import { RolesGuard } from './common/guards/roles.guard'
 import * as admin from 'firebase-admin'
 import { FIREBASE_CONFIG } from './common/constants/firebase'
 import { AuthMiddleware } from './common/middlewares/auth.middleware'
-import { RegistrarModule } from './registrar/registrar.module';
-import { CategoriasModule } from './categorias/categorias.module';
-import { ServicosModule } from './servicos/servicos.module';
+import { RegistrarModule } from './registrar/registrar.module'
+import { CategoriasModule } from './categorias/categorias.module'
+import { ServicosModule } from './servicos/servicos.module'
 
 @Module({
   imports: [
@@ -35,13 +37,16 @@ import { ServicosModule } from './servicos/servicos.module';
         credential: admin.credential.cert(FIREBASE_CONFIG),
       }),
     }),
+    CacheModule.register({
+      ttl: 600, // seconds
+      max: 10, // maximum number of items in cache
+    }),
     PgModelsConfigModule,
     AppConfigModule,
     PrestadoresModule,
     RegistrarModule,
     CategoriasModule,
-    ServicosModule
-    
+    ServicosModule,
   ],
   controllers: [AppController],
   providers: [
@@ -56,6 +61,10 @@ import { ServicosModule } from './servicos/servicos.module';
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
     },
     AppService,
   ],
