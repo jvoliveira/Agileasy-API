@@ -51,7 +51,7 @@ export class PrestadoresController {
     }
   }
 
-  @Get(':id')
+  @Get(':id/informacoes')
   @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   public async get(@Param('id') id: number): Promise<ResponseDefault> {
     const prestador = await this.serv.getByID(id)
@@ -180,6 +180,26 @@ export class PrestadoresController {
     }
 
     const prestador = await this.serv.addServicos(id, servicos)
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
+  }
+
+  @Roles(TipoUsuario.PRESTADOR)
+  @Get('/eu')
+  public async getAllInformation(
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    const clienteIncompleto = await this.userService.getPrestadorByToken(
+      user.uid,
+    )
+    const prestador = await this.serv.getAllInformation(clienteIncompleto.id)
+
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',

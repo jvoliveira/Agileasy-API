@@ -144,4 +144,26 @@ describe('Prestadores Service', () => {
       AllException,
     )
   })
+
+  it('should be get all information', async () => {
+    const shouldReturn = [
+      {
+        descricao: 'Vinicius Picanco',
+      },
+    ]
+
+    expect(service).toBeDefined()
+
+    repo.findOneOrFail.mockReturnValue(shouldReturn as any)
+
+    expect(await service.getAllInformation(1)).toBe(shouldReturn)
+    expect(repo.findOneOrFail).toHaveBeenCalledWith(1, {
+      relations: ['usuario', 'endereco', 'pedidos', 'servicos', 'categorias'],
+    })
+
+    repo.findOneOrFail.mockClear()
+    repo.findOneOrFail.mockRejectedValue(new Error())
+
+    await expect(service.getAllInformation(1)).rejects.toThrow(Error)
+  })
 })

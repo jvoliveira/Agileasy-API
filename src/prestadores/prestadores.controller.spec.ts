@@ -14,7 +14,7 @@ import * as admin from 'firebase-admin'
 describe('Prestadores Service', () => {
   let service: PrestadoresService
   const mockFirebaseUser = createMock<FirebaseAuthenticationService>()
-  let constroller: PrestadoresController
+  let controller: PrestadoresController
   const repo = createMock<Repository<Prestador>>()
   const userService = createMock<UserService>()
   const defaultResponse = {
@@ -50,12 +50,12 @@ describe('Prestadores Service', () => {
       ],
     }).compile()
     service = module.get<PrestadoresService>(PrestadoresService)
-    constroller = module.get<PrestadoresController>(PrestadoresController)
+    controller = module.get<PrestadoresController>(PrestadoresController)
   })
 
   it('should be defined', async () => {
     expect(service).toBeDefined()
-    expect(constroller).toBeDefined()
+    expect(controller).toBeDefined()
   })
 
   it('should return all prestadores', async () => {
@@ -66,7 +66,7 @@ describe('Prestadores Service', () => {
     jest
       .spyOn(service, 'getAll')
       .mockImplementation(() => getAllResponse.data['prestadores'])
-    await expect(constroller.getAll()).resolves.toStrictEqual(getAllResponse)
+    await expect(controller.getAll()).resolves.toStrictEqual(getAllResponse)
   })
 
   it('should return all prestadores with categoria', async () => {
@@ -78,7 +78,7 @@ describe('Prestadores Service', () => {
       .spyOn(service, 'getPrestadoresWithCategoria')
       .mockImplementation(() => getAllResponse.data['prestadores'])
     await expect(
-      constroller.getPrestadoresWithCategorias(),
+      controller.getPrestadoresWithCategorias(),
     ).resolves.toStrictEqual(getAllResponse)
   })
 
@@ -90,7 +90,7 @@ describe('Prestadores Service', () => {
     jest
       .spyOn(service, 'getPrestadorByCategoria')
       .mockImplementation(() => getAllResponse.data['prestadores'])
-    await expect(constroller.getPrestadorByCategoria(1)).resolves.toStrictEqual(
+    await expect(controller.getPrestadorByCategoria(1)).resolves.toStrictEqual(
       getAllResponse,
     )
   })
@@ -103,7 +103,7 @@ describe('Prestadores Service', () => {
     jest
       .spyOn(service, 'getByID')
       .mockImplementation(() => getByIDResponse.data['prestador'])
-    await expect(constroller.get(1)).resolves.toStrictEqual(getByIDResponse)
+    await expect(controller.get(1)).resolves.toStrictEqual(getByIDResponse)
   })
 
   it('should create prestador', async () => {
@@ -126,7 +126,7 @@ describe('Prestadores Service', () => {
       .spyOn(service, 'create')
       .mockImplementation(() => createResponse.data['prestador'])
     await expect(
-      constroller.create(
+      controller.create(
         {
           nome: 'Vinicius',
           usuario: { cpf: '133.568.145-56' },
@@ -154,7 +154,7 @@ describe('Prestadores Service', () => {
       .spyOn(service, 'addCategoria')
       .mockImplementation(() => createResponse.data['prestador'])
     await expect(
-      constroller.addCategoriaAsAdmin(1, { categorias: [1, 2] }),
+      controller.addCategoriaAsAdmin(1, { categorias: [1, 2] }),
     ).resolves.toStrictEqual(createResponse)
     expect(service.addCategoria).toBeCalledWith(1, [1, 2])
   })
@@ -176,7 +176,7 @@ describe('Prestadores Service', () => {
       .spyOn(service, 'addServicos')
       .mockImplementation(() => createResponse.data['prestador'])
     await expect(
-      constroller.addServicos(
+      controller.addServicos(
         {
           servicos: [
             {
@@ -217,7 +217,7 @@ describe('Prestadores Service', () => {
       .spyOn(service, 'addCategoria')
       .mockImplementation(() => createResponse.data['prestador'])
     await expect(
-      constroller.addCategoria({ categorias: [1, 2] }, mockUser),
+      controller.addCategoria({ categorias: [1, 2] }, mockUser),
     ).resolves.toStrictEqual(createResponse)
     expect(service.addCategoria).toBeCalledWith(1, [1, 2])
   })
@@ -227,6 +227,28 @@ describe('Prestadores Service', () => {
     mockService.getServicosByPrestador.mockResolvedValue(prestador as any)
 
     defaultResponse.data = { prestador }
-    expect(constroller.getServicos(1)).resolves.toStrictEqual(defaultResponse)
+    expect(controller.getServicos(1)).resolves.toStrictEqual(defaultResponse)
+  })
+
+  it('should return all information', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador: {
+          nome: 'Vinicius',
+        },
+      },
+    }
+    const mockUser = createMock<admin.auth.UserRecord>()
+    mockUser.uid = 'teste'
+    userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
+    jest
+      .spyOn(service, 'getAllInformation')
+      .mockImplementation(() => shouldReturn.data.prestador as any)
+    await expect(controller.getAllInformation(mockUser)).resolves.toStrictEqual(
+      shouldReturn,
+    )
   })
 })

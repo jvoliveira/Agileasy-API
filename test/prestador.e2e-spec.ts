@@ -10,7 +10,6 @@ import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
 import { TipoErro } from '../src/common/enums/tipo-erro.enum'
 import { Categoria } from '../src/models/categorias/categoria.entity'
 import { Usuario } from '../src/models/usuarios/usuario.entity'
-import { Servico } from '../src/models/servicos/servico.entity'
 
 describe('PrestadorController (e2e)', () => {
   let app: INestApplication
@@ -123,7 +122,7 @@ describe('PrestadorController (e2e)', () => {
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
-  it('/prestadores/1 (GET)', async () => {
+  it('/prestadores/1/informacoes (GET)', async () => {
     const shouldReturn = {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -141,7 +140,7 @@ describe('PrestadorController (e2e)', () => {
     } as any)
 
     const response = await request(app.getHttpServer())
-      .get('/prestadores/1')
+      .get('/prestadores/1/informacoes')
       .auth('token-valido', { type: 'bearer' })
     expect(response.status).toBe(200)
     expect(response.body).toStrictEqual(shouldReturn)
@@ -458,6 +457,37 @@ describe('PrestadorController (e2e)', () => {
     const response = await request(app.getHttpServer())
       .get('/prestadores/1/servicos')
       .auth('token-valido', { type: 'bearer' })
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/prestadores/eu (GET)', async () => {
+    const shouldReturn = {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador: { nome: 'oi' } as any,
+      },
+    }
+    mockService.findOneOrFail.mockResolvedValue(
+      shouldReturn.data.prestador as any,
+    )
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100, 200] },
+    } as any)
+
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { nome: 'Vinicius', id: 1 },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .get('/prestadores/eu')
+      .auth('token-valido', { type: 'bearer' })
+    console.log(response)
     expect(response.status).toBe(200)
     expect(response.body).toStrictEqual(shouldReturn)
   })
