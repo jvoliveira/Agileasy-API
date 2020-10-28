@@ -6,6 +6,7 @@ import * as admin from 'firebase-admin'
 import { ClientesService } from './clientes.service'
 import { User } from '../common/decorators/user.decorator'
 import { TipoErro } from '../common/enums/tipo-erro.enum'
+import { TipoUsuario } from '../common/enums/tipo-usuario.enum'
 
 @Controller('clientes')
 export class ClientesController {
@@ -14,7 +15,7 @@ export class ClientesController {
     private userService: UserService,
   ) {}
 
-  @Roles(200)
+  @Roles(TipoUsuario.CLIENTE)
   @Get('eu')
   public async getAllInformation(
     @User() user: admin.auth.UserRecord,
