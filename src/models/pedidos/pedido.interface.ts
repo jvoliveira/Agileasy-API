@@ -6,6 +6,7 @@ import { ServicoInterface } from '../servicos/servico.interface'
 export interface PedidoInterface {
   subtotal: number
   observacao: string | null
+  dataHora: Date
   metodoPagamento: MPagamentoInterface
   situacoes: SituacaoInterface[]
   endereco: EnderecoInterface

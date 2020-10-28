@@ -26,6 +26,9 @@ export class AllException extends HttpException {
         newTipoErroDado = error
       }
     }
+    if (message) {
+      newTipoErroDado.message = message
+    }
     super(newTipoErroDado.message, newTipoErroDado.httpStatus)
     this.tipoErroDado = newTipoErroDado
   }

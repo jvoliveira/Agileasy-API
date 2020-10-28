@@ -4,6 +4,7 @@ import { Roles } from '../common/decorators/roles.decorator'
 import { UserService } from '../common/services/user.service'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
 import { AddCategoriaDto } from './dto/add-categoria.dto'
+import { AddServicoDto } from './dto/add-servico.dto'
 import { ResponseDefault } from '../common/interfaces/response-default.interface'
 import { TipoErro } from '../common/enums/tipo-erro.enum'
 import { TipoUsuario } from '../common/enums/tipo-usuario.enum'
@@ -12,6 +13,7 @@ import * as admin from 'firebase-admin'
 import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { Claims } from '../common/guards/interfaces/claims.interface'
 import { AllException } from '../common/exceptions/all.exception'
+import { Servico } from '../models/servicos/servico.entity'
 
 @Controller('prestadores')
 export class PrestadoresController {
@@ -20,9 +22,9 @@ export class PrestadoresController {
     private auth: FirebaseAuthenticationService,
     private userService: UserService,
   ) {}
-
+  /** Rotas para nível cliente */
   @Get()
-  @Roles(0, 200)
+  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   public async getAll(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getAll()
     return {
@@ -49,8 +51,8 @@ export class PrestadoresController {
     }
   }
 
-  @Get(':id')
-  @Roles(0, 100, 200)
+  @Get(':id/informacoes')
+  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   public async get(@Param('id') id: number): Promise<ResponseDefault> {
     const prestador = await this.serv.getByID(id)
     return {
@@ -64,7 +66,7 @@ export class PrestadoresController {
   }
 
   @Get(':id/categoria')
-  @Roles(0, 200)
+  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   public async getPrestadorByCategoria(
     @Param('id') id: number,
   ): Promise<ResponseDefault> {
@@ -80,7 +82,7 @@ export class PrestadoresController {
   }
 
   @Post('criar')
-  @Roles(0, 200)
+  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   public async create(
     @Body() createPrestadorDto: CreatePrestadorDto,
     @User() user: admin.auth.UserRecord,
@@ -103,7 +105,24 @@ export class PrestadoresController {
       },
     }
   }
-  @Roles(0)
+
+  @Roles(TipoUsuario.CLIENTE)
+  @Get(':id/servicos')
+  public async getServicos(@Param('id') id: number): Promise<ResponseDefault> {
+    const prestador = await this.serv.getServicosByPrestador(id)
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
+  }
+
+  /** Rotas para nível administrador */
+  @Roles(TipoUsuario.ADMIN)
   @Post(':id/adicionar_categorias')
   public async addCategoriaAsAdmin(
     @Param('id') id: number,
@@ -123,7 +142,8 @@ export class PrestadoresController {
     }
   }
 
-  @Roles(100)
+  /** Rotas para nível prestador */
+  @Roles(TipoUsuario.PRESTADOR)
   @Post('adicionar_categorias')
   public async addCategoria(
     @Body() addCategoriasDto: AddCategoriaDto,
@@ -145,10 +165,40 @@ export class PrestadoresController {
     }
   }
 
-  @Roles(TipoUsuario.CLIENTE)
-  @Get(':id/servicos')
-  public async getServicos(@Param('id') id: number): Promise<ResponseDefault> {
-    const prestador = await this.serv.getServicosByPrestador(id)
+  @Roles(TipoUsuario.PRESTADOR)
+  @Post('adicionar_servicos')
+  public async addServicos(
+    @Body() addServicosDto: AddServicoDto,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    const prestadorFull = await this.userService.getPrestadorByToken(user.uid)
+    const id = prestadorFull.id
+    const servicos = []
+    // Converte os json dos serviços em uma identidade
+    for (const servico of addServicosDto.servicos) {
+      servicos.push(Servico.fromJson(servico))
+    }
+
+    const prestador = await this.serv.addServicos(id, servicos)
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
+  }
+
+  @Roles(TipoUsuario.PRESTADOR)
+  @Get('/eu')
+  public async getAllInformation(
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    const clienteIncompleto = await this.userService.getPrestadorByToken(
+      user.uid,
+    )
+    const prestador = await this.serv.getAllInformation(clienteIncompleto.id)
 
     return {
       error_id: TipoErro.SEM_ERROS,

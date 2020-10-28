@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
+  JoinColumn,
 } from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
 import { Pedido } from '../pedidos/pedido.entity'
@@ -30,6 +31,7 @@ export class MetodoPagamento extends BaseModel<MetodoPagamento>
     cartao => cartao.metodosPagamentos,
     { cascade: false },
   )
+  @JoinColumn({ name: 'id_cartao' })
   cartao!: Cartao | null
 
   @OneToMany(

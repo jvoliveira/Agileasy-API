@@ -14,6 +14,7 @@ import { ClienteInterface } from './cliente.interface'
 import { JsonHelper } from '../../common/helpers/json.helper'
 import { TipoStatus } from '../usuarios/usuario.interface'
 import { Cartao } from '../cartoes/cartao.entity'
+import { Pedido } from '../pedidos/pedido.entity'
 
 @Entity('cliente')
 export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
@@ -37,6 +38,12 @@ export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
     { cascade: true },
   )
   enderecos!: Endereco[]
+
+  @OneToMany(
+    type => Pedido,
+    pedidos => pedidos.cliente,
+  )
+  pedidos!: Pedido[]
 
   @OneToMany(
     type => Cartao,

@@ -9,4 +9,9 @@ export class ServicosService extends BaseService<Servico> {
   constructor(@InjectRepository(Servico) repo: Repository<Servico>) {
     super(repo)
   }
+
+  async getByIdWithPrestador(id: number): Promise<Servico> {
+    const servico = this.repo.findOneOrFail(id, { relations: ['prestador'] })
+    return servico
+  }
 }

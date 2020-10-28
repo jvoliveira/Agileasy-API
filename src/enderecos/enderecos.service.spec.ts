@@ -1,32 +1,33 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { getRepositoryToken } from '@nestjs/typeorm'
-import { Servico } from '../models/servicos/servico.entity'
-import { ServicosService } from './servicos.service'
-import { createMock } from '@golevelup/nestjs-testing'
 import { Repository } from 'typeorm'
+import { Endereco } from '../models/enderecos/endereco.entity'
+import { EnderecosService } from './enderecos.service'
+import { createMock } from '@golevelup/nestjs-testing'
+import { getRepositoryToken } from '@nestjs/typeorm'
 
-describe('ServicosService', () => {
-  let service: ServicosService
-  const repo = createMock<Repository<Servico>>()
+describe('EnderecosService', () => {
+  let service: EnderecosService
+  const repo = createMock<Repository<Endereco>>()
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ServicosService,
+        EnderecosService,
         {
-          provide: getRepositoryToken(Servico),
+          provide: getRepositoryToken(Endereco),
           useValue: repo,
         },
       ],
     }).compile()
 
-    service = module.get<ServicosService>(ServicosService)
+    service = module.get<EnderecosService>(EnderecosService)
   })
 
   it('should be defined', () => {
     expect(service).toBeDefined()
   })
 
-  it('should be get servicos with prestador', async () => {
+  it('should be get endereco with cliente', async () => {
     const shouldReturn = [
       {
         descricao: 'Vinicius Picanco',
@@ -37,14 +38,14 @@ describe('ServicosService', () => {
 
     repo.findOneOrFail.mockReturnValue(shouldReturn as any)
 
-    expect(await service.getByIdWithPrestador(1)).toBe(shouldReturn)
+    expect(await service.getByIdWithCliente(1)).toBe(shouldReturn)
     expect(repo.findOneOrFail).toHaveBeenCalledWith(1, {
-      relations: ['prestador'],
+      relations: ['cliente'],
     })
 
     repo.findOneOrFail.mockClear()
     repo.findOneOrFail.mockRejectedValue(new Error())
 
-    await expect(service.getByIdWithPrestador(1)).rejects.toThrow(Error)
+    await expect(service.getByIdWithCliente(1)).rejects.toThrow(Error)
   })
 })

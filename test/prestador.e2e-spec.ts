@@ -122,7 +122,7 @@ describe('PrestadorController (e2e)', () => {
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
-  it('/prestadores/1 (GET)', async () => {
+  it('/prestadores/1/informacoes (GET)', async () => {
     const shouldReturn = {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -140,7 +140,7 @@ describe('PrestadorController (e2e)', () => {
     } as any)
 
     const response = await request(app.getHttpServer())
-      .get('/prestadores/1')
+      .get('/prestadores/1/informacoes')
       .auth('token-valido', { type: 'bearer' })
     expect(response.status).toBe(200)
     expect(response.body).toStrictEqual(shouldReturn)
@@ -211,6 +211,84 @@ describe('PrestadorController (e2e)', () => {
       .post('/prestadores/adicionar_categorias')
       .auth('token-valido', { type: 'bearer' })
       .send({ categorias: [1, 2] })
+    expect(response.status).toBe(201)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/prestadores/adicionar_servicos (POST)', async () => {
+    jest.resetAllMocks()
+    const shouldReturn = {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador: {
+          usuario: {
+            status: 0,
+            nome: 'João Oliveira',
+            dataNascimento: '2020-09-10T18:51:22.931Z',
+            telefone: '22999496547',
+            cpf: '14582486722',
+          },
+          cnpj: '30419000166',
+          delivery: true,
+          documentoUrl: 'http://storage.google.com',
+          nomePublico: 'OLIVEIRA TECH',
+          razaoSocial: 'Oliveira prestação de serviços',
+          tipoPessoa: 1,
+          endereco: {
+            apelido: 'Casa',
+            endereco: 'Rua Alvaro Tinoco Lanes',
+            complemento: 'Baixos',
+            numero: '105',
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300000',
+            referencia: null,
+          },
+        } as any,
+      },
+    }
+
+    mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [100] },
+      uid: 'oi',
+    } as any)
+
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.prestador)
+    mockService.save.mockResolvedValue(shouldReturn.data.prestador)
+
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { id: 1, nome: 'Vinicius' },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .post('/prestadores/adicionar_servicos')
+      .auth('token-valido', { type: 'bearer' })
+      .send({
+        servicos: [
+          {
+            descricao: 'Esse serviço é novo',
+            valor: 256.6,
+            nome: 'Novo serviço',
+            urlFoto: 'www.fotourl.com.br',
+          },
+        ],
+      })
+
+    shouldReturn.data.prestador.servicos = [
+      {
+        descricao: 'Esse serviço é novo',
+        valor: 256.6,
+        nome: 'Novo serviço',
+        urlFoto: 'www.fotourl.com.br',
+      },
+    ]
+
     expect(response.status).toBe(201)
     expect(response.body).toStrictEqual(shouldReturn)
   })
@@ -379,6 +457,37 @@ describe('PrestadorController (e2e)', () => {
     const response = await request(app.getHttpServer())
       .get('/prestadores/1/servicos')
       .auth('token-valido', { type: 'bearer' })
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/prestadores/eu (GET)', async () => {
+    const shouldReturn = {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador: { nome: 'oi' } as any,
+      },
+    }
+    mockService.findOneOrFail.mockResolvedValue(
+      shouldReturn.data.prestador as any,
+    )
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100, 200] },
+    } as any)
+
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { nome: 'Vinicius', id: 1 },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .get('/prestadores/eu')
+      .auth('token-valido', { type: 'bearer' })
+    console.log(response)
     expect(response.status).toBe(200)
     expect(response.body).toStrictEqual(shouldReturn)
   })
