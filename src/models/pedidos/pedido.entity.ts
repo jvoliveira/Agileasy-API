@@ -20,6 +20,7 @@ import { JsonHelper } from '../../common/helpers/json.helper'
 import { TipoPagamento } from '../metodos-pagamento/metodo-pagamento.interface'
 import { Cliente } from '../clientes/cliente.entity'
 import { Prestador } from '../prestadores/prestador.entity'
+import { Avaliacao } from '../avaliacao/avaliacao.entity'
 
 @Entity('pedido')
 export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
@@ -94,6 +95,13 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     },
   })
   servicos!: Servico[]
+
+  @OneToMany(
+    type => Avaliacao,
+    avaliacoes => avaliacoes.pedido,
+    { cascade: true },
+  )
+  avaliacoes: Avaliacao[]
 
   constructor(
     id: number,
