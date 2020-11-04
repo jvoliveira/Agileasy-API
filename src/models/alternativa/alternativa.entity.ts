@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
 import { VariacaoServico } from '../servico-variacao/variacao-servico.entity'
 import { AlternativaInterface } from './alternativa.interface'
@@ -12,35 +18,31 @@ export class Alternativa extends BaseModel<Alternativa>
   @Column('text', { nullable: false })
   descricao: string
 
-  @Column('int', { nullable: false })
-  idVariacao: number
-
   @ManyToOne(
     type => VariacaoServico,
     variacaoServico => variacaoServico.alternativas,
     { cascade: false },
   )
+  @JoinColumn({ name: 'id_variacao' })
   variacaoServico: VariacaoServico
 
-  constructor(id: number, descricao: string, idVariacao: number) {
+  constructor(id: number, descricao: string) {
     super(id, true)
     this.descricao = descricao
-    this.idVariacao = idVariacao
   }
 
   fillFromJson(json: any, recursive?: string[]): Alternativa {
     this.id = json['id']
     this.descricao = json['descricao']
-    this.idVariacao = json['idVariacao']
 
     return this
   }
 
   public static fromJson(json: any): Alternativa {
-    return new Alternativa(1, '', 1).fillFromJson(json)
+    return new Alternativa(1, '').fillFromJson(json)
   }
 
   copy(): Alternativa {
-    return new Alternativa(this.id, this.descricao, this.idVariacao)
+    return new Alternativa(this.id, this.descricao)
   }
 }
