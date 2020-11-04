@@ -10,6 +10,7 @@ describe('Variacao-Servico', () => {
       1,
       1,
     )
+    mockVariacao.alternativas = []
     expect(JSON.parse(JSON.stringify(mockVariacao))).toStrictEqual(
       JSON.parse(JSON.stringify(expectedJSON())),
     )
@@ -21,6 +22,7 @@ function expectedJSON() {
   return {
     ativo: true,
     id: 1,
+    alternativas: [],
     tipo: 1,
     titulo: 'Escolha o modelo',
     obrigatorio: true,
