@@ -25,6 +25,7 @@ describe('Prestador', () => {
       150.0,
       'Pintura profissional',
       'URLDAFOTO',
+      true,
     )
     const categoriaPai = new Categoria(
       1,
