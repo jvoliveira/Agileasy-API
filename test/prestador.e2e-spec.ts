@@ -487,7 +487,6 @@ describe('PrestadorController (e2e)', () => {
     const response = await request(app.getHttpServer())
       .get('/prestadores/eu')
       .auth('token-valido', { type: 'bearer' })
-    console.log(response)
     expect(response.status).toBe(200)
     expect(response.body).toStrictEqual(shouldReturn)
   })
