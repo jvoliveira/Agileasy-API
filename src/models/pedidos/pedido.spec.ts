@@ -7,6 +7,8 @@ import { Estado } from '../situacoes/situacao.interface'
 import { Endereco } from '../enderecos/endereco.entity'
 import { TipoPagamento } from '../metodos-pagamento/metodo-pagamento.interface'
 import { Servico } from '../servicos/servico.entity'
+import { VariacaoServico } from '../servico-variacao/variacao-servico.entity'
+import { Alternativa } from '../alternativa/alternativa.entity'
 
 describe('Pedido', () => {
   it('test json pedido', () => {
@@ -41,6 +43,7 @@ describe('Pedido', () => {
       150.0,
       'Pintura profissional',
       'URLDAFOTO',
+      true,
     )
     const mockPedido = new Pedido(
       1,
