@@ -70,14 +70,12 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
     nome: string,
     urlFoto: string,
     ativo = true,
-    variacao: VariacaoServico,
   ) {
     super(id, ativo)
     this.descricao = descricao
     this.valor = valor
     this.nome = nome
     this.urlFoto = urlFoto
-    this.variacao = variacao
   }
 
   fillFromJson(json: any, recursive?: string[] | undefined): Servico {
@@ -90,23 +88,15 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
     this.nome = json.nome
     this.urlFoto = json.urlFoto
     this.ativo = json.ativo
-    this.variacao = VariacaoServico.fromJson(json.variacao)
+    if (json.variacao != null) {
+      this.variacao = VariacaoServico.fromJson(json.variacao)
+    }
 
     return this
   }
 
   public static fromJson(json: any): Servico {
-    return new Servico(
-      1,
-      '',
-      1,
-      '',
-      '',
-      true,
-      new VariacaoServico(1, 1, 'Escolha o modelo', true, 1, 1, [
-        new Alternativa(1, 'ALTERNATIVA 1', 1),
-      ]),
-    ).fillFromJson(json)
+    return new Servico(1, '', 1, '', '', true).fillFromJson(json)
   }
 
   copy(): Servico {
@@ -117,7 +107,6 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
       this.nome,
       this.urlFoto,
       this.ativo,
-      this.variacao,
     )
     servico.dados = this.dados
     return servico

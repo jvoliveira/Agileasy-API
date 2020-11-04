@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { CategoriasEntityModule } from '../categorias/categorias.module'
 import { PedidosEntityModule } from '../pedidos/pedidos.module'
 import { PrestadoresEntityModule } from '../prestadores/prestadores.module'
+import { VariacaoServicoEntityModule } from '../servico-variacao/variacao-servico.module'
 
 @Module({
   imports: [
@@ -11,6 +12,8 @@ import { PrestadoresEntityModule } from '../prestadores/prestadores.module'
     CategoriasEntityModule,
     forwardRef(() => PedidosEntityModule),
     forwardRef(() => PrestadoresEntityModule),
+    forwardRef(() => CategoriasEntityModule),
+    forwardRef(() => VariacaoServicoEntityModule),
   ],
   exports: [TypeOrmModule],
 })
