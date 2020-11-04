@@ -4,7 +4,6 @@ export interface VariacaoServicoInterface {
   tipo: number
   titulo: string
   obrigatorio: boolean
-  id_servico: number
   qtsMaxima: number
   alternativas: Array<Alternativa>
 }

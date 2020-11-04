@@ -28,9 +28,6 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
   obrigatorio: boolean
 
   @Column('int', { nullable: false })
-  id_servico: number
-
-  @Column('int', { nullable: false })
   qtsMaxima: number
 
   @OneToMany(
@@ -55,7 +52,6 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
     tipo: number,
     titulo: string,
     obrigatorio: boolean,
-    id_servico: number,
     qtsMaxima: number,
     ativo = true,
   ) {
@@ -64,7 +60,6 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
     this.tipo = tipo
     this.titulo = titulo
     this.obrigatorio = obrigatorio
-    this.id_servico = id_servico
     this.qtsMaxima = qtsMaxima
   }
 
@@ -73,7 +68,6 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
     this.tipo = json['tipo']
     this.titulo = json['titulo']
     this.obrigatorio = json['obrigatorio']
-    this.id_servico = json['id_servico']
     this.qtsMaxima = json['qtsMaxima']
     this.alternativas = JsonHelper.jsonToArray<Alternativa>(
       json['alternativas'],
@@ -84,7 +78,7 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
   }
 
   public static fromJson(json: any): VariacaoServico {
-    return new VariacaoServico(1, 1, '', true, 1, 1).fillFromJson(json)
+    return new VariacaoServico(1, 1, '', true, 1).fillFromJson(json)
   }
 
   copy(): VariacaoServico {
@@ -93,7 +87,6 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
       this.tipo,
       this.titulo,
       this.obrigatorio,
-      this.id_servico,
       this.qtsMaxima,
     )
   }
