@@ -3,9 +3,11 @@ export class JsonHelper {
   static jsonToArray<T>(jsonList: any, method: FromJSON): T[] {
     const listaFinal: T[] = []
 
-    jsonList.forEach((e: any) => {
-      listaFinal.push(method(e))
-    })
+    if (jsonList) {
+      jsonList.forEach((e: any) => {
+        listaFinal.push(method(e))
+      })
+    }
 
     return listaFinal
   }
