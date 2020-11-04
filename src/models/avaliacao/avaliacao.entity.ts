@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
 import { Pedido } from '../pedidos/pedido.entity'
 import { AvaliacaoInterface } from './avaliacao.interface'
@@ -15,9 +21,6 @@ export class Avaliacao extends BaseModel<Avaliacao>
   @Column('double precision', { nullable: false })
   nota: number
 
-  @Column('int', { nullable: false })
-  idPedido: number
-
   @Column('text', { nullable: false })
   urlFoto: string
 
@@ -29,13 +32,13 @@ export class Avaliacao extends BaseModel<Avaliacao>
     pedido => pedido.avaliacoes,
     { cascade: false },
   )
+  @JoinColumn({ name: 'id_pedido' })
   pedido: Pedido
 
   constructor(
     id: number,
     comentario: string,
     nota: number,
-    idPedido: number,
     urlFoto: string,
     quemAvaliou: number,
   ) {
@@ -43,7 +46,6 @@ export class Avaliacao extends BaseModel<Avaliacao>
     this.id = id
     this.comentario = comentario
     this.nota = nota
-    this.idPedido = idPedido
     this.urlFoto = urlFoto
     this.quemAvaliou = quemAvaliou
   }
@@ -52,7 +54,6 @@ export class Avaliacao extends BaseModel<Avaliacao>
     this.id = json['id']
     this.comentario = json['comentario']
     this.nota = json['nota']
-    this.idPedido = json['idPedido']
     this.urlFoto = json['urlFoto']
     this.quemAvaliou = json['quemAvaliou']
 
@@ -60,7 +61,7 @@ export class Avaliacao extends BaseModel<Avaliacao>
   }
 
   public static fromJson(json: any): Avaliacao {
-    return new Avaliacao(1, '', 1, 1, '', 1).fillFromJson(json)
+    return new Avaliacao(1, '', 5, '', 1).fillFromJson(json)
   }
 
   copy(): Avaliacao {
@@ -68,7 +69,6 @@ export class Avaliacao extends BaseModel<Avaliacao>
       this.id,
       this.comentario,
       this.nota,
-      this.idPedido,
       this.urlFoto,
       this.quemAvaliou,
     )

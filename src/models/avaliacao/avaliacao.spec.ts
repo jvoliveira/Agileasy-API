@@ -6,7 +6,6 @@ describe('Avaliacao', () => {
       1,
       'Achei muito bom, recomendo',
       5,
-      1,
       'URLDAFOTO',
       1,
     )
@@ -24,7 +23,6 @@ function expectedJSON() {
     id: 1,
     comentario: 'Achei muito bom, recomendo',
     nota: 5,
-    idPedido: 1,
     urlFoto: 'URLDAFOTO',
     quemAvaliou: 1,
   }
