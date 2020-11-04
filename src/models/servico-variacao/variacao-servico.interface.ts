@@ -1,4 +1,4 @@
-import { AlternativaInterface } from '../alternativa/alternativa.interface'
+import { Alternativa } from '../alternativa/alternativa.entity'
 
 export interface VariacaoServicoInterface {
   tipo: number
@@ -6,5 +6,5 @@ export interface VariacaoServicoInterface {
   obrigatorio: boolean
   id_servico: number
   qtsMaxima: number
-  alternativas: Array<AlternativaInterface>
+  alternativas: Array<Alternativa>
 }

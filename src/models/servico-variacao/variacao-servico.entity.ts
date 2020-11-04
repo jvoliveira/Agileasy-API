@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -46,6 +47,7 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
     servico => servico.variacao,
     { cascade: false },
   )
+  @JoinColumn({ name: 'id_servico' })
   servico: Servico
 
   constructor(
@@ -55,16 +57,15 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
     obrigatorio: boolean,
     id_servico: number,
     qtsMaxima: number,
-    alternativas: Alternativa[],
+    ativo = true,
   ) {
-    super(id, true)
+    super(id, ativo)
     this.id = id
     this.tipo = tipo
     this.titulo = titulo
     this.obrigatorio = obrigatorio
     this.id_servico = id_servico
     this.qtsMaxima = qtsMaxima
-    this.alternativas = alternativas
   }
 
   fillFromJson(json: any, recursive?: string[]): VariacaoServico {
@@ -83,9 +84,7 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
   }
 
   public static fromJson(json: any): VariacaoServico {
-    return new VariacaoServico(1, 1, '', true, 1, 1, [
-      new Alternativa(1, 'ALTERNATIVA 1', 1),
-    ]).fillFromJson(json)
+    return new VariacaoServico(1, 1, '', true, 1, 1).fillFromJson(json)
   }
 
   copy(): VariacaoServico {
@@ -96,7 +95,6 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
       this.obrigatorio,
       this.id_servico,
       this.qtsMaxima,
-      this.alternativas,
     )
   }
 }
