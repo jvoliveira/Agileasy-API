@@ -1,4 +1,4 @@
-import { Body, Controller, HttpException, Post } from '@nestjs/common'
+import { Body, Controller, Get, HttpException, Post } from '@nestjs/common'
 import { Roles } from '../common/decorators/roles.decorator'
 import { PedidosService } from './pedidos.service'
 import { CreatePedidoDto } from './dto/create-pedido.dto'
@@ -12,6 +12,7 @@ import { UserService } from '../common/services/user.service'
 import { User } from '../common/decorators/user.decorator'
 import * as admin from 'firebase-admin'
 import { EnderecosService } from '../enderecos/enderecos.service'
+import { TipoUsuario } from '../common/enums/tipo-usuario.enum'
 
 @Controller('pedidos')
 export class PedidosController {
@@ -22,7 +23,7 @@ export class PedidosController {
     private enderecoService: EnderecosService,
   ) {}
 
-  @Roles(200)
+  @Roles(TipoUsuario.CLIENTE)
   @Post('novo')
   public async newPedido(
     @Body() newPedido: CreatePedidoDto,
@@ -83,6 +84,40 @@ export class PedidosController {
       error: false,
       data: {
         pedido,
+      },
+    }
+  }
+
+  @Roles(TipoUsuario.CLIENTE)
+  @Get('cliente/eu')
+  public async myPedidosAsCliente(
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    const cliente = await this.userService.getClienteByToken(user.uid)
+    const pedidos = await this.serv.getPedidosAsCliente(cliente.id)
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedidos,
+      },
+    }
+  }
+
+  @Roles(TipoUsuario.PRESTADOR)
+  @Get('prestador/eu')
+  public async myPedidosAsPrestador(
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    const prestador = await this.userService.getPrestadorByToken(user.uid)
+    const pedidos = await this.serv.getPedidosAsPrestador(prestador.id)
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedidos,
       },
     }
   }

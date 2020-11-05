@@ -42,7 +42,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   @ManyToOne(
     type => MetodoPagamento,
     metodoPagamento => metodoPagamento.pedidos,
-    { cascade: false },
+    { cascade: false, eager: true },
   )
   @JoinColumn({ name: 'id_metodo_pagamento' })
   metodoPagamento!: MetodoPagamento
@@ -66,14 +66,14 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   @OneToMany(
     type => Situacao,
     situacoes => situacoes.pedido,
-    { cascade: true },
+    { cascade: true, eager: true },
   )
   situacoes!: Situacao[]
 
   @ManyToOne(
     type => Endereco,
     endereco => endereco.pedidos,
-    { cascade: false },
+    { cascade: false, eager: true },
   )
   @JoinColumn({ name: 'id_endereco' })
   endereco!: Endereco
@@ -81,7 +81,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   @ManyToMany(
     type => Servico,
     servicos => servicos.pedidos,
-    { cascade: true },
+    { cascade: true, eager: true },
   )
   @JoinTable({
     name: 'item',

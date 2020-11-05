@@ -12,4 +12,12 @@ export class PedidosService extends BaseService<Pedido> {
   constructor(@InjectRepository(Pedido) repo: Repository<Pedido>) {
     super(repo)
   }
+
+  public async getPedidosAsCliente(id: number): Promise<Pedido[]> {
+    return this.repo.find({ where: { cliente: { id } } })
+  }
+
+  public async getPedidosAsPrestador(id: number): Promise<Pedido[]> {
+    return this.repo.find({ where: { prestador: { id } } })
+  }
 }
