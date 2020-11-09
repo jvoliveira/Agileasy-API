@@ -14,4 +14,11 @@ export class EnderecosService extends BaseService<Endereco> {
     const servico = this.repo.findOneOrFail(id, { relations: ['cliente'] })
     return servico
   }
+
+  async getEnderecosByCliente(idCliente: number): Promise<Endereco[]> {
+    const servico = await this.repo.find({
+      where: { ativo: true, cliente: idCliente },
+    })
+    return servico
+  }
 }

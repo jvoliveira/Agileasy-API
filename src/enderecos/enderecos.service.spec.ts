@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { Repository } from 'typeorm'
+import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
 import { Endereco } from '../models/enderecos/endereco.entity'
 import { EnderecosService } from './enderecos.service'
 import { createMock } from '@golevelup/nestjs-testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
+import { Cliente } from '../models/clientes/cliente.entity'
 
 describe('EnderecosService', () => {
   let service: EnderecosService
@@ -47,5 +48,21 @@ describe('EnderecosService', () => {
     repo.findOneOrFail.mockRejectedValue(new Error())
 
     await expect(service.getByIdWithCliente(1)).rejects.toThrow(Error)
+  })
+
+  it('should list enderecos from cliente', async () => {
+    const shouldReturn = [{ nome: 'Vinicius' }]
+
+    repo.find.mockResolvedValue(shouldReturn as any)
+
+    repo.findOne.mockResolvedValue(shouldReturn as any)
+
+    await expect(service.getEnderecosByCliente(1)).resolves.toStrictEqual(
+      shouldReturn,
+    )
+
+    expect(repo.find).toHaveBeenCalledWith({
+      where: { ativo: true, cliente: 1 },
+    })
   })
 })
