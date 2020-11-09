@@ -48,4 +48,17 @@ describe('PedidosService', () => {
     )
     expect(repo.find).toBeCalledWith({ where: { cliente: { id: 1 } } })
   })
+
+  it('should get pedido and prestador by id', async () => {
+    const shouldReturn = { observacao: 'esse pedido é legal' }
+
+    repo.findOneOrFail.mockResolvedValue(shouldReturn as any)
+
+    await expect(
+      service.getByPedidoAndPrestadorId(1, 1),
+    ).resolves.toStrictEqual(shouldReturn)
+    expect(repo.findOneOrFail).toBeCalledWith({
+      where: { id: 1, prestador: { id: 1 } },
+    })
+  })
 })
