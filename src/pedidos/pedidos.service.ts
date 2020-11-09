@@ -28,7 +28,7 @@ export class PedidosService extends BaseService<Pedido> {
     return this.repo.save(pedido)
   }
 
-  // Retorna o pedido dado o id do pedido e prestador, os dois devem ser válidos
+  // Retorna o pedido dado o id do pedido e prestador, os dois devem ser válidos se não retorna erro do próprio método
   public async getByPedidoAndPrestadorId(
     idPedido: number,
     idPrestador: number,
