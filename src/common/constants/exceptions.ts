@@ -63,4 +63,9 @@ export const COMMON_ERRORS: TipoErroDados[] = [
     message: 'Dados inválidos',
     httpStatus: HttpStatus.BAD_REQUEST,
   },
+  {
+    errorId: TipoErro.SITUACAO_INVALIDA,
+    message: 'Situação inválida',
+    httpStatus: HttpStatus.BAD_REQUEST,
+  },
 ]
