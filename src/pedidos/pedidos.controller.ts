@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, Post } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
 import { Roles } from '../common/decorators/roles.decorator'
 import { PedidosService } from './pedidos.service'
 import { CreatePedidoDto } from './dto/create-pedido.dto'
@@ -118,6 +118,44 @@ export class PedidosController {
       error: false,
       data: {
         pedidos,
+      },
+    }
+  }
+
+  @Put(':id/marcar_andamento')
+  @Roles(TipoUsuario.PRESTADOR)
+  public async markAsEmAndamento(
+    @Param('id') idPedido,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    // Pega o prestador logado que está fazendo a solicitação
+    const prestador = await this.userService.getPrestadorByToken(user.uid)
+
+    // Pega o pedido referente aquele prestador, se o pedido não pertencer aquele prestador é dado falha
+    const pedido = await this.serv.getByPedidoAndPrestadorId(
+      idPedido,
+      prestador.id,
+    )
+
+    // Só pode ser feito se a última situação for aceito
+    if (
+      pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.aceito
+    ) {
+      throw new AllException(TipoErro.SITUACAO_INVALIDA)
+    }
+
+    // Muda a situação para em andamento
+    const pedidoAtualizado = await this.serv.changeSituacao(pedido, {
+      data: moment().toDate(),
+      estado: Estado.andamento,
+    })
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: pedidoAtualizado,
       },
     }
   }

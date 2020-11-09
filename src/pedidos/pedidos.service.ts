@@ -1,11 +1,9 @@
-import { override } from '@hapi/joi'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { TipoErro } from '../common/enums/tipo-erro.enum'
-import { AllException } from '../common/exceptions/all.exception'
 import { BaseService } from '../common/services/base.service'
 import { Pedido } from '../models/pedidos/pedido.entity'
+import { SituacaoInterface } from '../models/situacoes/situacao.interface'
 
 @Injectable()
 export class PedidosService extends BaseService<Pedido> {
@@ -19,5 +17,24 @@ export class PedidosService extends BaseService<Pedido> {
 
   public async getPedidosAsPrestador(id: number): Promise<Pedido[]> {
     return this.repo.find({ where: { prestador: { id } } })
+  }
+
+  // Muda para a situação enviada por parâmetro
+  public async changeSituacao(
+    pedido: Pedido,
+    situacao: SituacaoInterface,
+  ): Promise<Pedido> {
+    pedido.situacoes.push(situacao as any)
+    return this.repo.save(pedido)
+  }
+
+  // Retorna o pedido dado o id do pedido e prestador, os dois devem ser válidos
+  public async getByPedidoAndPrestadorId(
+    idPedido: number,
+    idPrestador: number,
+  ): Promise<Pedido> {
+    return this.repo.findOneOrFail({
+      where: { id: idPedido, prestador: { id: idPrestador } },
+    })
   }
 }
