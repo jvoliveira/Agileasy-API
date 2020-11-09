@@ -11,6 +11,7 @@ import { Pedido } from '../src/models/pedidos/pedido.entity'
 import { Servico } from '../src/models/servicos/servico.entity'
 import * as moment from 'moment-timezone'
 import { Endereco } from '../src/models/enderecos/endereco.entity'
+import { Estado } from '../src/models/situacoes/situacao.interface'
 
 describe('PedidoController (e2e)', () => {
   let app: INestApplication
@@ -262,6 +263,90 @@ describe('PedidoController (e2e)', () => {
       .get('/pedidos/prestador/eu')
       .auth('token-valido', { type: 'bearer' })
     expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/pedidos/1/marcar_andamento (PUT)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 25,
+          observacao: 'Quero que faça isso com urgência',
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: 1,
+              data: '2020-11-05T14:17:07.312Z',
+            },
+          ],
+          endereco: {
+            id: 2,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Rua Euclides Poubel de Lima',
+            complemento: 'Apto',
+            numero: 125,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: 'Ao lado casa da mercearia',
+          },
+          servicos: [
+            {
+              id: 1,
+              ativo: true,
+              descricao: 'Serviço completo de pé e mão',
+              valor: 25,
+              nome: 'Pé e mão',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/download.jpeg',
+            },
+          ],
+          dataHora: '2030-10-24T13:12:32.162Z',
+        },
+      },
+    }
+    mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.save(shouldReturn.data.pedido as any)
+
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { id: 1, nome: 'Vinicius' },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .put('/pedidos/1/marcar_andamento')
+      .auth('token-valido', { type: 'bearer' })
+      .send(shouldReturn.data.pedido)
+    expect(response.status).toBe(200)
+
+    const lastSituacao = shouldReturn.data.pedido.situacoes.pop()
+    lastSituacao.data = moment(lastSituacao.data)
+      .toDate()
+      .toJSON()
+
+    shouldReturn.data.pedido.situacoes.push(lastSituacao)
+
     expect(response.body).toStrictEqual(shouldReturn)
   })
 })

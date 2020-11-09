@@ -175,6 +175,80 @@ describe('PedidosController', () => {
     ).resolves.toStrictEqual(shouldReturn)
   })
 
+  it('should mark as em andamento', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 25,
+          observacao: 'Quero que faça isso com urgência',
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: 0,
+              data: '2020-11-05T14:17:07.312Z',
+            },
+          ],
+          endereco: {
+            id: 2,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Rua Euclides Poubel de Lima',
+            complemento: 'Apto',
+            numero: 125,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: 'Ao lado casa da mercearia',
+          },
+          servicos: [
+            {
+              id: 1,
+              ativo: true,
+              descricao: 'Serviço completo de pé e mão',
+              valor: 25,
+              nome: 'Pé e mão',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/download.jpeg',
+            },
+          ],
+          dataHora: '2030-10-24T13:12:32.162Z',
+        },
+      },
+    }
+
+    const mockUser = createMock<admin.auth.UserRecord>()
+    mockUser.uid = 'teste'
+
+    userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
+
+    service.getByPedidoAndPrestadorId.mockResolvedValue(
+      shouldReturn.data.pedido as any,
+    )
+
+    shouldReturn.data.pedido.situacoes.push({
+      data: '2020-11-09T20:26:38.185Z',
+      estado: 1,
+      id: 2,
+      ativo: true,
+    })
+    service.changeSituacao.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    await expect(
+      controller.markAsEmAndamento(1, mockUser),
+    ).resolves.toStrictEqual(shouldReturn)
+  })
+
   it('should get todos pedidos as cliente', async () => {
     const shouldReturn = {
       error_id: -1,
