@@ -1,18 +1,18 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
-import { Roles } from '../common/decorators/roles.decorator'
+import { Roles } from '../../common/decorators/roles.decorator'
 import { PedidosService } from './pedidos.service'
 import { CreatePedidoDto } from './dto/create-pedido.dto'
-import { ResponseDefault } from '../common/interfaces/response-default.interface'
-import { TipoErro } from '../common/enums/tipo-erro.enum'
+import { ResponseDefault } from '../../common/interfaces/response-default.interface'
+import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import * as moment from 'moment-timezone'
-import { Estado } from '../models/situacoes/situacao.interface'
+import { Estado } from '../../models/situacoes/situacao.interface'
 import { ServicosService } from '../servicos/servicos.service'
-import { AllException } from '../common/exceptions/all.exception'
-import { UserService } from '../common/services/user.service'
-import { User } from '../common/decorators/user.decorator'
+import { AllException } from '../../common/exceptions/all.exception'
+import { UserService } from '../../common/services/user.service'
+import { User } from '../../common/decorators/user.decorator'
 import * as admin from 'firebase-admin'
 import { EnderecosService } from '../enderecos/enderecos.service'
-import { TipoUsuario } from '../common/enums/tipo-usuario.enum'
+import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
 
 @Controller('pedidos')
 export class PedidosController {
@@ -122,6 +122,34 @@ export class PedidosController {
     }
   }
 
+  @Put(':id/marcar_aceito')
+  @Roles(TipoUsuario.PRESTADOR)
+  public async markAsAceito(
+    @Param('id') idPedido,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    // Pega o prestador logado que está fazendo a solicitação
+    const prestador = await this.userService.getPrestadorByToken(user.uid)
+
+    // Pega o pedido referente aquele prestador, se o pedido não pertencer aquele prestador é dado falha
+    const pedido = await this.serv.getByIdAsPrestador(idPedido, prestador.id)
+
+    // Muda a situação para em andamento
+    const pedidoAtualizado = await this.serv.changeSituacao(pedido, {
+      data: moment().toDate(),
+      estado: Estado.aceito,
+    })
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: pedidoAtualizado,
+      },
+    }
+  }
+
   @Put(':id/marcar_andamento')
   @Roles(TipoUsuario.PRESTADOR)
   public async markAsEmAndamento(
@@ -132,10 +160,7 @@ export class PedidosController {
     const prestador = await this.userService.getPrestadorByToken(user.uid)
 
     // Pega o pedido referente aquele prestador, se o pedido não pertencer aquele prestador é dado falha
-    const pedido = await this.serv.getByPedidoAndPrestadorId(
-      idPedido,
-      prestador.id,
-    )
+    const pedido = await this.serv.getByIdAsPrestador(idPedido, prestador.id)
 
     // Só pode ser feito se a última situação for aceito
     if (
@@ -156,6 +181,163 @@ export class PedidosController {
       error: false,
       data: {
         pedido: pedidoAtualizado,
+      },
+    }
+  }
+
+  @Put(':id/marcar_finalizado')
+  @Roles(TipoUsuario.PRESTADOR)
+  public async markAsFinalizado(
+    @Param('id') idPedido,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    // Pega o prestador logado que está fazendo a solicitação
+    const prestador = await this.userService.getPrestadorByToken(user.uid)
+
+    // Pega o pedido referente aquele prestador, se o pedido não pertencer aquele prestador é dado falha
+    const pedido = await this.serv.getByIdAsPrestador(idPedido, prestador.id)
+
+    // Só pode ser feito se a última situação for aceito
+    if (
+      pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.andamento
+    ) {
+      throw new AllException(TipoErro.SITUACAO_INVALIDA)
+    }
+
+    // Muda a situação para em andamento
+    const pedidoAtualizado = await this.serv.changeSituacao(pedido, {
+      data: moment().toDate(),
+      estado: Estado.finalizado,
+    })
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: pedidoAtualizado,
+      },
+    }
+  }
+
+  @Put(':id/prestador/cancelar')
+  @Roles(TipoUsuario.PRESTADOR)
+  public async cancelarPedidoAsPrestador(
+    @Param('id') idPedido,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    // Pega o prestador logado que está fazendo a solicitação
+    const prestador = await this.userService.getPrestadorByToken(user.uid)
+
+    // Pega o pedido referente aquele prestador, se o pedido não pertencer aquele prestador é dado falha
+    const pedido = await this.serv.getByIdAsPrestador(idPedido, prestador.id)
+
+    // Só pode ser feito se Não for andamento ou posterior
+    if (
+      pedido.situacoes[pedido.situacoes.length - 1].estado !==
+        Estado.andamento ||
+      pedido.situacoes[pedido.situacoes.length - 1].estado !==
+        Estado.finalizado ||
+      pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.cancelado
+    ) {
+      throw new AllException(TipoErro.SITUACAO_INVALIDA)
+    }
+
+    // Muda a situação para em andamento
+    const pedidoCancelado = await this.serv.changeSituacao(pedido, {
+      data: moment().toDate(),
+      estado: Estado.cancelado,
+    })
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: pedidoCancelado,
+      },
+    }
+  }
+
+  @Put(':id/cliente/cancelar')
+  @Roles(TipoUsuario.CLIENTE)
+  public async cancelarPedidoAsCliente(
+    @Param('id') idPedido,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    // Pega o cliente logado que está fazendo a solicitação
+    const cliente = await this.userService.getClienteByToken(user.uid)
+
+    // Pega o pedido referente aquele cliente, se o pedido não pertencer aquele cliente é dado falha
+    const pedido = await this.serv.getByIdAsCliente(idPedido, cliente.id)
+
+    // Só pode ser feito se Não for andamento ou posterior
+    if (
+      pedido.situacoes[pedido.situacoes.length - 1].estado !==
+        Estado.andamento ||
+      pedido.situacoes[pedido.situacoes.length - 1].estado !==
+        Estado.finalizado ||
+      pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.cancelado
+    ) {
+      throw new AllException(TipoErro.SITUACAO_INVALIDA)
+    }
+
+    // Muda a situação para em andamento
+    const pedidoCancelado = await this.serv.changeSituacao(pedido, {
+      data: moment().toDate(),
+      estado: Estado.cancelado,
+    })
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: pedidoCancelado,
+      },
+    }
+  }
+
+  @Get(':id/cliente/informacoes')
+  @Roles(TipoUsuario.CLIENTE)
+  public async getByIdAsCliente(
+    @Param('id') idPedido,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    // Pega o cliente logado que está fazendo a solicitação
+    const cliente = await this.userService.getClienteByToken(user.uid)
+
+    // Pega o pedido referente aquele cliente, se o pedido não pertencer aquele cliente é dado falha
+    const pedido = await this.serv.getByIdAsCliente(idPedido, cliente.id)
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: pedido,
+      },
+    }
+  }
+
+  @Get(':id/prestador/informacoes')
+  @Roles(TipoUsuario.PRESTADOR)
+  public async getByIdAsPrestador(
+    @Param('id') idPedido,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    // Pega o prestador logado que está fazendo a solicitação
+    const prestador = await this.userService.getPrestadorByToken(user.uid)
+
+    // Pega o pedido referente aquele prestador, se o pedido não pertencer aquele prestador é dado falha
+    const pedido = await this.serv.getByIdAsPrestador(idPedido, prestador.id)
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: pedido,
       },
     }
   }
