@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { Servico } from '../models/servicos/servico.entity'
+import { Servico } from '../../models/servicos/servico.entity'
 import { ServicosService } from './servicos.service'
 import { createMock } from '@golevelup/nestjs-testing'
 import { Repository } from 'typeorm'

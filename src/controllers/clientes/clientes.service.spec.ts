@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { Repository } from 'typeorm'
-import { Cliente } from '../models/clientes/cliente.entity'
+import { Cliente } from '../../models/clientes/cliente.entity'
 import { ClientesService } from './clientes.service'
 import { createMock } from '@golevelup/nestjs-testing'
 import { getRepositoryToken } from '@nestjs/typeorm'

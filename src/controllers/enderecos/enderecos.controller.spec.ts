@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { EnderecosController } from './enderecos.controller'
 import { EnderecosService } from './enderecos.service'
 import { createMock } from '@golevelup/nestjs-testing'
-import { UserService } from '../common/services/user.service'
+import { UserService } from '../../common/services/user.service'
 import * as admin from 'firebase-admin'
 
 describe('EnderecosController', () => {

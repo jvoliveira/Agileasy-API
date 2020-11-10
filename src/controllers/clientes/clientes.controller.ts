@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common'
-import { Roles } from '../common/decorators/roles.decorator'
-import { ResponseDefault } from '../common/interfaces/response-default.interface'
-import { UserService } from '../common/services/user.service'
+import { Roles } from '../../common/decorators/roles.decorator'
+import { ResponseDefault } from '../../common/interfaces/response-default.interface'
+import { UserService } from '../../common/services/user.service'
 import * as admin from 'firebase-admin'
 import { ClientesService } from './clientes.service'
-import { User } from '../common/decorators/user.decorator'
-import { TipoErro } from '../common/enums/tipo-erro.enum'
-import { TipoUsuario } from '../common/enums/tipo-usuario.enum'
+import { User } from '../../common/decorators/user.decorator'
+import { TipoErro } from '../../common/enums/tipo-erro.enum'
+import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
 
 @Controller('clientes')
 export class ClientesController {

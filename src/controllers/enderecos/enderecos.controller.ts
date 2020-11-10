@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common'
-import { Roles } from '../common/decorators/roles.decorator'
-import { User } from '../common/decorators/user.decorator'
-import { TipoUsuario } from '../common/enums/tipo-usuario.enum'
-import { UserService } from '../common/services/user.service'
+import { Roles } from '../../common/decorators/roles.decorator'
+import { User } from '../../common/decorators/user.decorator'
+import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
+import { UserService } from '../../common/services/user.service'
 import { EnderecosService } from './enderecos.service'
 import * as admin from 'firebase-admin'
-import { ResponseDefault } from '../common/interfaces/response-default.interface'
-import { TipoErro } from '../common/enums/tipo-erro.enum'
+import { ResponseDefault } from '../../common/interfaces/response-default.interface'
+import { TipoErro } from '../../common/enums/tipo-erro.enum'
 
 @Controller('enderecos')
 export class EnderecosController {

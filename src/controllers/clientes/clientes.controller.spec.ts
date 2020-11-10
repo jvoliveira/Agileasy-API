@@ -1,6 +1,6 @@
 import { createMock } from '@golevelup/nestjs-testing'
 import { Test, TestingModule } from '@nestjs/testing'
-import { UserService } from '../common/services/user.service'
+import { UserService } from '../../common/services/user.service'
 import { ClientesController } from './clientes.controller'
 import { ClientesService } from './clientes.service'
 import * as admin from 'firebase-admin'

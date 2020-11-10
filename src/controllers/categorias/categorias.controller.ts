@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common'
-import { Roles } from '../common/decorators/roles.decorator'
-import { TipoErro } from '../common/enums/tipo-erro.enum'
-import { ResponseDefault } from '../common/interfaces/response-default.interface'
+import { Roles } from '../../common/decorators/roles.decorator'
+import { TipoErro } from '../../common/enums/tipo-erro.enum'
+import { ResponseDefault } from '../../common/interfaces/response-default.interface'
 import { CategoriasService } from './categorias.service'
 
 @Controller('categorias')

@@ -2,8 +2,8 @@ import { Controller, Post, Body } from '@nestjs/common'
 import { RegisterPrestadorDto } from './dto/register-parceiro.dto'
 import { PrestadoresService } from '../prestadores/prestadores.service'
 import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
-import { ResponseDefault } from '../common/interfaces/response-default.interface'
-import { TipoErro } from '../common/enums/tipo-erro.enum'
+import { ResponseDefault } from '../../common/interfaces/response-default.interface'
+import { TipoErro } from '../../common/enums/tipo-erro.enum'
 
 @Controller('registrar')
 export class RegistrarController {

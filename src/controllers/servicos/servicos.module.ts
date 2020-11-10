@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ServicosEntityModule } from '../models/servicos/servicos.module'
+import { ServicosEntityModule } from '../../models/servicos/servicos.module'
 import { ServicosController } from './servicos.controller'
 import { ServicosService } from './servicos.service'
 

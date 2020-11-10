@@ -1,14 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { PrestadoresService } from './prestadores.service'
 import { createMock } from '@golevelup/nestjs-testing'
-import { Prestador } from '../models/prestadores/prestador.entity'
+import { Prestador } from '../../models/prestadores/prestador.entity'
 import { Repository } from 'typeorm'
 import { PrestadoresController } from './prestadores.controller'
-import { TipoErro } from '../common/enums/tipo-erro.enum'
+import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { RequestAuth } from '../common/interfaces/request-auth.interface'
+import { RequestAuth } from '../../common/interfaces/request-auth.interface'
 import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
-import { UserService } from '../common/services/user.service'
+import { UserService } from '../../common/services/user.service'
 import * as admin from 'firebase-admin'
 
 describe('Prestadores Service', () => {

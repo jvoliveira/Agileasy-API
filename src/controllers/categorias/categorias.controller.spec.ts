@@ -1,6 +1,6 @@
 import { createMock } from '@golevelup/nestjs-testing'
 import { Test, TestingModule } from '@nestjs/testing'
-import { TipoErro } from '../common/enums/tipo-erro.enum'
+import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { CategoriasController } from './categorias.controller'
 import { CategoriasService } from './categorias.service'
 

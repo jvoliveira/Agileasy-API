@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
-import { Endereco } from '../models/enderecos/endereco.entity'
+import { Endereco } from '../../models/enderecos/endereco.entity'
 import { EnderecosService } from './enderecos.service'
 import { createMock } from '@golevelup/nestjs-testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { Cliente } from '../models/clientes/cliente.entity'
+import { Cliente } from '../../models/clientes/cliente.entity'
 
 describe('EnderecosService', () => {
   let service: EnderecosService

@@ -4,7 +4,7 @@ import { ServicosService } from '../servicos/servicos.service'
 import { PedidosController } from './pedidos.controller'
 import { PedidosService } from './pedidos.service'
 import * as moment from 'moment-timezone'
-import { UserService } from '../common/services/user.service'
+import { UserService } from '../../common/services/user.service'
 import * as admin from 'firebase-admin'
 import { EnderecosService } from '../enderecos/enderecos.service'
 

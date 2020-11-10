@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { PrestadoresService } from './prestadores.service'
 import { createMock } from '@golevelup/nestjs-testing'
-import { Prestador } from '../models/prestadores/prestador.entity'
+import { Prestador } from '../../models/prestadores/prestador.entity'
 import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { Categoria } from '../models/categorias/categoria.entity'
-import { AllException } from '../common/exceptions/all.exception'
-import { Servico } from '../models/servicos/servico.entity'
+import { Categoria } from '../../models/categorias/categoria.entity'
+import { AllException } from '../../common/exceptions/all.exception'
+import { Servico } from '../../models/servicos/servico.entity'
 
 describe('Prestadores Service', () => {
   let service: PrestadoresService
