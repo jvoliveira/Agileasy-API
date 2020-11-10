@@ -29,12 +29,22 @@ export class PedidosService extends BaseService<Pedido> {
   }
 
   // Retorna o pedido dado o id do pedido e prestador, os dois devem ser válidos se não retorna erro do próprio método
-  public async getByPedidoAndPrestadorId(
+  public async getByIdAsPrestador(
     idPedido: number,
     idPrestador: number,
   ): Promise<Pedido> {
     return this.repo.findOneOrFail({
       where: { id: idPedido, prestador: { id: idPrestador } },
+    })
+  }
+
+  // Retorna o pedido dado o id do pedido e cliente, os dois devem ser válidos se não retorna erro do próprio método
+  public async getByIdAsCliente(
+    idPedido: number,
+    idCliente: number,
+  ): Promise<Pedido> {
+    return this.repo.findOneOrFail({
+      where: { id: idPedido, cliente: { id: idCliente } },
     })
   }
 }
