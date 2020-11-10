@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { Prestador } from '../models/prestadores/prestador.entity'
+import { Prestador } from '../../models/prestadores/prestador.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { BaseService } from '../common/services/base.service'
-import { AllException } from '../common/exceptions/all.exception'
-import { TipoErro } from '../common/enums/tipo-erro.enum'
-import { Servico } from '../models/servicos/servico.entity'
+import { BaseService } from '../../common/services/base.service'
+import { AllException } from '../../common/exceptions/all.exception'
+import { TipoErro } from '../../common/enums/tipo-erro.enum'
+import { Servico } from '../../models/servicos/servico.entity'
 
 @Injectable()
 export class PrestadoresService extends BaseService<Prestador> {

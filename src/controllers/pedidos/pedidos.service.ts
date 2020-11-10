@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { BaseService } from '../common/services/base.service'
-import { Pedido } from '../models/pedidos/pedido.entity'
-import { SituacaoInterface } from '../models/situacoes/situacao.interface'
+import { BaseService } from '../../common/services/base.service'
+import { Pedido } from '../../models/pedidos/pedido.entity'
+import { SituacaoInterface } from '../../models/situacoes/situacao.interface'
 
 @Injectable()
 export class PedidosService extends BaseService<Pedido> {

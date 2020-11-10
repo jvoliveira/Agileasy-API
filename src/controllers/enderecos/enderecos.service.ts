@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { BaseService } from '../common/services/base.service'
-import { Endereco } from '../models/enderecos/endereco.entity'
+import { BaseService } from '../../common/services/base.service'
+import { Endereco } from '../../models/enderecos/endereco.entity'
 
 @Injectable()
 export class EnderecosService extends BaseService<Endereco> {
