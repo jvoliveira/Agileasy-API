@@ -232,7 +232,7 @@ describe('PedidosController', () => {
 
     userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
 
-    service.getByPedidoAndPrestadorId.mockResolvedValue(
+    service.getByIdAsPrestador.mockResolvedValue(
       shouldReturn.data.pedido as any,
     )
 
