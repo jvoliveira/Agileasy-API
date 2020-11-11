@@ -6,7 +6,6 @@ import { createMock } from '@golevelup/nestjs-testing'
 import { AppModule } from '../src/app.module'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { TipoErro } from '../src/common/enums/tipo-erro.enum'
 import { Usuario } from '../src/models/usuarios/usuario.entity'
 import { Endereco } from '../src/models/enderecos/endereco.entity'
 
@@ -78,6 +77,131 @@ describe('EnderecoController (e2e)', () => {
       .get('/enderecos/cliente/eu')
       .auth('token-valido', { type: 'bearer' })
     expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/enderecos/adicionar/cliente/eu (POST)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        endereco: {
+          apelido: 'Casa',
+          endereco: 'Rua Benedito Nicolau',
+          complemento: 'interfone 30',
+          numero: '123',
+          cidade: 'Itaperuna',
+          estado: 'RJ',
+          cep: '28300-000',
+        },
+      },
+    }
+    mockService.find.mockResolvedValue(shouldReturn.data.endereco as any)
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100, 200] },
+    } as any)
+
+    mockUsuarioRepo.findOne.mockReturnValue({
+      cliente: { id: 1 },
+    } as any)
+    mockService.save.mockReturnValue(shouldReturn.data.endereco as any)
+    const response = await request(app.getHttpServer())
+      .post('/enderecos/adicionar/cliente/eu')
+      .auth('token-valido', { type: 'bearer' })
+      .send(shouldReturn.data.endereco)
+    expect(response.status).toBe(201)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/enderecos/1/alterar/cliente/eu (PUT)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        endereco: {
+          apelido: 'Casa',
+          endereco: 'Rua Benedito Nicolau',
+          complemento: 'interfone 30',
+          numero: '123',
+          cidade: 'Itaperuna',
+          estado: 'RJ',
+          cep: '28300-000',
+          cliente: {
+            id: 1,
+          },
+        },
+      },
+    }
+    mockService.find.mockResolvedValue(shouldReturn.data.endereco as any)
+    mockService.findOneOrFail.mockResolvedValue(
+      shouldReturn.data.endereco as any,
+    )
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100, 200] },
+    } as any)
+
+    mockUsuarioRepo.findOne.mockReturnValue({
+      cliente: { id: 1 },
+    } as any)
+    mockService.update.mockResolvedValue({ affected: 1 } as any)
+    const response = await request(app.getHttpServer())
+      .put('/enderecos/1/alterar/cliente/eu')
+      .auth('token-valido', { type: 'bearer' })
+      .send(shouldReturn.data.endereco)
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/enderecos/1/cliente/eu (PUT)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        endereco: {
+          apelido: 'Casa',
+          endereco: 'Rua Benedito Nicolau',
+          complemento: 'interfone 30',
+          numero: '123',
+          cidade: 'Itaperuna',
+          estado: 'RJ',
+          cep: '28300-000',
+          cliente: {
+            id: 1,
+          },
+        },
+      },
+    }
+    mockService.find.mockResolvedValue(shouldReturn.data.endereco as any)
+    mockService.findOneOrFail.mockResolvedValue(
+      shouldReturn.data.endereco as any,
+    )
+
+    mockService.findOne.mockResolvedValue(shouldReturn.data.endereco as any)
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100, 200] },
+    } as any)
+
+    mockUsuarioRepo.findOne.mockReturnValue({
+      cliente: { id: 1 },
+    } as any)
+    mockService.save.mockResolvedValue(shouldReturn.data.endereco as any)
+    const response = await request(app.getHttpServer())
+      .delete('/enderecos/1/cliente/eu')
+      .auth('token-valido', { type: 'bearer' })
+    expect(response.status).toBe(200)
+    delete shouldReturn.data.endereco
     expect(response.body).toStrictEqual(shouldReturn)
   })
 })

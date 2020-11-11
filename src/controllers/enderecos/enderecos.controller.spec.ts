@@ -55,4 +55,80 @@ describe('EnderecosController', () => {
       controller.getEnderecosByCliente(mockUser),
     ).resolves.toStrictEqual(shouldReturn)
   })
+
+  it('should adicionar enderecos from cliente', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        endereco: {
+          apelido: 'Casa',
+          endereco: 'Rua Benedito Nicolau',
+          complemento: 'interfone 30',
+          numero: '123',
+          cidade: 'Itaperuna',
+          estado: 'RJ',
+          cep: '28300-000',
+        },
+      },
+    }
+    const mockUser = createMock<admin.auth.UserRecord>()
+    mockUser.uid = 'teste'
+    userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
+    repo.create.mockResolvedValue(shouldReturn.data.endereco as any)
+    await expect(
+      controller.addEndereco(mockUser, shouldReturn.data.endereco),
+    ).resolves.toStrictEqual(shouldReturn)
+  })
+
+  it('should alterar endereco from cliente', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        endereco: {
+          apelido: 'Casa',
+          endereco: 'Rua Benedito Nicolau',
+          complemento: 'interfone 30',
+          numero: '123',
+          cidade: 'Itaperuna',
+          estado: 'RJ',
+          cep: '28300-000',
+        },
+      },
+    }
+    const mockUser = createMock<admin.auth.UserRecord>()
+    mockUser.uid = 'teste'
+    userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
+    repo.getByIdWithCliente.mockResolvedValue({
+      id: 1,
+      cliente: { id: 1 },
+    } as any)
+    repo.update.mockResolvedValue(shouldReturn.data.endereco as any)
+    await expect(
+      controller.updateEndereco(mockUser, 1, shouldReturn.data.endereco),
+    ).resolves.toStrictEqual(shouldReturn)
+  })
+
+  it('should delete endereco from cliente', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {},
+    }
+    const mockUser = createMock<admin.auth.UserRecord>()
+    mockUser.uid = 'teste'
+    userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
+    repo.getByIdWithCliente.mockResolvedValue({
+      id: 1,
+      cliente: { id: 1 },
+    } as any)
+    repo.delete.mockResolvedValue(shouldReturn.data as any)
+    await expect(controller.removeEndereco(mockUser, 1)).resolves.toStrictEqual(
+      shouldReturn,
+    )
+  })
 })
