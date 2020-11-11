@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { Pedido } from '../models/pedidos/pedido.entity'
+import { Pedido } from '../../models/pedidos/pedido.entity'
 import { PedidosService } from './pedidos.service'
 import { createMock } from '@golevelup/nestjs-testing'
 import {
   Estado,
   SituacaoInterface,
-} from '../models/situacoes/situacao.interface'
+} from '../../models/situacoes/situacao.interface'
 import * as moment from 'moment-timezone'
 
 describe('PedidosService', () => {
@@ -59,15 +59,28 @@ describe('PedidosService', () => {
 
     repo.findOneOrFail.mockResolvedValue(shouldReturn as any)
 
-    await expect(
-      service.getByPedidoAndPrestadorId(1, 1),
-    ).resolves.toStrictEqual(shouldReturn)
+    await expect(service.getByIdAsPrestador(1, 1)).resolves.toStrictEqual(
+      shouldReturn,
+    )
     expect(repo.findOneOrFail).toBeCalledWith({
       where: { id: 1, prestador: { id: 1 } },
     })
   })
 
-  it('should change situacao', async () => {
+  it('should get pedido and cliente by id', async () => {
+    const shouldReturn = { observacao: 'esse pedido é legal' }
+
+    repo.findOneOrFail.mockResolvedValue(shouldReturn as any)
+
+    await expect(service.getByIdAsCliente(1, 1)).resolves.toStrictEqual(
+      shouldReturn,
+    )
+    expect(repo.findOneOrFail).toBeCalledWith({
+      where: { id: 1, cliente: { id: 1 } },
+    })
+  })
+
+  it('should change situacao to ACEITO', async () => {
     const shouldReturn = { observacao: 'esse pedido é legal', situacoes: [] }
 
     repo.save.mockResolvedValue(shouldReturn as any)
