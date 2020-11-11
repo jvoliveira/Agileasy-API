@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { BaseService } from '../../common/services/base.service'
 import { Pedido } from '../../models/pedidos/pedido.entity'
+import { Situacao } from '../../models/situacoes/situacao.entity'
 import { SituacaoInterface } from '../../models/situacoes/situacao.interface'
 
 @Injectable()
@@ -24,7 +25,7 @@ export class PedidosService extends BaseService<Pedido> {
     pedido: Pedido,
     situacao: SituacaoInterface,
   ): Promise<Pedido> {
-    pedido.situacoes.push(situacao as any)
+    pedido.situacoes.push(situacao as Situacao)
     return this.repo.save(pedido)
   }
 

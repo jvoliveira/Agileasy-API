@@ -134,6 +134,10 @@ export class PedidosController {
     // Pega o pedido referente aquele prestador, se o pedido não pertencer aquele prestador é dado falha
     const pedido = await this.serv.getByIdAsPrestador(idPedido, prestador.id)
 
+    if (pedido.situacoes.length > 0) {
+      throw new AllException(TipoErro.SITUACAO_INVALIDA)
+    }
+
     // Muda a situação para em andamento
     const pedidoAtualizado = await this.serv.changeSituacao(pedido, {
       data: moment().toDate(),
@@ -163,12 +167,15 @@ export class PedidosController {
     const pedido = await this.serv.getByIdAsPrestador(idPedido, prestador.id)
 
     // Só pode ser feito se a última situação for aceito
-    if (
-      pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.aceito
-    ) {
+    if (pedido.situacoes.length > 0) {
+      if (
+        pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.aceito
+      ) {
+        throw new AllException(TipoErro.SITUACAO_INVALIDA)
+      }
+    } else {
       throw new AllException(TipoErro.SITUACAO_INVALIDA)
     }
-
     // Muda a situação para em andamento
     const pedidoAtualizado = await this.serv.changeSituacao(pedido, {
       data: moment().toDate(),
@@ -197,13 +204,17 @@ export class PedidosController {
     // Pega o pedido referente aquele prestador, se o pedido não pertencer aquele prestador é dado falha
     const pedido = await this.serv.getByIdAsPrestador(idPedido, prestador.id)
 
-    // Só pode ser feito se a última situação for aceito
-    if (
-      pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.andamento
-    ) {
+    // Só pode ser feito se a última situação for em andamento
+    if (pedido.situacoes.length > 0) {
+      if (
+        pedido.situacoes[pedido.situacoes.length - 1].estado !==
+        Estado.andamento
+      ) {
+        throw new AllException(TipoErro.SITUACAO_INVALIDA)
+      }
+    } else {
       throw new AllException(TipoErro.SITUACAO_INVALIDA)
     }
-
     // Muda a situação para em andamento
     const pedidoAtualizado = await this.serv.changeSituacao(pedido, {
       data: moment().toDate(),
@@ -233,16 +244,15 @@ export class PedidosController {
     const pedido = await this.serv.getByIdAsPrestador(idPedido, prestador.id)
 
     // Só pode ser feito se Não for andamento ou posterior
-    if (
-      pedido.situacoes[pedido.situacoes.length - 1].estado !==
-        Estado.andamento ||
-      pedido.situacoes[pedido.situacoes.length - 1].estado !==
-        Estado.finalizado ||
-      pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.cancelado
-    ) {
+    if (pedido.situacoes.length > 0) {
+      if (
+        pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.aceito
+      ) {
+        throw new AllException(TipoErro.SITUACAO_INVALIDA)
+      }
+    } else {
       throw new AllException(TipoErro.SITUACAO_INVALIDA)
     }
-
     // Muda a situação para em andamento
     const pedidoCancelado = await this.serv.changeSituacao(pedido, {
       data: moment().toDate(),
@@ -272,13 +282,13 @@ export class PedidosController {
     const pedido = await this.serv.getByIdAsCliente(idPedido, cliente.id)
 
     // Só pode ser feito se Não for andamento ou posterior
-    if (
-      pedido.situacoes[pedido.situacoes.length - 1].estado !==
-        Estado.andamento ||
-      pedido.situacoes[pedido.situacoes.length - 1].estado !==
-        Estado.finalizado ||
-      pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.cancelado
-    ) {
+    if (pedido.situacoes.length > 0) {
+      if (
+        pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.aceito
+      ) {
+        throw new AllException(TipoErro.SITUACAO_INVALIDA)
+      }
+    } else {
       throw new AllException(TipoErro.SITUACAO_INVALIDA)
     }
 
