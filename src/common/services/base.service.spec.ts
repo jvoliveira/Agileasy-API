@@ -140,17 +140,20 @@ describe('Base Service Test', () => {
 
       expect(service).toBeDefined()
 
-      repo.save.mockReturnValue(shouldReturn as any)
+      repo.update.mockResolvedValue({ affected: 1 } as any)
+      repo.findOneOrFail.mockResolvedValue(shouldReturn as any)
 
-      expect(await service.update(updateParam)).toBe(shouldReturn)
+      expect(await service.update(1, updateParam as any)).toBe(shouldReturn)
 
-      expect(repo.save).toHaveBeenCalledTimes(1)
-      expect(repo.save).toHaveBeenCalledWith(updateParam)
+      expect(repo.update).toHaveBeenCalledTimes(1)
+      expect(repo.update).toHaveBeenCalledWith(1, updateParam)
 
-      repo.save.mockClear()
-      repo.save.mockReturnValue(null)
+      repo.update.mockClear()
+      repo.update.mockResolvedValue({ affected: 0 } as any)
 
-      await expect(service.update(updateParam)).rejects.toThrow(AllException)
+      await expect(service.update(1, updateParam as any)).rejects.toThrow(
+        AllException,
+      )
     }
   })
 
