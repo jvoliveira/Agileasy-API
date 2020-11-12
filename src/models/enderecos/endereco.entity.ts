@@ -45,6 +45,9 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
   @Column('text', { nullable: true })
   referencia: string | null
 
+  @Column('boolean', { nullable: false, default: false })
+  favorito: boolean
+
   @ManyToOne(
     type => Cliente,
     cliente => cliente.enderecos,
@@ -77,6 +80,7 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
     estado: string,
     cep: string,
     referencia: string | null,
+    favorito: boolean,
     ativo = true,
   ) {
     super(id, ativo)
@@ -88,6 +92,7 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
     this.estado = estado
     this.cep = cep
     this.referencia = referencia
+    this.favorito = favorito
   }
 
   fillFromJson(json: any, recursive?: string[] | undefined): Endereco {
@@ -101,11 +106,12 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
     this.cep = json.cep
     this.referencia = json.referencia
     this.ativo = json.ativo
+    this.favorito = json.favorito
     return this
   }
 
   public static fromJson(json: any): Endereco {
-    return new Endereco(1, 'f', 'f', 'd', 'd', 'd', 'd', 'd', 'd').fillFromJson(
+    return new Endereco(1, 'f', 'f', 'd', 'd', 'd', 'd', 'd', 'd', false).fillFromJson(
       json,
     )
   }
@@ -121,6 +127,7 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
       this.estado,
       this.cep,
       this.referencia,
+      this.favorito,
       this.ativo,
     )
     endereco.dados = this.dados

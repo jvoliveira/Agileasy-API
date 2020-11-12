@@ -7,4 +7,5 @@ export interface EnderecoInterface {
   estado: string
   cep: string
   referencia: string | null
+  favorito: boolean
 }

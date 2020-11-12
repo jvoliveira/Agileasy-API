@@ -12,6 +12,7 @@ describe('Endereco', () => {
       'RJ',
       '28300000',
       null,
+      true,
     )
 
     expect(JSON.parse(JSON.stringify(mockEndereco))).toStrictEqual(
@@ -33,5 +34,6 @@ function expectedJSON() {
     estado: 'RJ',
     cep: '28300000',
     referencia: null,
+    favorito: true,
   }
 }
