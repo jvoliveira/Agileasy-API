@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { TipoErro } from '../enums/tipo-erro.enum'
 import { AllException } from '../exceptions/all.exception'
 import { BaseModel } from '../../models/basis/base.entity'
@@ -44,6 +44,21 @@ export class BaseService<T extends BaseModel<T>> {
       throw new AllException(TipoErro.ERROR_AO_ATUALIZAR)
     }
     return this.repo.findOneOrFail(id)
+  }
+
+  async bulkUpdate(
+    id: number[],
+    obj: QueryDeepPartialEntity<T>,
+  ): Promise<void> {
+    const status = await this.repo
+      .createQueryBuilder()
+      .update(obj)
+      .where({ id: In(id) })
+      .execute()
+
+    if (!status.affected) {
+      throw new AllException(TipoErro.ERROR_AO_ATUALIZAR)
+    }
   }
 
   async delete(id: number): Promise<T> {

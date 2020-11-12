@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing'
-import { Repository } from 'typeorm'
+import { Repository, SelectQueryBuilder, UpdateQueryBuilder } from 'typeorm'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { PrestadoresService } from '../../controllers/prestadores/prestadores.service'
 import { Prestador } from '../../models/prestadores/prestador.entity'
@@ -154,6 +154,40 @@ describe('Base Service Test', () => {
       await expect(service.update(1, updateParam as any)).rejects.toThrow(
         AllException,
       )
+    }
+  })
+
+  it('should be bulk update', async () => {
+    const updateParam = {
+      nome: 'Vinicius Picanco',
+    }
+    for (let i = 0; i < services.length; i++) {
+      const repo = repos[i]
+      const service = services[i]
+
+      expect(service).toBeDefined()
+
+      const mockUpdate = createMock<SelectQueryBuilder<any>>()
+      const mockWhere = createMock<UpdateQueryBuilder<any>>()
+      const mockExecute = createMock<UpdateQueryBuilder<any>>()
+      mockUpdate.update.mockReturnValue(mockWhere)
+      mockWhere.where.mockReturnValue(mockExecute)
+      mockExecute.execute.mockResolvedValue({ affected: 3 } as any)
+
+      repo.createQueryBuilder.mockReturnValue(mockUpdate)
+
+      await expect(
+        service.bulkUpdate([1, 2, 3], updateParam as any),
+      ).resolves.toBeUndefined()
+
+      expect(mockExecute.execute).toHaveBeenCalledTimes(1)
+
+      mockExecute.execute.mockClear()
+      mockExecute.execute.mockResolvedValue({ affected: 0 } as any)
+
+      await expect(
+        service.bulkUpdate([1, 2, 3], updateParam as any),
+      ).rejects.toThrow(AllException)
     }
   })
 
