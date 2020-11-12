@@ -5,7 +5,7 @@ import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { createMock } from '@golevelup/nestjs-testing'
 import { AppModule } from '../src/app.module'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Repository, SelectQueryBuilder, UpdateQueryBuilder } from 'typeorm'
 import { Usuario } from '../src/models/usuarios/usuario.entity'
 import { Endereco } from '../src/models/enderecos/endereco.entity'
 
@@ -156,6 +156,58 @@ describe('EnderecoController (e2e)', () => {
       .put('/enderecos/1/alterar/cliente/eu')
       .auth('token-valido', { type: 'bearer' })
       .send(shouldReturn.data.endereco)
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/enderecos/1/favorito/cliente/eu (PATCH)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        endereco: {
+          id: 1,
+          apelido: 'Casa',
+          endereco: 'Rua Benedito Nicolau',
+          complemento: 'interfone 30',
+          numero: '123',
+          cidade: 'Itaperuna',
+          estado: 'RJ',
+          cep: '28300-000',
+          cliente: {
+            id: 1,
+          },
+        },
+      },
+    }
+    mockService.find.mockResolvedValue([shouldReturn.data.endereco] as any)
+    mockService.findOneOrFail.mockResolvedValue(
+      shouldReturn.data.endereco as any,
+    )
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100, 200] },
+    } as any)
+
+    mockUsuarioRepo.findOne.mockReturnValue({
+      cliente: { id: 1 },
+    } as any)
+    mockService.update.mockResolvedValue({ affected: 1 } as any)
+    const mockUpdate = createMock<SelectQueryBuilder<any>>()
+    const mockWhere = createMock<UpdateQueryBuilder<any>>()
+    const mockExecute = createMock<UpdateQueryBuilder<any>>()
+    mockUpdate.update.mockReturnValue(mockWhere)
+    mockWhere.where.mockReturnValue(mockExecute)
+    mockExecute.execute.mockResolvedValue({ affected: 3 } as any)
+
+    mockService.createQueryBuilder.mockReturnValue(mockUpdate)
+
+    const response = await request(app.getHttpServer())
+      .patch('/enderecos/1/favorito/cliente/eu')
+      .auth('token-valido', { type: 'bearer' })
     expect(response.status).toBe(200)
     expect(response.body).toStrictEqual(shouldReturn)
   })
