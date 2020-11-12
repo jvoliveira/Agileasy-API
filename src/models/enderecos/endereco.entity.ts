@@ -111,9 +111,18 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
   }
 
   public static fromJson(json: any): Endereco {
-    return new Endereco(1, 'f', 'f', 'd', 'd', 'd', 'd', 'd', 'd', false).fillFromJson(
-      json,
-    )
+    return new Endereco(
+      1,
+      'f',
+      'f',
+      'd',
+      'd',
+      'd',
+      'd',
+      'd',
+      'd',
+      false,
+    ).fillFromJson(json)
   }
 
   copy(): Endereco {
