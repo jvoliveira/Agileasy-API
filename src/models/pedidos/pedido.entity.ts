@@ -154,7 +154,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
       'df',
       new MetodoPagamento(1, TipoPagamento.cartaoCreditoEntrega, null),
       [],
-      new Endereco(1, 'r', 'e', 'r', 'd', 'f', 'f', 'f', 'f'),
+      new Endereco(1, 'r', 'e', 'r', 'd', 'f', 'f', 'f', 'f', false),
       [new Servico(1, 'f', 2, 'r', 'd')],
       moment(),
     ).fillFromJson(json)

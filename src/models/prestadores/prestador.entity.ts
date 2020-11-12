@@ -195,7 +195,7 @@ export class Prestador extends BaseModel<Prestador>
       't',
       'r',
       3,
-      new Endereco(1, 'r', 'e', 'r', 'd', 'f', 'f', 'f', 'f'),
+      new Endereco(1, 'r', 'e', 'r', 'd', 'f', 'f', 'f', 'f', false),
       [],
       [],
       '1',
