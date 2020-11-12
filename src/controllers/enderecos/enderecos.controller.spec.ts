@@ -112,6 +112,42 @@ describe('EnderecosController', () => {
     ).resolves.toStrictEqual(shouldReturn)
   })
 
+  it('should mark as favorite endereco from cliente', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        endereco: {
+          id: 1,
+          apelido: 'Casa',
+          endereco: 'Rua Benedito Nicolau',
+          complemento: 'interfone 30',
+          numero: '123',
+          cidade: 'Itaperuna',
+          estado: 'RJ',
+          cep: '28300-000',
+          favorito: true,
+        },
+      },
+    }
+    const mockUser = createMock<admin.auth.UserRecord>()
+    mockUser.uid = 'teste'
+    userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
+    repo.getByIdWithCliente.mockResolvedValue({
+      id: 1,
+      cliente: { id: 1 },
+    } as any)
+    repo.getEnderecosByCliente.mockResolvedValue([
+      shouldReturn.data.endereco,
+    ] as any)
+    repo.update.mockResolvedValue(shouldReturn.data.endereco as any)
+    repo.bulkUpdate.mockReturnThis()
+    await expect(controller.markAsFavorito(mockUser, 1)).resolves.toStrictEqual(
+      shouldReturn,
+    )
+  })
+
   it('should delete endereco from cliente', async () => {
     const shouldReturn = {
       error_id: -1,

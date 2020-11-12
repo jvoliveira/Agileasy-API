@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import {
+  Body,
+  CacheTTL,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+} from '@nestjs/common'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { User } from '../../common/decorators/user.decorator'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
@@ -20,6 +30,7 @@ export class EnderecosController {
 
   @Roles(TipoUsuario.CLIENTE)
   @Get('cliente/eu')
+  @CacheTTL(1)
   public async getEnderecosByCliente(
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
@@ -33,6 +44,42 @@ export class EnderecosController {
       error: false,
       data: {
         enderecos,
+      },
+    }
+  }
+
+  @Roles(TipoUsuario.CLIENTE)
+  @Patch(':id/favorito/cliente/eu')
+  public async markAsFavorito(
+    @User() user: admin.auth.UserRecord,
+    @Param('id') id: number,
+  ): Promise<ResponseDefault> {
+    const clienteIncompleto = await this.userService.getClienteByToken(user.uid)
+    const enderecos = await this.serv.getEnderecosByCliente(
+      clienteIncompleto.id,
+    )
+    const idEnderecos: number[] = []
+    let hasEndereco = false
+    for (const endereco of enderecos) {
+      idEnderecos.push(endereco.id)
+      if (endereco.id == id) {
+        hasEndereco = true
+      }
+    }
+    // Caso o endereço não pertença ao cliente que está fazendo a permissão
+    if (!hasEndereco) {
+      throw new AllException(TipoErro.USUARIO_SEM_PERMISSAO)
+    }
+
+    await this.serv.bulkUpdate(idEnderecos, { favorito: false })
+    const endereco = await this.serv.update(id, { favorito: true })
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        endereco,
       },
     }
   }
