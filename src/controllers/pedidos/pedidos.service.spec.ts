@@ -70,7 +70,7 @@ describe('PedidosService', () => {
         'situacoes',
         'endereco',
         'servicos',
-        'avaliacoes',
+        'avaliacao',
       ],
       where: { id: 1, prestador: { id: 1 } },
     })
@@ -92,7 +92,7 @@ describe('PedidosService', () => {
         'situacoes',
         'endereco',
         'servicos',
-        'avaliacoes',
+        'avaliacao',
       ],
       where: { id: 1, cliente: { id: 1 } },
     })
