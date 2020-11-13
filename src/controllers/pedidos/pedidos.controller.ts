@@ -239,6 +239,45 @@ export class PedidosController {
     }
   }
 
+  @Put(':id/marcar-rejeitado')
+  @Roles(TipoUsuario.PRESTADOR)
+  public async markAsRejeitado(
+    @Param('id') idPedido,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    // Pega o prestador logado que está fazendo a solicitação
+    const prestador = await this.userService.getPrestadorByToken(user.uid)
+
+    // Pega o pedido referente aquele prestador, se o pedido não pertencer aquele prestador é dado falha
+    const pedido = await this.serv.getByIdAsPrestador(idPedido, prestador.id)
+
+    // Só pode ser feito se Não for andamento ou posterior
+    if (pedido.situacoes.length > 0) {
+      if (
+        pedido.situacoes[pedido.situacoes.length - 1].estado !==
+        Estado.solicitado
+      ) {
+        throw new AllException(TipoErro.SITUACAO_INVALIDA)
+      }
+    } else {
+      throw new AllException(TipoErro.SITUACAO_INVALIDA)
+    }
+    // Muda a situação para em andamento
+    const pedidoRejeitado = await this.serv.changeSituacao(pedido, {
+      data: moment().toDate(),
+      estado: Estado.rejeitado,
+    })
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: pedidoRejeitado,
+      },
+    }
+  }
+
   @Put(':id/prestador/cancelar')
   @Roles(TipoUsuario.PRESTADOR)
   public async cancelarPedidoAsPrestador(
