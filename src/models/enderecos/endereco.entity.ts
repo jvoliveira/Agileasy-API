@@ -27,6 +27,9 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
   @Column('text', { nullable: false })
   endereco!: string
 
+  @Column('text', { nullable: false })
+  bairro!: string
+
   @Column('text', { nullable: true })
   complemento: string | null
 
@@ -80,6 +83,7 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
     estado: string,
     cep: string,
     referencia: string | null,
+    bairro: string,
     favorito: boolean,
     ativo = true,
   ) {
@@ -91,6 +95,7 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
     this.cidade = cidade
     this.estado = estado
     this.cep = cep
+    this.bairro = bairro
     this.referencia = referencia
     this.favorito = favorito
   }
@@ -105,6 +110,7 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
     this.estado = json.estado
     this.cep = json.cep
     this.referencia = json.referencia
+    this.bairro = json.bairro
     this.ativo = json.ativo
     this.favorito = json.favorito
     return this
@@ -115,6 +121,7 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
       1,
       'f',
       'f',
+      'd',
       'd',
       'd',
       'd',
@@ -136,6 +143,7 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
       this.estado,
       this.cep,
       this.referencia,
+      this.bairro,
       this.favorito,
       this.ativo,
     )

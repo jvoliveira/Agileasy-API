@@ -17,6 +17,8 @@ describe('Cliente', () => {
       'RJ',
       '28300-000',
       null,
+      'São Mateus',
+      false,
     )
     const cartaoCliente = new Cartao(
       1,
@@ -79,6 +81,8 @@ function expectedJSON() {
         estado: 'RJ',
         cep: '28300-000',
         referencia: null,
+        bairro: 'São Mateus',
+        favorito: false,
       },
     ],
     cartoes: [

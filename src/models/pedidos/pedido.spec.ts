@@ -7,8 +7,6 @@ import { Estado } from '../situacoes/situacao.interface'
 import { Endereco } from '../enderecos/endereco.entity'
 import { TipoPagamento } from '../metodos-pagamento/metodo-pagamento.interface'
 import { Servico } from '../servicos/servico.entity'
-import { VariacaoServico } from '../servico-variacao/variacao-servico.entity'
-import { Alternativa } from '../alternativa/alternativa.entity'
 
 describe('Pedido', () => {
   it('test json pedido', () => {
@@ -36,6 +34,8 @@ describe('Pedido', () => {
       'RJ',
       '28300000',
       null,
+      'São Mateus',
+      false,
     )
     const serv = new Servico(
       1,
@@ -103,6 +103,8 @@ function expectedJSON() {
       estado: 'RJ',
       cep: '28300000',
       referencia: null,
+      bairro: 'São Mateus',
+      favorito: false,
     },
     servicos: [
       {

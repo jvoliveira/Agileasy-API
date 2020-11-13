@@ -18,6 +18,8 @@ describe('Prestador', () => {
       'RJ',
       '28300000',
       null,
+      'São Mateus',
+      false
     )
     const serv = new Servico(
       1,
@@ -110,6 +112,8 @@ function expectedJSON() {
       estado: 'RJ',
       cep: '28300000',
       referencia: null,
+      favorito: false,
+      bairro: 'São Mateus'
     },
     servicos: [
       {
