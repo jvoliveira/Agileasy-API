@@ -538,7 +538,7 @@ describe('PedidoController (e2e)', () => {
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
-  it('/pedidos/1/marcar-andamento (PUT)', async () => {
+  it('/pedidos/1/marcar-andamento (PATCH)', async () => {
     const shouldReturn = {
       error_id: -1,
       message: 'Sucesso!',
@@ -607,7 +607,7 @@ describe('PedidoController (e2e)', () => {
     } as any)
 
     const response = await request(app.getHttpServer())
-      .put('/pedidos/1/marcar-andamento')
+      .patch('/pedidos/1/marcar-andamento')
       .auth('token-valido', { type: 'bearer' })
       .send(shouldReturn.data.pedido)
     expect(response.status).toBe(200)
@@ -622,7 +622,7 @@ describe('PedidoController (e2e)', () => {
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
-  it('/pedidos/1/marcar-aceito (PUT)', async () => {
+  it('/pedidos/1/marcar-aceito (PATCH)', async () => {
     const shouldReturn = {
       error_id: -1,
       message: 'Sucesso!',
@@ -691,7 +691,7 @@ describe('PedidoController (e2e)', () => {
     } as any)
 
     const response = await request(app.getHttpServer())
-      .put('/pedidos/1/marcar-aceito')
+      .patch('/pedidos/1/marcar-aceito')
       .auth('token-valido', { type: 'bearer' })
       .send(shouldReturn.data.pedido)
     expect(response.status).toBe(200)
@@ -706,7 +706,7 @@ describe('PedidoController (e2e)', () => {
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
-  it('/pedidos/1/marcar-rejeitado (PUT)', async () => {
+  it('/pedidos/1/marcar-rejeitado (PATCH)', async () => {
     const shouldReturn = {
       error_id: -1,
       message: 'Sucesso!',
@@ -775,7 +775,7 @@ describe('PedidoController (e2e)', () => {
     } as any)
 
     const response = await request(app.getHttpServer())
-      .put('/pedidos/1/marcar-rejeitado')
+      .patch('/pedidos/1/marcar-rejeitado')
       .auth('token-valido', { type: 'bearer' })
       .send(shouldReturn.data.pedido)
     expect(response.status).toBe(200)
@@ -790,7 +790,7 @@ describe('PedidoController (e2e)', () => {
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
-  it('/pedidos/1/marcar-finalizado (PUT)', async () => {
+  it('/pedidos/1/marcar-finalizado (PATCH)', async () => {
     const shouldReturn = {
       error_id: -1,
       message: 'Sucesso!',
@@ -871,7 +871,7 @@ describe('PedidoController (e2e)', () => {
     } as any)
 
     const response = await request(app.getHttpServer())
-      .put('/pedidos/1/marcar-finalizado')
+      .patch('/pedidos/1/marcar-finalizado')
       .auth('token-valido', { type: 'bearer' })
       .send(shouldReturn.data.pedido)
     expect(response.status).toBe(200)
@@ -886,7 +886,7 @@ describe('PedidoController (e2e)', () => {
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
-  it('/pedidos/1/prestador/cancelar (PUT)', async () => {
+  it('/pedidos/1/prestador/cancelar (PATCH)', async () => {
     const shouldReturn = {
       error_id: -1,
       message: 'Sucesso!',
@@ -961,7 +961,7 @@ describe('PedidoController (e2e)', () => {
     } as any)
 
     const response = await request(app.getHttpServer())
-      .put('/pedidos/1/prestador/cancelar')
+      .patch('/pedidos/1/prestador/cancelar')
       .auth('token-valido', { type: 'bearer' })
       .send(shouldReturn.data.pedido)
     expect(response.status).toBe(200)
@@ -976,7 +976,7 @@ describe('PedidoController (e2e)', () => {
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
-  it('/pedidos/1/cliente/cancelar (PUT)', async () => {
+  it('/pedidos/1/cliente/cancelar (PATCH)', async () => {
     const shouldReturn = {
       error_id: -1,
       message: 'Sucesso!',
@@ -1051,7 +1051,7 @@ describe('PedidoController (e2e)', () => {
     } as any)
 
     const response = await request(app.getHttpServer())
-      .put('/pedidos/1/cliente/cancelar')
+      .patch('/pedidos/1/cliente/cancelar')
       .auth('token-valido', { type: 'bearer' })
       .send(shouldReturn.data.pedido)
     expect(response.status).toBe(200)

@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Patch,
 } from '@nestjs/common'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { PedidosService } from './pedidos.service'
@@ -98,6 +98,7 @@ export class PedidosController {
 
   @Roles(TipoUsuario.CLIENTE)
   @Get('cliente/eu')
+  @CacheTTL(5)
   public async myPedidosAsCliente(
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
@@ -115,6 +116,7 @@ export class PedidosController {
 
   @Roles(TipoUsuario.PRESTADOR)
   @Get('prestador/eu')
+  @CacheTTL(5)
   public async myPedidosAsPrestador(
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
@@ -168,7 +170,7 @@ export class PedidosController {
     }
   }
 
-  @Put(':id/marcar-aceito')
+  @Patch(':id/marcar-aceito')
   @Roles(TipoUsuario.PRESTADOR)
   public async markAsAceito(
     @Param('id') idPedido,
@@ -208,7 +210,7 @@ export class PedidosController {
     }
   }
 
-  @Put(':id/marcar-andamento')
+  @Patch(':id/marcar-andamento')
   @Roles(TipoUsuario.PRESTADOR)
   public async markAsEmAndamento(
     @Param('id') idPedido,
@@ -246,7 +248,7 @@ export class PedidosController {
     }
   }
 
-  @Put(':id/marcar-finalizado')
+  @Patch(':id/marcar-finalizado')
   @Roles(TipoUsuario.PRESTADOR)
   public async markAsFinalizado(
     @Param('id') idPedido,
@@ -285,7 +287,7 @@ export class PedidosController {
     }
   }
 
-  @Put(':id/marcar-rejeitado')
+  @Patch(':id/marcar-rejeitado')
   @Roles(TipoUsuario.PRESTADOR)
   public async markAsRejeitado(
     @Param('id') idPedido,
@@ -324,7 +326,7 @@ export class PedidosController {
     }
   }
 
-  @Put(':id/prestador/cancelar')
+  @Patch(':id/prestador/cancelar')
   @Roles(TipoUsuario.PRESTADOR)
   public async cancelarPedidoAsPrestador(
     @Param('id') idPedido,
@@ -362,7 +364,7 @@ export class PedidosController {
     }
   }
 
-  @Put(':id/cliente/cancelar')
+  @Patch(':id/cliente/cancelar')
   @Roles(TipoUsuario.CLIENTE)
   public async cancelarPedidoAsCliente(
     @Param('id') idPedido,
