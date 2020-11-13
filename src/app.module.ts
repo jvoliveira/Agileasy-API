@@ -26,6 +26,7 @@ import { ServicosModule } from './controllers/servicos/servicos.module'
 import { PedidosModule } from './controllers/pedidos/pedidos.module'
 import { EnderecosModule } from './controllers/enderecos/enderecos.module'
 import { ClientesModule } from './controllers/clientes/clientes.module'
+import { MetodosPagamentoModule } from './controllers/metodospagamento/metodos-pagamento.module'
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { ClientesModule } from './controllers/clientes/clientes.module'
     PedidosModule,
     EnderecosModule,
     ClientesModule,
+    MetodosPagamentoModule,
   ],
   controllers: [AppController],
   providers: [
