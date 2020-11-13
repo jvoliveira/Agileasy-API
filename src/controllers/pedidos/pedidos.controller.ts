@@ -331,7 +331,10 @@ export class PedidosController {
     // Só pode ser feito se Não for andamento ou posterior
     if (pedido.situacoes.length > 0) {
       if (
-        pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.aceito
+        pedido.situacoes[pedido.situacoes.length - 1].estado !==
+          Estado.aceito &&
+        pedido.situacoes[pedido.situacoes.length - 1].estado !==
+          Estado.solicitado
       ) {
         throw new AllException(TipoErro.SITUACAO_INVALIDA)
       }
