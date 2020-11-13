@@ -11,13 +11,13 @@ export class MetodosPagamentoController {
   @Roles(TipoUsuario.CLIENTE)
   @Get('comuns')
   public async getCommonsMetodosPagamento(): Promise<ResponseDefault> {
-    const enderecos = await this.serv.getAll()
+    const metodosPagamento = await this.serv.getAll()
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
       error: false,
       data: {
-        enderecos,
+        metodosPagamento,
       },
     }
   }
