@@ -54,15 +54,24 @@ describe('PedidosService', () => {
     expect(repo.find).toBeCalledWith({ where: { cliente: { id: 1 } } })
   })
 
-  it('should get pedido and prestador by id', async () => {
+  it('should get pedido as prestador', async () => {
     const shouldReturn = { observacao: 'esse pedido é legal' }
 
     repo.findOneOrFail.mockResolvedValue(shouldReturn as any)
 
-    await expect(service.getByIdAsPrestador(1, 1)).resolves.toStrictEqual(
+    await expect(service.getByIdAsPrestador(1, 1, true)).resolves.toStrictEqual(
       shouldReturn,
     )
     expect(repo.findOneOrFail).toBeCalledWith({
+      relations: [
+        'metodoPagamento',
+        'cliente',
+        'prestador',
+        'situacoes',
+        'endereco',
+        'servicos',
+        'avaliacoes',
+      ],
       where: { id: 1, prestador: { id: 1 } },
     })
   })
@@ -72,10 +81,19 @@ describe('PedidosService', () => {
 
     repo.findOneOrFail.mockResolvedValue(shouldReturn as any)
 
-    await expect(service.getByIdAsCliente(1, 1)).resolves.toStrictEqual(
+    await expect(service.getByIdAsCliente(1, 1, true)).resolves.toStrictEqual(
       shouldReturn,
     )
     expect(repo.findOneOrFail).toBeCalledWith({
+      relations: [
+        'metodoPagamento',
+        'cliente',
+        'prestador',
+        'situacoes',
+        'endereco',
+        'servicos',
+        'avaliacoes',
+      ],
       where: { id: 1, cliente: { id: 1 } },
     })
   })

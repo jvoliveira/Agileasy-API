@@ -21,10 +21,10 @@ export class Avaliacao extends BaseModel<Avaliacao>
   @Column('double precision', { nullable: false })
   nota: number
 
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: false, name: 'url_foto' })
   urlFoto: string
 
-  @Column('int', { nullable: false })
+  @Column('int', { nullable: false, name: 'quem_avaliou' })
   quemAvaliou: number
 
   @ManyToOne(

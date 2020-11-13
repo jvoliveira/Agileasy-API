@@ -677,4 +677,262 @@ describe('PedidosController', () => {
       controller.myPedidosAsCliente(mockUser),
     ).resolves.toStrictEqual(shouldReturn)
   })
+
+  it('should get pedido as cliente', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 30,
+          observacao: 'Quero estrelinha.',
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: 0,
+              data: '2020-11-10T21:44:00.000Z',
+            },
+            {
+              id: 2,
+              ativo: true,
+              estado: 1,
+              data: '2020-11-13T18:18:25.388Z',
+            },
+            {
+              id: 3,
+              ativo: true,
+              estado: 3,
+              data: '2020-11-13T18:18:58.946Z',
+            },
+            {
+              id: 4,
+              ativo: true,
+              estado: 6,
+              data: '2020-11-13T18:19:03.102Z',
+            },
+          ],
+          endereco: {
+            id: 3,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Green Stravenue',
+            complemento: 'Hill',
+            numero: 223,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: null,
+            favorito: false,
+          },
+          servicos: [
+            {
+              id: 2,
+              ativo: true,
+              descricao: 'Corte popular de cabelo',
+              valor: 30,
+              nome: 'Corte de cabelo',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/Dyed-Udon-with-Shaved-Hairline-702x1024.jpg',
+            },
+          ],
+          dataHora: '2021-02-11T14:30:00.000Z',
+          cliente: {
+            id: 1,
+            ativo: true,
+            usuario: {
+              id: 2,
+              ativo: true,
+              nome: 'Joao Picanco',
+              nomeSocial: 'Jaozin',
+              dataNascimento: '1987-06-27T03:00:00.000Z',
+              telefone: '22998047269',
+              cpf: '678.532.458-87',
+              token: 't0V7MEE9kiTP2f7T6la9WIedxee2',
+              status: 0,
+              foto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/estilo-geek-masculino7.jpg',
+            },
+          },
+          prestador: {
+            id: 1,
+            ativo: true,
+            usuario: {
+              id: 1,
+              ativo: true,
+              nome: 'Alice Medeiros',
+              nomeSocial: 'Lice',
+              dataNascimento: '1999-03-25T03:00:00.000Z',
+              telefone: '22998047269',
+              cpf: '010.677.458-23',
+              token: '1I80WG9tuUTIRS3XW8Z6627XYkB2',
+              status: 0,
+              foto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/maquiadora.jpg',
+            },
+            cnpj: '',
+            delivery: true,
+            documentoUrl:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/Nova-Carteira-de-Identidade_site.jpg',
+            nomePublico: 'Unhas da Alice',
+            razaoSocial: '',
+            tipoPessoa: 0,
+            logo:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/unhas-decoradas-alice-no-pai%CC%81s-das-maravilhas-4.jpg',
+            nota: 4.3,
+            capa:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/capa-maquiagem-blog.png?alt=media',
+          },
+          avaliacoes: [],
+        },
+      },
+    }
+
+    const mockUser = createMock<admin.auth.UserRecord>()
+    mockUser.uid = 'teste'
+    userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
+    service.getByIdAsCliente.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    await expect(
+      controller.getByIdAsCliente(1, mockUser),
+    ).resolves.toStrictEqual(shouldReturn)
+  })
+
+  it('should get pedido as prestador', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 30,
+          observacao: 'Quero estrelinha.',
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: 0,
+              data: '2020-11-10T21:44:00.000Z',
+            },
+            {
+              id: 2,
+              ativo: true,
+              estado: 1,
+              data: '2020-11-13T18:18:25.388Z',
+            },
+            {
+              id: 3,
+              ativo: true,
+              estado: 3,
+              data: '2020-11-13T18:18:58.946Z',
+            },
+            {
+              id: 4,
+              ativo: true,
+              estado: 6,
+              data: '2020-11-13T18:19:03.102Z',
+            },
+          ],
+          endereco: {
+            id: 3,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Green Stravenue',
+            complemento: 'Hill',
+            numero: 223,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: null,
+            favorito: false,
+          },
+          servicos: [
+            {
+              id: 2,
+              ativo: true,
+              descricao: 'Corte popular de cabelo',
+              valor: 30,
+              nome: 'Corte de cabelo',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/Dyed-Udon-with-Shaved-Hairline-702x1024.jpg',
+            },
+          ],
+          dataHora: '2021-02-11T14:30:00.000Z',
+          cliente: {
+            id: 1,
+            ativo: true,
+            usuario: {
+              id: 2,
+              ativo: true,
+              nome: 'Joao Picanco',
+              nomeSocial: 'Jaozin',
+              dataNascimento: '1987-06-27T03:00:00.000Z',
+              telefone: '22998047269',
+              cpf: '678.532.458-87',
+              token: 't0V7MEE9kiTP2f7T6la9WIedxee2',
+              status: 0,
+              foto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/estilo-geek-masculino7.jpg',
+            },
+          },
+          prestador: {
+            id: 1,
+            ativo: true,
+            usuario: {
+              id: 1,
+              ativo: true,
+              nome: 'Alice Medeiros',
+              nomeSocial: 'Lice',
+              dataNascimento: '1999-03-25T03:00:00.000Z',
+              telefone: '22998047269',
+              cpf: '010.677.458-23',
+              token: '1I80WG9tuUTIRS3XW8Z6627XYkB2',
+              status: 0,
+              foto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/maquiadora.jpg',
+            },
+            cnpj: '',
+            delivery: true,
+            documentoUrl:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/Nova-Carteira-de-Identidade_site.jpg',
+            nomePublico: 'Unhas da Alice',
+            razaoSocial: '',
+            tipoPessoa: 0,
+            logo:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/unhas-decoradas-alice-no-pai%CC%81s-das-maravilhas-4.jpg',
+            nota: 4.3,
+            capa:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/capa-maquiagem-blog.png?alt=media',
+          },
+          avaliacoes: [],
+        },
+      },
+    }
+
+    const mockUser = createMock<admin.auth.UserRecord>()
+    mockUser.uid = 'teste'
+    userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
+    service.getByIdAsPrestador.mockResolvedValue(
+      shouldReturn.data.pedido as any,
+    )
+
+    await expect(
+      controller.getByIdAsPrestador(1, mockUser),
+    ).resolves.toStrictEqual(shouldReturn)
+  })
 })

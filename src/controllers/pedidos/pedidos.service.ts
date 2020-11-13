@@ -30,22 +30,52 @@ export class PedidosService extends BaseService<Pedido> {
   }
 
   // Retorna o pedido dado o id do pedido e prestador, os dois devem ser válidos se não retorna erro do próprio método
+  // O parâmetro allData dita se vai trazer todas as relações do pedido ou não
   public async getByIdAsPrestador(
     idPedido: number,
     idPrestador: number,
+    allData = false,
   ): Promise<Pedido> {
-    return this.repo.findOneOrFail({
-      where: { id: idPedido, prestador: { id: idPrestador } },
-    })
+    return allData == true
+      ? this.repo.findOneOrFail({
+          relations: [
+            'metodoPagamento',
+            'cliente',
+            'prestador',
+            'situacoes',
+            'endereco',
+            'servicos',
+            'avaliacoes',
+          ],
+          where: { id: idPedido, prestador: { id: idPrestador } },
+        })
+      : this.repo.findOneOrFail({
+          where: { id: idPedido, prestador: { id: idPrestador } },
+        })
   }
 
   // Retorna o pedido dado o id do pedido e cliente, os dois devem ser válidos se não retorna erro do próprio método
+  // O parâmetro allData dita se vai trazer todas as relações do pedido ou não
   public async getByIdAsCliente(
     idPedido: number,
     idCliente: number,
+    allData = false,
   ): Promise<Pedido> {
-    return this.repo.findOneOrFail({
-      where: { id: idPedido, cliente: { id: idCliente } },
-    })
+    return allData == true
+      ? this.repo.findOneOrFail({
+          relations: [
+            'metodoPagamento',
+            'cliente',
+            'prestador',
+            'situacoes',
+            'endereco',
+            'servicos',
+            'avaliacoes',
+          ],
+          where: { id: idPedido, cliente: { id: idCliente } },
+        })
+      : this.repo.findOneOrFail({
+          where: { id: idPedido, cliente: { id: idCliente } },
+        })
   }
 }
