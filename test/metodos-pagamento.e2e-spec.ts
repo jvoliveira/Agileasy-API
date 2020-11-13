@@ -45,7 +45,7 @@ describe('MetodoPagamentoController (e2e)', () => {
       message: 'Sucesso!',
       error: false,
       data: {
-        enderecos: [
+        metodosPagamento: [
           {
             id: 1,
             ativo: true,
@@ -74,7 +74,9 @@ describe('MetodoPagamentoController (e2e)', () => {
         ],
       },
     }
-    mockService.find.mockResolvedValue(shouldReturn.data.enderecos as any)
+    mockService.find.mockResolvedValue(
+      shouldReturn.data.metodosPagamento as any,
+    )
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
       uid: 'uid-valido',
     } as any)
