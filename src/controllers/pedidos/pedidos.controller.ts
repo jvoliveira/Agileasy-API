@@ -122,7 +122,7 @@ export class PedidosController {
     }
   }
 
-  @Put(':id/marcar_aceito')
+  @Put(':id/marcar-aceito')
   @Roles(TipoUsuario.PRESTADOR)
   public async markAsAceito(
     @Param('id') idPedido,
@@ -134,7 +134,15 @@ export class PedidosController {
     // Pega o pedido referente aquele prestador, se o pedido não pertencer aquele prestador é dado falha
     const pedido = await this.serv.getByIdAsPrestador(idPedido, prestador.id)
 
+    // Só pode ser feito se a última situação for solicitado
     if (pedido.situacoes.length > 0) {
+      if (
+        pedido.situacoes[pedido.situacoes.length - 1].estado !==
+        Estado.solicitado
+      ) {
+        throw new AllException(TipoErro.SITUACAO_INVALIDA)
+      }
+    } else {
       throw new AllException(TipoErro.SITUACAO_INVALIDA)
     }
 
@@ -154,7 +162,7 @@ export class PedidosController {
     }
   }
 
-  @Put(':id/marcar_andamento')
+  @Put(':id/marcar-andamento')
   @Roles(TipoUsuario.PRESTADOR)
   public async markAsEmAndamento(
     @Param('id') idPedido,
@@ -192,7 +200,7 @@ export class PedidosController {
     }
   }
 
-  @Put(':id/marcar_finalizado')
+  @Put(':id/marcar-finalizado')
   @Roles(TipoUsuario.PRESTADOR)
   public async markAsFinalizado(
     @Param('id') idPedido,
@@ -256,7 +264,7 @@ export class PedidosController {
     // Muda a situação para em andamento
     const pedidoCancelado = await this.serv.changeSituacao(pedido, {
       data: moment().toDate(),
-      estado: Estado.cancelado,
+      estado: Estado.canceladoPrestador,
     })
 
     return {
@@ -295,7 +303,7 @@ export class PedidosController {
     // Muda a situação para em andamento
     const pedidoCancelado = await this.serv.changeSituacao(pedido, {
       data: moment().toDate(),
-      estado: Estado.cancelado,
+      estado: Estado.canceladoCliente,
     })
 
     return {
