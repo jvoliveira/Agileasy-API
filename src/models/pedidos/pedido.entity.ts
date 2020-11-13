@@ -7,6 +7,7 @@ import {
   ManyToMany,
   JoinTable,
   JoinColumn,
+  OneToOne,
 } from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
 import { PedidoInterface } from './pedido.interface'
@@ -96,12 +97,12 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   })
   servicos!: Servico[]
 
-  @OneToMany(
+  @OneToOne(
     type => Avaliacao,
-    avaliacoes => avaliacoes.pedido,
+    avaliacao => avaliacao.pedido,
     { cascade: true },
   )
-  avaliacoes: Avaliacao[]
+  avaliacao: Avaliacao
 
   constructor(
     id: number,

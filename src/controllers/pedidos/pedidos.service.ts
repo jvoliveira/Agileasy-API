@@ -45,7 +45,7 @@ export class PedidosService extends BaseService<Pedido> {
             'situacoes',
             'endereco',
             'servicos',
-            'avaliacoes',
+            'avaliacao',
           ],
           where: { id: idPedido, prestador: { id: idPrestador } },
         })
@@ -70,7 +70,7 @@ export class PedidosService extends BaseService<Pedido> {
             'situacoes',
             'endereco',
             'servicos',
-            'avaliacoes',
+            'avaliacao',
           ],
           where: { id: idPedido, cliente: { id: idCliente } },
         })

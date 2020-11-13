@@ -3,6 +3,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
@@ -27,9 +28,9 @@ export class Avaliacao extends BaseModel<Avaliacao>
   @Column('int', { nullable: false, name: 'quem_avaliou' })
   quemAvaliou: number
 
-  @ManyToOne(
+  @OneToOne(
     type => Pedido,
-    pedido => pedido.avaliacoes,
+    pedido => pedido.avaliacao,
     { cascade: false },
   )
   @JoinColumn({ name: 'id_pedido' })
