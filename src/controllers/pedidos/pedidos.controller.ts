@@ -44,6 +44,10 @@ export class PedidosController {
       estado: Estado.solicitado,
     })
 
+    newPedido.dataHora = moment(newPedido.dataHora)
+      .utc()
+      .toDate()
+
     const cliente = await this.userService.getClienteByToken(user.uid)
 
     if (cliente.id !== newPedido.cliente.id) {
