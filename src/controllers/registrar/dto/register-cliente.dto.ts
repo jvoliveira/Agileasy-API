@@ -1,30 +1,16 @@
 import {
   IsString,
-  IsUrl,
   IsNumber,
-  IsBoolean,
   IsNumberString,
   IsEmail,
   Length,
 } from 'class-validator'
-export class RegisterPrestadorDto {
+export class RegisterClienteDto {
   @IsEmail()
   email: string
   @IsString()
   @Length(128, 128)
   senha: string
-  @IsString()
-  cnpj: string
-  @IsBoolean()
-  delivery: boolean
-  @IsUrl()
-  documentoUrl: string
-  @IsString()
-  nomePublico: string
-  @IsString()
-  razaoSocial: string
-  @IsNumber()
-  tipoPessoa: number
   usuario: UsuarioDto
   endereco: EnderecoDto
 }
