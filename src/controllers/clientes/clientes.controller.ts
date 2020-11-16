@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common'
+import { CacheTTL, Controller, Get } from '@nestjs/common'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { ResponseDefault } from '../../common/interfaces/response-default.interface'
 import { UserService } from '../../common/services/user.service'
@@ -17,6 +17,7 @@ export class ClientesController {
 
   @Roles(TipoUsuario.CLIENTE)
   @Get('eu')
+  @CacheTTL(600)
   public async getAllInformation(
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {

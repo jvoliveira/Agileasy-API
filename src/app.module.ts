@@ -42,7 +42,7 @@ import { MetodosPagamentoModule } from './controllers/metodospagamento/metodos-p
       }),
     }),
     CacheModule.register({
-      ttl: 600, // seconds
+      ttl: 5, // seconds
       max: 10, // maximum number of items in cache
     }),
     PgModelsConfigModule,

@@ -13,7 +13,10 @@ export class PedidosService extends BaseService<Pedido> {
   }
 
   public async getPedidosAsCliente(id: number): Promise<Pedido[]> {
-    return this.repo.find({ where: { cliente: { id } } })
+    return this.repo.find({
+      where: { cliente: { id } },
+      relations: ['prestador'],
+    })
   }
 
   public async getPedidosAsPrestador(id: number): Promise<Pedido[]> {

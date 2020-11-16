@@ -51,7 +51,10 @@ describe('PedidosService', () => {
     await expect(service.getPedidosAsCliente(1)).resolves.toStrictEqual(
       shouldReturn,
     )
-    expect(repo.find).toBeCalledWith({ where: { cliente: { id: 1 } } })
+    expect(repo.find).toBeCalledWith({
+      where: { cliente: { id: 1 } },
+      relations: ['prestador'],
+    })
   })
 
   it('should get pedido as prestador', async () => {

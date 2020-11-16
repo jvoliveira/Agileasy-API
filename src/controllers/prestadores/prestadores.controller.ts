@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, CacheTTL } from '@nestjs/common'
 import { PrestadoresService } from './prestadores.service'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { UserService } from '../../common/services/user.service'
@@ -25,6 +25,7 @@ export class PrestadoresController {
   /** Rotas para nível cliente */
   @Get()
   @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
+  @CacheTTL(600)
   public async getAll(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getAll()
     return {
@@ -39,6 +40,7 @@ export class PrestadoresController {
 
   @Get('categorias')
   @Roles(0, 200)
+  @CacheTTL(600)
   public async getPrestadoresWithCategorias(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getPrestadoresWithCategoria()
     return {
