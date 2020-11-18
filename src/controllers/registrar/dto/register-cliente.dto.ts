@@ -13,6 +13,7 @@ export class RegisterClienteDto {
   senha: string
   usuario: UsuarioDto
   endereco: EnderecoDto
+  enderecos?: [EnderecoDto]
 }
 
 class UsuarioDto {

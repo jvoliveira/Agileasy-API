@@ -58,6 +58,8 @@ export class RegistrarController {
       roles: [TipoUsuario.CLIENTE],
     })
     registerPrestadorDto.usuario.token = user.uid
+    registerPrestadorDto.enderecos = [registerPrestadorDto.endereco]
+    delete registerPrestadorDto.endereco
     try {
       const cliente = await this.servCliente.create(registerPrestadorDto)
       return {
