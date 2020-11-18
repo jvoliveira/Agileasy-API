@@ -89,7 +89,7 @@ export class PrestadoresController {
     @Body() createPrestadorDto: CreatePrestadorDto,
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
-    createPrestadorDto.usuario.token = user.uid
+    createPrestadorDto.usuario.uid = user.uid
     const claims = user.customClaims as Claims
     if (claims.roles.includes(TipoUsuario.PRESTADOR)) {
       throw new AllException(TipoErro.USUARIO_JA_EXISTE)

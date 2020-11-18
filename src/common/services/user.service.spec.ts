@@ -37,7 +37,7 @@ describe('Prestadores Service', () => {
     )
 
     expect(repo.findOne).toHaveBeenCalledWith({
-      where: { token: 'oid', ativo: true },
+      where: { uid: 'oid', ativo: true },
       relations: ['prestador'],
     })
   })
@@ -52,7 +52,7 @@ describe('Prestadores Service', () => {
     )
 
     expect(repo.findOne).toHaveBeenCalledWith({
-      where: { token: 'oid', ativo: true },
+      where: { uid: 'oid', ativo: true },
       relations: ['cliente'],
     })
   })

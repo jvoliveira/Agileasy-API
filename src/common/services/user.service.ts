@@ -13,10 +13,10 @@ export class UserService {
     @InjectRepository(Usuario) private repoUsuario: Repository<Usuario>,
   ) {}
 
-  async getPrestadorByToken(token: string): Promise<Prestador> {
+  async getPrestadorByToken(uid: string): Promise<Prestador> {
     const status = await this.repoUsuario.findOne({
       relations: ['prestador'],
-      where: { token, ativo: true },
+      where: { uid, ativo: true },
     })
 
     if (!status.prestador) {
@@ -26,10 +26,10 @@ export class UserService {
     return status.prestador
   }
 
-  async getClienteByToken(token: string): Promise<Cliente> {
+  async getClienteByToken(uid: string): Promise<Cliente> {
     const status = await this.repoUsuario.findOne({
       relations: ['cliente'],
-      where: { token, ativo: true },
+      where: { uid, ativo: true },
     })
 
     if (!status.cliente) {

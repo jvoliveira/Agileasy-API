@@ -28,7 +28,7 @@ export class RegistrarController {
     await this.firebaseAuth.setCustomUserClaims(user.uid, {
       roles: [TipoUsuario.CLIENTE],
     })
-    registerPrestadorDto.usuario.token = user.uid
+    registerPrestadorDto.usuario.uid = user.uid
     try {
       const prestador = await this.servPrestador.create(registerPrestadorDto)
       return {
@@ -57,7 +57,7 @@ export class RegistrarController {
     await this.firebaseAuth.setCustomUserClaims(user.uid, {
       roles: [TipoUsuario.CLIENTE],
     })
-    registerPrestadorDto.usuario.token = user.uid
+    registerPrestadorDto.usuario.uid = user.uid
     registerPrestadorDto.enderecos = [registerPrestadorDto.endereco]
     delete registerPrestadorDto.endereco
     try {

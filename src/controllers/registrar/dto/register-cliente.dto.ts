@@ -28,7 +28,7 @@ class UsuarioDto {
   @IsString()
   cpf: string
   @IsString()
-  token?: string
+  uid?: string
 }
 
 class EnderecoDto {

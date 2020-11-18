@@ -32,14 +32,11 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
   @Column('text', { nullable: true })
   foto!: string
 
-  // @Column('text', { nullable: true })
+  @Column('text', { nullable: true })
   email!: string
 
-  //@Column('text', { nullable: false, name: 'uid' })
+  @Column('text', { nullable: false, name: 'uid' })
   uid!: string
-
-  @Column('text', { nullable: false, name: 'token_acesso' })
-  token!: string
 
   @Column('int', { nullable: false })
   status!: TipoStatus
