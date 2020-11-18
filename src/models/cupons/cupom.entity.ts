@@ -24,13 +24,13 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
   desconto!: number
   @Column('double precision', { nullable: false, name: 'valor_minimo' })
   valorMinimo!: number
-  @Column('int', { nullable: false })
+  @Column('int', { nullable: false, default: 0 })
   voucher!: number
   @Column('timestamptz', { nullable: false, name: 'validade' })
   validade!: Date
   @Column('int', { nullable: false, name: 'tipo_cupom' })
   tipoCupom!: number
-  @Column('boolean', { nullable: false })
+  @Column('boolean', { nullable: false, default: false })
   indicacao!: boolean
 
   @ManyToOne(
