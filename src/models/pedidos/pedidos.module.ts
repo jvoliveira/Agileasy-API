@@ -9,6 +9,7 @@ import { ClientesEntityModule } from '../clientes/clientes.module'
 import { PrestadoresEntityModule } from '../prestadores/prestadores.module'
 import { AvaliacaoEntityModule } from '../avaliacao/avaliacao.module'
 import { DisponibilidadesEntityModule } from '../disponibilidades/disponibilidade.module'
+import { CancelamentosEntityModule } from '../cancelamentos/cancelamento.module'
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DisponibilidadesEntityModule } from '../disponibilidades/disponibilidad
     forwardRef(() => MetodosPagamentoEntityModule),
     forwardRef(() => SituacoesEntityModule),
     forwardRef(() => ClientesEntityModule),
+    forwardRef(() => CancelamentosEntityModule),
     forwardRef(() => PrestadoresEntityModule),
     forwardRef(() => AvaliacaoEntityModule),
     forwardRef(() => DisponibilidadesEntityModule),

@@ -69,7 +69,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   @OneToOne(
     type => Cancelamento,
     cancelamento => cancelamento.pedido,
-    { cascade: true },
+    { cascade: true, nullable: true },
   )
   @JoinColumn({ name: 'id_cancelamento' })
   cancelamento!: Cancelamento
