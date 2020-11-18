@@ -23,6 +23,7 @@ import { Cliente } from '../clientes/cliente.entity'
 import { Prestador } from '../prestadores/prestador.entity'
 import { Avaliacao } from '../avaliacao/avaliacao.entity'
 import { Cupom } from '../cupons/cupom.entity'
+import { Cancelamento } from '../cancelamentos/cancelamento.entity'
 
 @Entity('pedido')
 export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
@@ -64,6 +65,14 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   )
   @JoinColumn({ name: 'id_prestador' })
   prestador!: Prestador
+
+  @OneToOne(
+    type => Cancelamento,
+    cancelamento => cancelamento.pedido,
+    { cascade: true },
+  )
+  @JoinColumn({ name: 'id_cancelamento' })
+  cancelamento!: Cancelamento
 
   @OneToMany(
     type => Situacao,

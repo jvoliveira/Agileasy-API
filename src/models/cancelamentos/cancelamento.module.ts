@@ -1,12 +1,12 @@
 import { Module, forwardRef } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { Cupom } from './cancelamento.entity'
-import { PrestadoresEntityModule } from '../prestadores/prestadores.module'
+import { Cancelamento } from './cancelamento.entity'
+import { PedidosEntityModule } from '../pedidos/pedidos.module'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Cupom]),
-    forwardRef(() => PrestadoresEntityModule),
+    TypeOrmModule.forFeature([Cancelamento]),
+    forwardRef(() => PedidosEntityModule),
   ],
   exports: [TypeOrmModule],
 })

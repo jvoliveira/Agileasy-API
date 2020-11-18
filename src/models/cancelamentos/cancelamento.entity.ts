@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { CancelamentoInterface } from './cancelamento.interface'
 import { BaseModel } from '../basis/base.entity'
+import { Pedido } from '../pedidos/pedido.entity'
 
 @Entity('prestador')
 export class Cancelamento extends BaseModel<Cancelamento>
@@ -16,6 +17,12 @@ export class Cancelamento extends BaseModel<Cancelamento>
   origem!: number
   @Column('text', { nullable: false })
   consequencia!: string
+  @OneToOne(
+    type => Pedido,
+    pedido => pedido.cancelamento,
+    { cascade: false },
+  )
+  pedido!: Pedido
 
   constructor(
     id: number,
