@@ -29,6 +29,7 @@ export class RegistrarController {
       roles: [TipoUsuario.CLIENTE],
     })
     registerPrestadorDto.usuario.uid = user.uid
+    registerPrestadorDto.usuario.email = registerPrestadorDto.email
     try {
       const prestador = await this.servPrestador.create(registerPrestadorDto)
       return {
@@ -47,21 +48,22 @@ export class RegistrarController {
 
   @Post('cliente')
   public async registerCliente(
-    @Body() registerPrestadorDto: RegisterClienteDto,
+    @Body() registerClienteDto: RegisterClienteDto,
   ): Promise<ResponseDefault> {
     const user = await this.firebaseAuth.createUser({
-      email: registerPrestadorDto.email,
-      password: registerPrestadorDto.senha,
-      displayName: registerPrestadorDto.usuario.nome,
+      email: registerClienteDto.email,
+      password: registerClienteDto.senha,
+      displayName: registerClienteDto.usuario.nome,
     })
     await this.firebaseAuth.setCustomUserClaims(user.uid, {
       roles: [TipoUsuario.CLIENTE],
     })
-    registerPrestadorDto.usuario.uid = user.uid
-    registerPrestadorDto.enderecos = [registerPrestadorDto.endereco]
-    delete registerPrestadorDto.endereco
+    registerClienteDto.usuario.uid = user.uid
+    registerClienteDto.enderecos = [registerClienteDto.endereco]
+    delete registerClienteDto.endereco
+    registerClienteDto.usuario.email = registerClienteDto.email
     try {
-      const cliente = await this.servCliente.create(registerPrestadorDto)
+      const cliente = await this.servCliente.create(registerClienteDto)
       return {
         error_id: TipoErro.SEM_ERROS,
         message: 'Sucesso!',

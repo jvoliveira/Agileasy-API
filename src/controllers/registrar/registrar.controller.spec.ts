@@ -74,7 +74,11 @@ describe('RegistrarController', () => {
       email: 'vimivini99@gmail.com',
       senha: '123456',
       nomePublico: 'V1pi',
-      usuario: { nome: 'Vinicius', uid: 'uid-valido' },
+      usuario: {
+        nome: 'Vinicius',
+        uid: 'uid-valido',
+        email: 'vimivini99@gmail.com',
+      },
     })
   })
 
@@ -105,7 +109,11 @@ describe('RegistrarController', () => {
       email: 'vimivini99@gmail.com',
       senha: '123456',
       nomePublico: 'V1pi',
-      usuario: { uid: 'uid-valido', nome: 'Vinicius' },
+      usuario: {
+        uid: 'uid-valido',
+        nome: 'Vinicius',
+        email: 'vimivini99@gmail.com',
+      },
     })
   })
 
@@ -147,7 +155,11 @@ describe('RegistrarController', () => {
       email: 'vimivini99@gmail.com',
       senha: '123456',
       nomePublico: 'V1pi',
-      usuario: { nome: 'Vinicius', uid: 'uid-valido' },
+      usuario: {
+        nome: 'Vinicius',
+        uid: 'uid-valido',
+        email: 'vimivini99@gmail.com',
+      },
       enderecos: [
         {
           endereco: 'Benedito Nicolau',
@@ -186,7 +198,11 @@ describe('RegistrarController', () => {
       email: 'vimivini99@gmail.com',
       senha: '123456',
       nomePublico: 'V1pi',
-      usuario: { uid: 'uid-valido', nome: 'Vinicius' },
+      usuario: {
+        uid: 'uid-valido',
+        nome: 'Vinicius',
+        email: 'vimivini99@gmail.com',
+      },
       enderecos: [
         {
           endereco: 'Benedito Nicolau',

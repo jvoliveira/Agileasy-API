@@ -29,6 +29,8 @@ class UsuarioDto {
   cpf: string
   @IsString()
   uid?: string
+  @IsString()
+  email?: string
 }
 
 class EnderecoDto {
