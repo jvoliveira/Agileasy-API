@@ -4,7 +4,7 @@ import { CupomInterface } from './cupom.interface'
 import { BaseModel } from '../basis/base.entity'
 import { Moment } from 'moment-timezone'
 
-@Entity('prestador')
+@Entity('cupom')
 export class Cupom extends BaseModel<Cupom> implements CupomInterface {
   @PrimaryGeneratedColumn()
   id!: number
