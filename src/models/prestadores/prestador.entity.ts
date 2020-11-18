@@ -188,7 +188,18 @@ export class Prestador extends BaseModel<Prestador>
   public static fromJson(json: any): Prestador {
     const prestador = new Prestador(
       0,
-      new Usuario(1, TipoStatus.ativo, 'a', 'a', moment(), 'a', 'a', 'a', '1'),
+      new Usuario(
+        1,
+        TipoStatus.ativo,
+        'a',
+        'a',
+        moment(),
+        'a',
+        'a',
+        'a',
+        '1',
+        '1',
+      ),
       '2',
       true,
       't',

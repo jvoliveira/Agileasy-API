@@ -19,7 +19,7 @@ describe('Prestador', () => {
       '28300000',
       null,
       'São Mateus',
-      false
+      false,
     )
     const serv = new Servico(
       1,
@@ -51,6 +51,7 @@ describe('Prestador', () => {
       '14582486722',
       'TOKENTOP',
       'foto_top',
+      'vimivini99@gmail.com',
     )
     const mockPrestador = new Prestador(
       1,
@@ -98,8 +99,9 @@ function expectedJSON() {
       dataNascimento: moment('1996-12-27T00:00:00-02:00').tz(moment.tz.guess()),
       telefone: '22999496547',
       cpf: '14582486722',
-      token: 'TOKENTOP',
+      uid: 'TOKENTOP',
       foto: 'foto_top',
+      email: 'vimivini99@gmail.com',
     },
     endereco: {
       ativo: true,
@@ -113,7 +115,7 @@ function expectedJSON() {
       cep: '28300000',
       referencia: null,
       favorito: false,
-      bairro: 'São Mateus'
+      bairro: 'São Mateus',
     },
     servicos: [
       {

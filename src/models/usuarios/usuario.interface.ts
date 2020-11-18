@@ -10,7 +10,8 @@ export interface UsuarioInterface {
   dataNascimento: Date
   telefone: string
   cpf: string
-  token: string
+  uid: string
+  email: string
   status: TipoStatus
   foto: string
 }

@@ -13,6 +13,7 @@ describe('Usuario', () => {
       '14582486722',
       'TOKETOP',
       'foto_legal',
+      'vimivini99@gmail.com',
     )
     expect(JSON.parse(JSON.stringify(mockUsuario))).toStrictEqual(
       JSON.parse(JSON.stringify(expectedJSON())),
@@ -31,7 +32,8 @@ function expectedJSON() {
     dataNascimento: moment('1996-12-27T00:00:00-02:00').tz(moment.tz.guess()),
     telefone: '22999486347',
     cpf: '14582486722',
-    token: 'TOKETOP',
+    uid: 'TOKETOP',
     foto: 'foto_legal',
+    email: 'vimivini99@gmail.com',
   }
 }

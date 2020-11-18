@@ -38,6 +38,7 @@ describe('Cliente', () => {
       '14582486722',
       'TOKENTOP',
       'foto_top',
+      'vimivini99@gmail.com',
     )
     const mockCliente = new Cliente(
       1,
@@ -66,8 +67,9 @@ function expectedJSON() {
       dataNascimento: moment('2020-08-14T16:12:13-03:00').tz(moment.tz.guess()),
       telefone: '22999486347',
       cpf: '14582486722',
-      token: 'TOKENTOP',
+      uid: 'TOKENTOP',
       foto: 'foto_top',
+      email: 'vimivini99@gmail.com',
     },
     enderecos: [
       {
