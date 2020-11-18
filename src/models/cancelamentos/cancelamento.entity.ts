@@ -3,7 +3,7 @@ import { CancelamentoInterface } from './cancelamento.interface'
 import { BaseModel } from '../basis/base.entity'
 import { Pedido } from '../pedidos/pedido.entity'
 
-@Entity('prestador')
+@Entity('cancelamento')
 export class Cancelamento extends BaseModel<Cancelamento>
   implements CancelamentoInterface {
   @PrimaryGeneratedColumn()
