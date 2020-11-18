@@ -23,7 +23,7 @@ export class Disponibilidade extends BaseModel<Disponibilidade>
   inicio: Date
   @Column('timestamptz', { nullable: false, name: 'fim' })
   fim: Date
-  @Column('boolean', { nullable: false, name: 'excepcional' })
+  @Column('boolean', { nullable: false, name: 'excepcional', default: false })
   excepcional: boolean
   @ManyToOne(
     type => Prestador,
