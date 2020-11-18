@@ -4,7 +4,7 @@ import { DisponibilidadeInterface } from './disponibilidade.interface'
 import { BaseModel } from '../basis/base.entity'
 import { Moment } from 'moment-timezone'
 
-@Entity('prestador')
+@Entity('disponibilidade')
 export class Disponibilidade extends BaseModel<Disponibilidade>
   implements DisponibilidadeInterface {
   @PrimaryGeneratedColumn()
