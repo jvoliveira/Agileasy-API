@@ -136,7 +136,7 @@ describe('Prestadores Service', () => {
     ).resolves.toStrictEqual(createResponse)
     expect(service.create).toBeCalledWith({
       nome: 'Vinicius',
-      usuario: { cpf: '133.568.145-56', token: 'oi' },
+      usuario: { cpf: '133.568.145-56', uid: 'oi' },
     })
   })
 
