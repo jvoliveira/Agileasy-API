@@ -1,9 +1,9 @@
 import * as moment from 'moment-timezone'
 import { Cupom } from './cupom.entity'
 
-describe('Disponibilidade', () => {
-  it('test json disponibilidade', () => {
-    const mockDisponibilidade = new Cupom(
+describe('Cupom', () => {
+  it('test json cupom', () => {
+    const mockCupom = new Cupom(
       1,
       false,
       '10%',
@@ -15,10 +15,10 @@ describe('Disponibilidade', () => {
       true,
     )
 
-    expect(JSON.parse(JSON.stringify(mockDisponibilidade))).toStrictEqual(
+    expect(JSON.parse(JSON.stringify(mockCupom))).toStrictEqual(
       JSON.parse(JSON.stringify(expectedJSON())),
     )
-    expect(mockDisponibilidade).toStrictEqual(Cupom.fromJson(expectedJSON()))
+    expect(mockCupom).toStrictEqual(Cupom.fromJson(expectedJSON()))
   })
 })
 
