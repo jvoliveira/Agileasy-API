@@ -132,6 +132,9 @@ describe('RegistrarController', () => {
         senha: '123456',
         nomePublico: 'V1pi',
         usuario: { nome: 'Vinicius' },
+        endereco: {
+          endereco: 'Benedito Nicolau',
+        },
       } as any),
     ).resolves.toStrictEqual(shouldReturn)
     expect(mockFirebaseUser.createUser).toBeCalledWith({
@@ -145,6 +148,11 @@ describe('RegistrarController', () => {
       senha: '123456',
       nomePublico: 'V1pi',
       usuario: { nome: 'Vinicius', token: 'uid-valido' },
+      enderecos: [
+        {
+          endereco: 'Benedito Nicolau',
+        },
+      ],
     })
   })
 
@@ -161,6 +169,9 @@ describe('RegistrarController', () => {
         senha: '123456',
         nomePublico: 'V1pi',
         usuario: { nome: 'Vinicius' },
+        endereco: {
+          endereco: 'Benedito Nicolau',
+        },
       } as any),
     ).rejects.toStrictEqual(shouldReturn)
     expect(mockFirebaseUser.createUser).toBeCalledWith({
@@ -176,6 +187,11 @@ describe('RegistrarController', () => {
       senha: '123456',
       nomePublico: 'V1pi',
       usuario: { token: 'uid-valido', nome: 'Vinicius' },
+      enderecos: [
+        {
+          endereco: 'Benedito Nicolau',
+        },
+      ],
     })
   })
 })
