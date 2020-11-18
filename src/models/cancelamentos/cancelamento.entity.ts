@@ -41,6 +41,7 @@ export class Cancelamento extends BaseModel<Cancelamento>
     this.ativo = json.ativo
     this.motivo = json.motivo
     this.tipoMotivo = json.tipoMotivo
+    this.consequencia = json.consequencia
     return this
   }
 
