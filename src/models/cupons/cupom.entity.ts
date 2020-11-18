@@ -1,8 +1,17 @@
 import * as moment from 'moment-timezone'
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 import { CupomInterface } from './cupom.interface'
 import { BaseModel } from '../basis/base.entity'
 import { Moment } from 'moment-timezone'
+import { Cliente } from '../clientes/cliente.entity'
+import { Pedido } from '../pedidos/pedido.entity'
 
 @Entity('cupom')
 export class Cupom extends BaseModel<Cupom> implements CupomInterface {
@@ -23,6 +32,20 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
   tipoCupom!: number
   @Column('boolean', { nullable: false })
   indicacao!: boolean
+
+  @ManyToOne(
+    type => Cliente,
+    cliente => cliente.cupons,
+  )
+  @JoinColumn({ name: 'id_cliente' })
+  cliente!: Cliente
+
+  @OneToMany(
+    type => Pedido,
+    pedidos => pedidos.cupom,
+    { cascade: true },
+  )
+  pedidos!: Pedido[]
 
   constructor(
     id: number,

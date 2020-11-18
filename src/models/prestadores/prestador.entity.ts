@@ -18,6 +18,7 @@ import { Servico } from '../servicos/servico.entity'
 import { Categoria } from '../categorias/categoria.entity'
 import { TipoStatus } from '../usuarios/usuario.interface'
 import { Pedido } from '../pedidos/pedido.entity'
+import { Disponibilidade } from '../disponibilidades/disponibilidade.entity'
 
 @Entity('prestador')
 export class Prestador extends BaseModel<Prestador>
@@ -76,6 +77,13 @@ export class Prestador extends BaseModel<Prestador>
   )
   @JoinColumn({ name: 'id_endereco' })
   endereco!: Endereco
+
+  @OneToMany(
+    type => Disponibilidade,
+    disponibilidades => disponibilidades.prestador,
+    { cascade: true },
+  )
+  disponibilidades!: Disponibilidade[]
 
   @OneToMany(
     type => Servico,

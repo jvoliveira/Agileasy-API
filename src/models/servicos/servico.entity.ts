@@ -13,7 +13,6 @@ import { Prestador } from '../prestadores/prestador.entity'
 import { Categoria } from '../categorias/categoria.entity'
 import { Pedido } from '../pedidos/pedido.entity'
 import { VariacaoServico } from '../servico-variacao/variacao-servico.entity'
-import { Alternativa } from '../alternativa/alternativa.entity'
 
 @Entity('servico')
 export class Servico extends BaseModel<Servico> implements ServicoInterface {

@@ -22,6 +22,7 @@ import { TipoPagamento } from '../metodos-pagamento/metodo-pagamento.interface'
 import { Cliente } from '../clientes/cliente.entity'
 import { Prestador } from '../prestadores/prestador.entity'
 import { Avaliacao } from '../avaliacao/avaliacao.entity'
+import { Cupom } from '../cupons/cupom.entity'
 
 @Entity('pedido')
 export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
@@ -70,6 +71,14 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     { cascade: true, eager: true },
   )
   situacoes!: Situacao[]
+
+  @ManyToOne(
+    type => Cupom,
+    cupom => cupom.pedidos,
+    { cascade: false },
+  )
+  @JoinColumn({ name: 'id_cupom' })
+  cupom!: Cupom
 
   @ManyToOne(
     type => Endereco,

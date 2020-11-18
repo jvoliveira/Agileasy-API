@@ -8,6 +8,7 @@ import { SituacoesEntityModule } from '../situacoes/situacoes.module'
 import { ClientesEntityModule } from '../clientes/clientes.module'
 import { PrestadoresEntityModule } from '../prestadores/prestadores.module'
 import { AvaliacaoEntityModule } from '../avaliacao/avaliacao.module'
+import { DisponibilidadesEntityModule } from '../disponibilidades/disponibilidade.module'
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AvaliacaoEntityModule } from '../avaliacao/avaliacao.module'
     forwardRef(() => ClientesEntityModule),
     forwardRef(() => PrestadoresEntityModule),
     forwardRef(() => AvaliacaoEntityModule),
+    forwardRef(() => DisponibilidadesEntityModule),
   ],
   exports: [TypeOrmModule],
 })

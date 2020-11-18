@@ -1,8 +1,15 @@
 import * as moment from 'moment-timezone'
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 import { DisponibilidadeInterface } from './disponibilidade.interface'
 import { BaseModel } from '../basis/base.entity'
 import { Moment } from 'moment-timezone'
+import { Prestador } from '../prestadores/prestador.entity'
 
 @Entity('disponibilidade')
 export class Disponibilidade extends BaseModel<Disponibilidade>
@@ -18,6 +25,12 @@ export class Disponibilidade extends BaseModel<Disponibilidade>
   fim: Date
   @Column('boolean', { nullable: false, name: 'excepcional' })
   excepcional: boolean
+  @ManyToOne(
+    type => Prestador,
+    prestador => prestador.disponibilidades,
+  )
+  @JoinColumn({ name: 'id_prestador' })
+  prestador!: Prestador
 
   constructor(
     id: number,
