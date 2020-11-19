@@ -17,7 +17,7 @@ export class ClientesController {
 
   @Roles(TipoUsuario.CLIENTE)
   @Get('eu')
-  @CacheTTL(600)
+  @CacheTTL(0)
   public async getAllInformation(
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
