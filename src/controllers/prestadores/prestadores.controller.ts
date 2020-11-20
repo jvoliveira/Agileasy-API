@@ -5,6 +5,7 @@ import { UserService } from '../../common/services/user.service'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
 import { AddCategoriaDto } from './dto/add-categoria.dto'
 import { AddServicoDto } from './dto/add-servico.dto'
+import { AddDisponibilidadeDto } from './dto/add-disponibilidade.dto'
 import { ResponseDefault } from '../../common/interfaces/response-default.interface'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
@@ -14,6 +15,7 @@ import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { Claims } from '../../common/guards/interfaces/claims.interface'
 import { AllException } from '../../common/exceptions/all.exception'
 import { Servico } from '../../models/servicos/servico.entity'
+import { Disponibilidade } from '../../models/disponibilidades/disponibilidade.entity'
 
 @Controller('prestadores')
 export class PrestadoresController {
@@ -125,7 +127,7 @@ export class PrestadoresController {
 
   /** Rotas para nível administrador */
   @Roles(TipoUsuario.ADMIN)
-  @Post(':id/adicionar_categorias')
+  @Post(':id/adicionar/categorias')
   public async addCategoriaAsAdmin(
     @Param('id') id: number,
     @Body() addCategoriasDto: AddCategoriaDto,
@@ -146,7 +148,7 @@ export class PrestadoresController {
 
   /** Rotas para nível prestador */
   @Roles(TipoUsuario.PRESTADOR)
-  @Post('adicionar_categorias')
+  @Post('adicionar/categorias')
   public async addCategoria(
     @Body() addCategoriasDto: AddCategoriaDto,
     @User() user: admin.auth.UserRecord,
@@ -168,7 +170,7 @@ export class PrestadoresController {
   }
 
   @Roles(TipoUsuario.PRESTADOR)
-  @Post('adicionar_servicos')
+  @Post('adicionar/servicos')
   public async addServicos(
     @Body() addServicosDto: AddServicoDto,
     @User() user: admin.auth.UserRecord,
@@ -182,6 +184,34 @@ export class PrestadoresController {
     }
 
     const prestador = await this.serv.addServicos(id, servicos)
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
+  }
+
+  @Roles(TipoUsuario.PRESTADOR)
+  @Post('adicionar/disponibilidades')
+  public async addDisponibilidades(
+    @Body() addDisponibilidades: AddDisponibilidadeDto,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    const prestadorFull = await this.userService.getPrestadorByToken(user.uid)
+    const id = prestadorFull.id
+    const newDisponibilidades = []
+    // Converte os json dos serviços em uma identidade
+    for (const disponibilidade of addDisponibilidades.disponibilidades) {
+      newDisponibilidades.push(Disponibilidade.fromJson(disponibilidade))
+    }
+
+    const prestador = await this.serv.addDisponibilidades(
+      id,
+      newDisponibilidades,
+    )
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',

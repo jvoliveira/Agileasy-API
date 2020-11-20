@@ -146,7 +146,7 @@ describe('PrestadorController (e2e)', () => {
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
-  it('/prestadores/adicionar_categorias (POST)', async () => {
+  it('/prestadores/adicionar/categorias (POST)', async () => {
     const shouldReturn = {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -208,14 +208,14 @@ describe('PrestadorController (e2e)', () => {
     } as any)
 
     const response = await request(app.getHttpServer())
-      .post('/prestadores/adicionar_categorias')
+      .post('/prestadores/adicionar/categorias')
       .auth('token-valido', { type: 'bearer' })
       .send({ categorias: [1, 2] })
     expect(response.status).toBe(201)
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
-  it('/prestadores/adicionar_servicos (POST)', async () => {
+  it('/prestadores/adicionar/servicos (POST)', async () => {
     jest.resetAllMocks()
     const shouldReturn = {
       error_id: TipoErro.SEM_ERROS,
@@ -267,7 +267,7 @@ describe('PrestadorController (e2e)', () => {
     } as any)
 
     const response = await request(app.getHttpServer())
-      .post('/prestadores/adicionar_servicos')
+      .post('/prestadores/adicionar/servicos')
       .auth('token-valido', { type: 'bearer' })
       .send({
         servicos: [
@@ -293,7 +293,7 @@ describe('PrestadorController (e2e)', () => {
     expect(response.body).toStrictEqual(shouldReturn)
   })
 
-  it('/prestadores/1/adicionar_categorias (POST)', async () => {
+  it('/prestadores/1/adicionar/categorias (POST)', async () => {
     const shouldReturn = {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -351,7 +351,7 @@ describe('PrestadorController (e2e)', () => {
     mockService.findOne.mockResolvedValue(shouldReturn.data.prestador)
 
     const response = await request(app.getHttpServer())
-      .post('/prestadores/1/adicionar_categorias')
+      .post('/prestadores/1/adicionar/categorias')
       .auth('token-valido', { type: 'bearer' })
       .send({ categorias: [1, 2] })
     expect(response.status).toBe(201)

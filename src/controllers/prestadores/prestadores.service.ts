@@ -6,6 +6,7 @@ import { BaseService } from '../../common/services/base.service'
 import { AllException } from '../../common/exceptions/all.exception'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { Servico } from '../../models/servicos/servico.entity'
+import { Disponibilidade } from '../../models/disponibilidades/disponibilidade.entity'
 
 @Injectable()
 export class PrestadoresService extends BaseService<Prestador> {
@@ -68,6 +69,29 @@ export class PrestadoresService extends BaseService<Prestador> {
     }
 
     prestador.servicos.push(...servicos)
+
+    const value = await this.repo.save(prestador)
+
+    if (!value) {
+      throw new AllException(TipoErro.ERROR_AO_ATUALIZAR)
+    }
+
+    return value
+  }
+
+  async addDisponibilidades(
+    idPrestador: number,
+    servicos: Disponibilidade[],
+  ): Promise<Prestador> {
+    const prestador = await this.repo.findOneOrFail(idPrestador, {
+      relations: ['disponibilidades'],
+    })
+
+    if (!prestador.disponibilidades) {
+      prestador.disponibilidades = []
+    }
+
+    prestador.disponibilidades.push(...servicos)
 
     const value = await this.repo.save(prestador)
 
