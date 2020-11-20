@@ -73,6 +73,8 @@ describe('PedidosController', () => {
           servicos: [
             {
               id: 1,
+              delivery: true,
+              noEstabelecimento: true,
             },
           ],
           situacoes: [
@@ -93,6 +95,8 @@ describe('PedidosController', () => {
     serviceSevicos.getByIdWithPrestador.mockResolvedValue({
       valor: 25,
       id: 1,
+      delivery: true,
+      noEstabelecimento: true,
       prestador: {
         id: 1,
       },

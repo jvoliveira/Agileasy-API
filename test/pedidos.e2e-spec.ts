@@ -76,6 +76,8 @@ describe('PedidoController (e2e)', () => {
           servicos: [
             {
               id: 1,
+              delivery: true,
+              noEstabelecimento: true,
             },
           ],
           situacoes: [
@@ -97,6 +99,8 @@ describe('PedidoController (e2e)', () => {
     mockServicosRepo.findOneOrFail.mockResolvedValue({
       valor: 25,
       id: 1,
+      delivery: true,
+      noEstabelecimento: true,
       prestador: { id: 1 },
     } as any)
     mockEnderecoRepo.findOneOrFail.mockResolvedValue({

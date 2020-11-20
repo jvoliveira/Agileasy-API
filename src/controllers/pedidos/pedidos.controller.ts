@@ -98,6 +98,16 @@ export class PedidosController {
           'Os serviços deve pertencer ao mesmo prestador',
         )
       }
+
+      if (
+        (!servico.noEstabelecimento && !newPedido.emDomicilio) ||
+        (!servico.delivery && newPedido.emDomicilio)
+      ) {
+        throw new AllException(
+          TipoErro.DADOS_INVALIDOS,
+          'Os serviços selecionados não suportam o local esclhido.',
+        )
+      }
     }
 
     const pedido = await this.serv.create(newPedido)
