@@ -46,4 +46,6 @@ export class CreatePedidoDto {
   cliente: ClienteDto
   @IsDefined()
   prestador: PrestadorDto
+  @IsDefined()
+  emDomicilio: boolean
 }

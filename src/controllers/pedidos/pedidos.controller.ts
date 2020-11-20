@@ -40,7 +40,9 @@ export class PedidosController {
     newPedido.situacoes = []
     // Cria uma nova situação do tipo solicitação
     newPedido.situacoes.push({
-      data: moment().toDate(),
+      data: moment()
+        .utc()
+        .toDate(),
       estado: Estado.solicitado,
     })
 
@@ -61,15 +63,27 @@ export class PedidosController {
       )
     }
 
-    const endereco = await this.enderecoService.getByIdWithCliente(
+    const endereco = await this.enderecoService.getByIdWithClienteAndPrestador(
       newPedido.endereco.id,
     )
 
-    if (!endereco.cliente || endereco.cliente.id !== newPedido.cliente.id) {
-      throw new AllException(
-        TipoErro.DADOS_INVALIDOS,
-        'O endereço não corresponde ao cliente da requisição.',
-      )
+    if (newPedido.emDomicilio) {
+      if (!endereco.cliente || endereco.cliente.id !== newPedido.cliente.id) {
+        throw new AllException(
+          TipoErro.DADOS_INVALIDOS,
+          'O endereço não corresponde ao cliente da requisição.',
+        )
+      }
+    } else {
+      if (
+        !endereco.prestador ||
+        endereco.prestador.id !== newPedido.prestador.id
+      ) {
+        throw new AllException(
+          TipoErro.DADOS_INVALIDOS,
+          'O endereço não corresponde ao prestador da requisição.',
+        )
+      }
     }
 
     newPedido.subtotal = 0

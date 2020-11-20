@@ -53,6 +53,7 @@ describe('PedidosController', () => {
       error: false,
       data: {
         pedido: {
+          emDomicilio: true,
           observacao: 'Quero que faça isso com urgência',
           dataHora: moment()
             .add(10, 'minutes')
@@ -96,7 +97,7 @@ describe('PedidosController', () => {
         id: 1,
       },
     } as any)
-    enderecoService.getByIdWithCliente.mockResolvedValue({
+    enderecoService.getByIdWithClienteAndPrestador.mockResolvedValue({
       endereco1: 'Rua não sei o que',
       cliente: {
         id: 1,

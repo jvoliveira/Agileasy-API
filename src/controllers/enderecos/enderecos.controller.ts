@@ -113,7 +113,7 @@ export class EnderecosController {
   ): Promise<ResponseDefault> {
     const clienteIncompleto = await this.userService.getClienteByToken(user.uid)
 
-    const endereco = await this.serv.getByIdWithCliente(id)
+    const endereco = await this.serv.getByIdWithClienteAndPrestador(id)
     if (clienteIncompleto.id !== endereco.cliente.id) {
       throw new AllException(TipoErro.USUARIO_SEM_PERMISSAO)
     }
@@ -135,7 +135,7 @@ export class EnderecosController {
   ): Promise<ResponseDefault> {
     const clienteIncompleto = await this.userService.getClienteByToken(user.uid)
 
-    const enderecoReceive = await this.serv.getByIdWithCliente(id)
+    const enderecoReceive = await this.serv.getByIdWithClienteAndPrestador(id)
     if (clienteIncompleto.id !== enderecoReceive.cliente.id) {
       throw new AllException(TipoErro.USUARIO_SEM_PERMISSAO)
     }

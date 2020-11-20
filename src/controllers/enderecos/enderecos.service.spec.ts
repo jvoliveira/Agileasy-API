@@ -38,15 +38,17 @@ describe('EnderecosService', () => {
 
     repo.findOneOrFail.mockReturnValue(shouldReturn as any)
 
-    expect(await service.getByIdWithCliente(1)).toBe(shouldReturn)
+    expect(await service.getByIdWithClienteAndPrestador(1)).toBe(shouldReturn)
     expect(repo.findOneOrFail).toHaveBeenCalledWith(1, {
-      relations: ['cliente'],
+      relations: ['cliente', 'prestador'],
     })
 
     repo.findOneOrFail.mockClear()
     repo.findOneOrFail.mockRejectedValue(new Error())
 
-    await expect(service.getByIdWithCliente(1)).rejects.toThrow(Error)
+    await expect(service.getByIdWithClienteAndPrestador(1)).rejects.toThrow(
+      Error,
+    )
   })
 
   it('should list enderecos from cliente', async () => {

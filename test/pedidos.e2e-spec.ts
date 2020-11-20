@@ -56,6 +56,7 @@ describe('PedidoController (e2e)', () => {
       error: false,
       data: {
         pedido: {
+          emDomicilio: true,
           observacao: 'Quero que faça isso com urgência',
           dataHora: moment()
             .add(10, 'minutes')
