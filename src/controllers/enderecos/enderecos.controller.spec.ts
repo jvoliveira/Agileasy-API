@@ -102,7 +102,7 @@ describe('EnderecosController', () => {
     const mockUser = createMock<admin.auth.UserRecord>()
     mockUser.uid = 'teste'
     userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
-    repo.getByIdWithCliente.mockResolvedValue({
+    repo.getByIdWithClienteAndPrestador.mockResolvedValue({
       id: 1,
       cliente: { id: 1 },
     } as any)
@@ -134,7 +134,7 @@ describe('EnderecosController', () => {
     const mockUser = createMock<admin.auth.UserRecord>()
     mockUser.uid = 'teste'
     userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
-    repo.getByIdWithCliente.mockResolvedValue({
+    repo.getByIdWithClienteAndPrestador.mockResolvedValue({
       id: 1,
       cliente: { id: 1 },
     } as any)
@@ -158,7 +158,7 @@ describe('EnderecosController', () => {
     const mockUser = createMock<admin.auth.UserRecord>()
     mockUser.uid = 'teste'
     userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
-    repo.getByIdWithCliente.mockResolvedValue({
+    repo.getByIdWithClienteAndPrestador.mockResolvedValue({
       id: 1,
       cliente: { id: 1 },
     } as any)
