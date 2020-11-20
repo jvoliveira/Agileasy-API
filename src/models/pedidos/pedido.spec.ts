@@ -59,6 +59,7 @@ describe('Pedido', () => {
       e,
       [serv],
       moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),
+      true,
     )
 
     expect(JSON.parse(JSON.stringify(mockPedido))).toStrictEqual(
@@ -71,6 +72,7 @@ describe('Pedido', () => {
 function expectedJSON() {
   return {
     ativo: true,
+    emDomicilio: true,
     id: 1,
     subtotal: 150,
     dataHora: moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),

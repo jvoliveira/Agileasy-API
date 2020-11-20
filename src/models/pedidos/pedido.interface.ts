@@ -11,4 +11,5 @@ export interface PedidoInterface {
   situacoes: SituacaoInterface[]
   endereco: EnderecoInterface
   servicos: ServicoInterface[]
+  emDomicilio: boolean
 }

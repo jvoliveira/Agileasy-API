@@ -33,6 +33,14 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
+  @Column({
+    type: 'boolean',
+    nullable: false,
+    default: true,
+    name: 'em_domicilio',
+  })
+  emDomicilio!: boolean
+
   @Column('timestamptz', { nullable: false, name: 'data_hora' })
   dataHora!: Date
 
@@ -131,6 +139,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     endereco: Endereco,
     servicos: Servico[],
     dataHora: Moment,
+    emDomicilio: boolean,
     ativo = true,
   ) {
     super(id, ativo)
@@ -140,6 +149,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     this.situacoes = situacoes
     this.endereco = endereco
     this.servicos = servicos
+    this.emDomicilio = emDomicilio
     this.dataHora = moment(dataHora).toDate()
   }
 
@@ -150,6 +160,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     this.id = json.id
     this.subtotal = json.subtotal
     this.observacao = json.observacao
+    this.emDomicilio = json.emDomicilio
     this.dataHora = moment(json.dataHora).toDate()
     this.metodoPagamento = MetodoPagamento.fromJson(json.metodoPagamento)
     this.situacoes = JsonHelper.jsonToArray<Situacao>(
@@ -176,6 +187,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
       new Endereco(1, 'r', 'e', 'r', 'd', 'f', 'f', 'f', 'f', 'a', false),
       [new Servico(1, 'f', 2, 'r', 'd', 1, 1, false, false)],
       moment(),
+      true,
     ).fillFromJson(json)
   }
 
@@ -189,6 +201,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
       this.endereco,
       this.servicos,
       moment(this.dataHora),
+      this.emDomicilio,
       this.ativo,
     )
     pedido.dados = this.dados
