@@ -10,6 +10,7 @@ import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
 import { TipoErro } from '../src/common/enums/tipo-erro.enum'
 import { Categoria } from '../src/models/categorias/categoria.entity'
 import { Usuario } from '../src/models/usuarios/usuario.entity'
+import * as moment from 'moment-timezone'
 
 describe('PrestadorController (e2e)', () => {
   let app: INestApplication
@@ -288,6 +289,92 @@ describe('PrestadorController (e2e)', () => {
         urlFoto: 'www.fotourl.com.br',
       },
     ]
+
+    expect(response.status).toBe(201)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/prestadores/adicionar/disponibilidades (POST)', async () => {
+    jest.resetAllMocks()
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador: {
+          id: 1,
+          ativo: true,
+          usuario: {
+            id: 1,
+            ativo: true,
+            nome: 'Alice Medeiros',
+            nomeSocial: 'Lice',
+            dataNascimento: '1999-03-25T03:00:00.000Z',
+            telefone: '22998047269',
+            cpf: '010.677.458-23',
+            uid: '5YgEUFjgMKbrgdnB2eTty3LalwG3',
+            status: 0,
+            email: 'prestador@naodelete.com',
+            foto:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/maquiadora.jpg',
+          },
+          cnpj: '',
+          delivery: true,
+          documentoUrl:
+            'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/Nova-Carteira-de-Identidade_site.jpg',
+          nomePublico: 'Unhas da Alice',
+          razaoSocial: '',
+          tipoPessoa: 0,
+          logo:
+            'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/unhas-decoradas-alice-no-pai%CC%81s-das-maravilhas-4.jpg',
+          nota: 4.3,
+          capa:
+            'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/capa-maquiagem-blog.png?alt=media',
+          disponibilidades: [],
+        },
+      },
+    }
+
+    mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [100] },
+      uid: 'oi',
+    } as any)
+
+    mockService.findOneOrFail.mockResolvedValue(
+      shouldReturn.data.prestador as any,
+    )
+    mockService.save.mockResolvedValue(shouldReturn.data.prestador as any)
+
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { id: 1, nome: 'Vinicius' },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .post('/prestadores/adicionar/disponibilidades')
+      .auth('token-valido', { type: 'bearer' })
+      .send({
+        disponibilidades: [
+          {
+            diaSemana: 0,
+            excepcional: false,
+            fim: '2020-08-14T16:12:13-03:00',
+            inicio: '2020-08-14T16:12:13-03:00',
+          },
+        ],
+      })
+
+    shouldReturn.data.prestador.disponibilidades = [
+      {
+        diaSemana: 0,
+        excepcional: false,
+        fim: '2020-08-14T19:12:13.000Z',
+        inicio: '2020-08-14T19:12:13.000Z',
+      },
+    ] as any
 
     expect(response.status).toBe(201)
     expect(response.body).toStrictEqual(shouldReturn)

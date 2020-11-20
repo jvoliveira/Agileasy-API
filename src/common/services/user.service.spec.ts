@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { createMock } from '@golevelup/nestjs-testing'
-import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
+import { Repository } from 'typeorm'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Usuario } from '../../models/usuarios/usuario.entity'
 import { UserService } from './user.service'

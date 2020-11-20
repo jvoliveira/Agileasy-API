@@ -16,6 +16,7 @@ import { Claims } from '../../common/guards/interfaces/claims.interface'
 import { AllException } from '../../common/exceptions/all.exception'
 import { Servico } from '../../models/servicos/servico.entity'
 import { Disponibilidade } from '../../models/disponibilidades/disponibilidade.entity'
+import * as moment from 'moment-timezone'
 
 @Controller('prestadores')
 export class PrestadoresController {
@@ -205,7 +206,14 @@ export class PrestadoresController {
     const newDisponibilidades = []
     // Converte os json dos serviços em uma identidade
     for (const disponibilidade of addDisponibilidades.disponibilidades) {
-      newDisponibilidades.push(Disponibilidade.fromJson(disponibilidade))
+      const dispo = Disponibilidade.fromJson(disponibilidade)
+      dispo.inicio = moment(dispo.inicio)
+        .utc()
+        .toDate()
+      dispo.fim = moment(dispo.fim)
+        .utc()
+        .toDate()
+      newDisponibilidades.push(dispo)
     }
 
     const prestador = await this.serv.addDisponibilidades(
