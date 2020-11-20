@@ -6,4 +6,8 @@ export interface ServicoInterface {
   nome: string
   urlFoto: string
   variacao: VariacaoServico
+  valorFrete: number
+  tempoMedio: number
+  noEstabelecimento: boolean
+  delivery: boolean
 }

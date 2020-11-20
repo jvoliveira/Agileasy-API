@@ -27,6 +27,10 @@ describe('Prestador', () => {
       150.0,
       'Pintura profissional',
       'URLDAFOTO',
+      10,
+      50,
+      false,
+      true,
       true,
     )
     const categoriaPai = new Categoria(
@@ -125,6 +129,10 @@ function expectedJSON() {
         valor: 150,
         nome: 'Pintura profissional',
         urlFoto: 'URLDAFOTO',
+        valorFrete: 10,
+        tempoMedio: 50,
+        noEstabelecimento: false,
+        delivery: true,
       },
     ],
     categorias: [
