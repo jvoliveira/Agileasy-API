@@ -1,6 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing'
-import { Repository, SelectQueryBuilder, UpdateQueryBuilder } from 'typeorm'
+import {
+  Connection,
+  Repository,
+  SelectQueryBuilder,
+  UpdateQueryBuilder,
+} from 'typeorm'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { PrestadoresService } from '../../controllers/prestadores/prestadores.service'
 import { Prestador } from '../../models/prestadores/prestador.entity'
@@ -21,6 +26,7 @@ import { DisponibilidadesService } from '../../controllers/disponibilidades/disp
 describe('Base Service Test', () => {
   const services: BaseService<any>[] = []
   const repos: DeepMocked<Repository<any>>[] = []
+  const connection = createMock<Connection>()
   beforeEach(async () => {
     const servicesTemp = [
       PrestadoresService,
@@ -52,7 +58,11 @@ describe('Base Service Test', () => {
     }
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [...servicesTemp, ...providers],
+      providers: [
+        ...servicesTemp,
+        ...providers,
+        { provide: Connection, useValue: connection },
+      ],
     }).compile()
 
     for (const service of servicesTemp) {

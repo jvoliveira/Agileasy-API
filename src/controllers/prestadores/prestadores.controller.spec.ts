@@ -10,8 +10,6 @@ import { RequestAuth } from '../../common/interfaces/request-auth.interface'
 import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { UserService } from '../../common/services/user.service'
 import * as admin from 'firebase-admin'
-import * as moment from 'moment-timezone'
-import { DiaSemana } from '../../models/disponibilidades/disponibilidade.interface'
 
 describe('Prestadores Service', () => {
   let service: PrestadoresService
@@ -186,6 +184,10 @@ describe('Prestadores Service', () => {
               nome: 'Vinicius Picanco',
               urlFoto: 'url',
               valor: 52.36,
+              delivery: false,
+              noEstabelecimento: true,
+              tempoMedio: 60,
+              valorFrete: 40,
             },
           ],
         },
@@ -198,47 +200,10 @@ describe('Prestadores Service', () => {
         nome: 'Vinicius Picanco',
         urlFoto: 'url',
         valor: 52.36,
-      },
-    ])
-  })
-
-  it('should add disponibilidade prestador', async () => {
-    mockFirebaseUser.setCustomUserClaims.mockResolvedValue()
-    const createResponse = defaultResponse
-    createResponse.data = {
-      prestador: {
-        id: 1,
-        nome: 'Vinicius',
-        usuario: { id: 1, cpf: '133.568.145-56' },
-      },
-    }
-    const mockUser = createMock<admin.auth.UserRecord>()
-    mockUser.uid = 'teste'
-    userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
-    jest
-      .spyOn(service, 'addDisponibilidades')
-      .mockImplementation(() => createResponse.data['prestador'])
-    await expect(
-      controller.addDisponibilidades(
-        {
-          disponibilidades: [
-            {
-              diaSemana: DiaSemana.DOMINGO,
-              excepcional: false,
-              fim: moment('2020-08-14T16:12:13-03:00').toDate(),
-              inicio: moment('2020-08-14T16:12:13-03:00').toDate(),
-            },
-          ],
-        },
-        mockUser,
-      ),
-    ).resolves.toStrictEqual(createResponse)
-    expect(service.addDisponibilidades).toBeCalledWith(1, [
-      {
-        diaSemana: DiaSemana.DOMINGO,
-        excepcional: false,
-        fim: moment('2020-08-14T16:12:13-03:00').toDate(),
-        inicio: moment('2020-08-14T16:12:13-03:00').toDate(),
+        delivery: false,
+        noEstabelecimento: true,
+        tempoMedio: 60,
+        valorFrete: 40,
       },
     ])
   })
