@@ -15,6 +15,8 @@ import { ServicosService } from '../../controllers/servicos/servicos.service'
 import { Servico } from '../../models/servicos/servico.entity'
 import { Cliente } from '../../models/clientes/cliente.entity'
 import { ClientesService } from '../../controllers/clientes/clientes.service'
+import { Disponibilidade } from '../../models/disponibilidades/disponibilidade.entity'
+import { DisponibilidadesService } from '../../controllers/disponibilidades/disponibilidades.service'
 
 describe('Base Service Test', () => {
   const services: BaseService<any>[] = []
@@ -26,9 +28,17 @@ describe('Base Service Test', () => {
       PedidosService,
       ServicosService,
       ClientesService,
+      DisponibilidadesService,
     ] // Aqui coloca todos os services que utilizam o base.service
 
-    const models = [Prestador, Categoria, Pedido, Servico, Cliente] // Aqui coloca todos os models que utilizam o base.service nos seus services
+    const models = [
+      Prestador,
+      Categoria,
+      Pedido,
+      Servico,
+      Cliente,
+      Disponibilidade,
+    ] // Aqui coloca todos os models que utilizam o base.service nos seus services
     const providers: Provider<any>[] = []
     services.length = 0
     repos.length = 0
