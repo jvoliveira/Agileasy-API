@@ -5,13 +5,7 @@ import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { createMock } from '@golevelup/nestjs-testing'
 import { AppModule } from '../src/app.module'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import {
-  Connection,
-  EntityManager,
-  getConnection,
-  QueryRunner,
-  Repository,
-} from 'typeorm'
+import { Repository } from 'typeorm'
 import { Usuario } from '../src/models/usuarios/usuario.entity'
 import { Disponibilidade } from '../src/models/disponibilidades/disponibilidade.entity'
 import { DiaSemana } from '../src/models/disponibilidades/disponibilidade.interface'
@@ -21,7 +15,6 @@ describe('DisponibilidadeController (e2e)', () => {
   const mockService = createMock<Repository<Disponibilidade>>()
   const mockUsuarioRepo = createMock<Repository<Usuario>>()
   const mockFirebaseAuth = createMock<FirebaseAuthenticationService>()
-  const mockConnection = createMock<Connection>()
 
   beforeAll(async () => {
     jest.resetAllMocks()
