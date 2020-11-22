@@ -159,55 +159,6 @@ describe('Prestadores Service', () => {
     expect(service.addCategoria).toBeCalledWith(1, [1, 2])
   })
 
-  it('should add servico prestador', async () => {
-    mockFirebaseUser.setCustomUserClaims.mockResolvedValue()
-    const createResponse = defaultResponse
-    createResponse.data = {
-      prestador: {
-        id: 1,
-        nome: 'Vinicius',
-        usuario: { id: 1, cpf: '133.568.145-56' },
-      },
-    }
-    const mockUser = createMock<admin.auth.UserRecord>()
-    mockUser.uid = 'teste'
-    userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
-    jest
-      .spyOn(service, 'addServicos')
-      .mockImplementation(() => createResponse.data['prestador'])
-    await expect(
-      controller.addServicos(
-        {
-          servicos: [
-            {
-              descricao: 'legal',
-              nome: 'Vinicius Picanco',
-              urlFoto: 'url',
-              valor: 52.36,
-              delivery: false,
-              noEstabelecimento: true,
-              tempoMedio: 60,
-              valorFrete: 40,
-            },
-          ],
-        },
-        mockUser,
-      ),
-    ).resolves.toStrictEqual(createResponse)
-    expect(service.addServicos).toBeCalledWith(1, [
-      {
-        descricao: 'legal',
-        nome: 'Vinicius Picanco',
-        urlFoto: 'url',
-        valor: 52.36,
-        delivery: false,
-        noEstabelecimento: true,
-        tempoMedio: 60,
-        valorFrete: 40,
-      },
-    ])
-  })
-
   it('should add categoria prestador', async () => {
     mockFirebaseUser.setCustomUserClaims.mockResolvedValue()
     const createResponse = defaultResponse

@@ -168,31 +168,6 @@ export class PrestadoresController {
   }
 
   @Roles(TipoUsuario.PRESTADOR)
-  @Post('adicionar/servicos')
-  public async addServicos(
-    @Body() addServicosDto: AddServicoDto,
-    @User() user: admin.auth.UserRecord,
-  ): Promise<ResponseDefault> {
-    const prestadorFull = await this.userService.getPrestadorByToken(user.uid)
-    const id = prestadorFull.id
-    const servicos = []
-    // Converte os json dos serviços em uma identidade
-    for (const servico of addServicosDto.servicos) {
-      servicos.push(Servico.fromJson(servico))
-    }
-
-    const prestador = await this.serv.addServicos(id, servicos)
-    return {
-      error_id: TipoErro.SEM_ERROS,
-      message: 'Sucesso!',
-      error: false,
-      data: {
-        prestador,
-      },
-    }
-  }
-
-  @Roles(TipoUsuario.PRESTADOR)
   @Get('/eu')
   public async getAllInformation(
     @User() user: admin.auth.UserRecord,
