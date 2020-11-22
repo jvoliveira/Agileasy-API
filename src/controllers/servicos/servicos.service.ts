@@ -14,4 +14,11 @@ export class ServicosService extends BaseService<Servico> {
     const servico = this.repo.findOneOrFail(id, { relations: ['prestador'] })
     return servico
   }
+
+  async getServicoByPrestador(idPrestador: number): Promise<Servico[]> {
+    const servico = await this.repo.find({
+      where: { ativo: true, prestador: { id: idPrestador } },
+    })
+    return servico
+  }
 }
