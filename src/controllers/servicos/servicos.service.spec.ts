@@ -47,4 +47,20 @@ describe('ServicosService', () => {
 
     await expect(service.getByIdWithPrestador(1)).rejects.toThrow(Error)
   })
+
+  it('should list enderecos from cliente', async () => {
+    const shouldReturn = [{ descricao: 'Vinicius' }]
+
+    repo.find.mockResolvedValue(shouldReturn as any)
+
+    repo.findOne.mockResolvedValue(shouldReturn as any)
+
+    await expect(service.getServicoByPrestador(1)).resolves.toStrictEqual(
+      shouldReturn,
+    )
+
+    expect(repo.find).toHaveBeenCalledWith({
+      where: { ativo: true, prestador: { id: 1 } },
+    })
+  })
 })
