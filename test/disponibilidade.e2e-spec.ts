@@ -8,10 +8,9 @@ import { getRepositoryToken } from '@nestjs/typeorm'
 import {
   Connection,
   EntityManager,
+  getConnection,
   QueryRunner,
   Repository,
-  SelectQueryBuilder,
-  UpdateQueryBuilder,
 } from 'typeorm'
 import { Usuario } from '../src/models/usuarios/usuario.entity'
 import { Disponibilidade } from '../src/models/disponibilidades/disponibilidade.entity'
@@ -28,12 +27,6 @@ describe('DisponibilidadeController (e2e)', () => {
     jest.resetAllMocks()
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-      providers: [
-        {
-          provide: Connection,
-          useValue: mockConnection,
-        },
-      ],
     })
       .overrideProvider(FirebaseAuthenticationService)
       .useValue(mockFirebaseAuth)
@@ -100,7 +93,6 @@ describe('DisponibilidadeController (e2e)', () => {
       data: {
         disponibilidades: [
           {
-            id: 2,
             excepcional: false,
             diaSemana: DiaSemana.DOMINGO,
             inicio: '2020-08-14T09:12:13.000Z',
@@ -112,29 +104,7 @@ describe('DisponibilidadeController (e2e)', () => {
         ],
       },
     }
-    const mockQueryRunner = createMock<QueryRunner>()
-    const mockEntityManager = createMock<EntityManager>()
-    mockConnection.createQueryRunner.mockReturnValue(mockQueryRunner)
-    mockQueryRunner.connect.mockReturnThis()
-    mockQueryRunner.startTransaction.mockReturnThis()
-    mockQueryRunner.release.mockReturnThis()
-    mockQueryRunner.commitTransaction.mockReturnThis()
 
-    mockEntityManager.save.mockResolvedValue([
-      {
-        id: 2,
-        excepcional: false,
-        diaSemana: DiaSemana.DOMINGO,
-        inicio: '2020-08-14T19:12:13.000Z',
-        fim: '2020-08-14T19:12:13.000Z',
-      },
-    ] as any)
-
-    mockEntityManager.delete.mockReturnThis()
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    mockQueryRunner.manager = mockEntityManager
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
       uid: 'uid-valido',
     } as any)
@@ -151,6 +121,7 @@ describe('DisponibilidadeController (e2e)', () => {
       .auth('token-valido', { type: 'bearer' })
       .send(shouldReturn.data)
     expect(response.status).toBe(201)
+    delete response.body.data.disponibilidades[0].id
     expect(response.body).toStrictEqual(shouldReturn)
   })
 })
