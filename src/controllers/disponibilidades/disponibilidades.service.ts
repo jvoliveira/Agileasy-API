@@ -5,7 +5,6 @@ import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { AllException } from '../../common/exceptions/all.exception'
 import { BaseService } from '../../common/services/base.service'
 import { Disponibilidade } from '../../models/disponibilidades/disponibilidade.entity'
-import { DisponibilidadeInterface } from '../../models/disponibilidades/disponibilidade.interface'
 
 @Injectable()
 export class DisponibilidadesService extends BaseService<Disponibilidade> {
@@ -45,7 +44,6 @@ export class DisponibilidadesService extends BaseService<Disponibilidade> {
       return newDisponibilidades
     } catch (err) {
       // since we have errors lets rollback the changes we made
-      console.log(err)
       await queryRunner.rollbackTransaction()
       await queryRunner.release()
       throw new AllException(TipoErro.ERROR_AO_SALVAR)

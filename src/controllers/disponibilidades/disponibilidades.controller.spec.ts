@@ -43,12 +43,14 @@ describe('DisponibilidadesController', () => {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
       data: {
-        disponibilidades: {
-          excepcional: false,
-          diaSemana: DiaSemana.DOMINGO,
-          inicio: '2020-08-14T19:12:13.000Z',
-          fim: '2020-08-14T19:12:13.000Z',
-        },
+        disponibilidades: [
+          {
+            excepcional: false,
+            diaSemana: DiaSemana.DOMINGO,
+            inicio: '2020-08-14T19:12:13.000Z',
+            fim: '2020-08-14T19:12:13.000Z',
+          },
+        ],
       },
     }
     const mockUser = createMock<admin.auth.UserRecord>()
@@ -85,5 +87,32 @@ describe('DisponibilidadesController', () => {
         fim: moment('2020-08-14T19:12:13-03:00').toDate(),
       },
     ])
+  })
+
+  it('should get all disponibilidade prestador', async () => {
+    const createResponse = {
+      error: false,
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      data: {
+        disponibilidades: [
+          {
+            excepcional: false,
+            diaSemana: DiaSemana.DOMINGO,
+            inicio: '2020-08-14T19:12:13.000Z',
+            fim: '2020-08-14T19:12:13.000Z',
+          },
+        ],
+      },
+    }
+    const mockUser = createMock<admin.auth.UserRecord>()
+    mockUser.uid = 'teste'
+    userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
+    service.getAllDisponibilidesByPrestador.mockResolvedValue(
+      createResponse.data.disponibilidades as any,
+    )
+    await expect(
+      controller.getAllDisponibilidades(mockUser),
+    ).resolves.toStrictEqual(createResponse)
   })
 })
