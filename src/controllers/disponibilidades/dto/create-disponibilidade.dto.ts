@@ -13,7 +13,7 @@ class DisponibilidadeDto {
   fim: Date
   @IsBoolean()
   excepcional: boolean
-  prestador: PrestadorDto
+  prestador?: PrestadorDto
 }
 
 class PrestadorDto {

@@ -74,10 +74,15 @@ describe('DisponibilidadesController', () => {
     ).resolves.toStrictEqual(createResponse)
     expect(service.updateAllDisponibilidade).toBeCalledWith(1, [
       {
+        ativo: undefined,
+        id: undefined,
+        prestador: {
+          id: 1,
+        },
         excepcional: false,
         diaSemana: DiaSemana.DOMINGO,
-        inicio: '2020-08-14T19:12:13.000Z',
-        fim: '2020-08-14T19:12:13.000Z',
+        inicio: moment('2020-08-14T19:12:13-03:00').toDate(),
+        fim: moment('2020-08-14T19:12:13-03:00').toDate(),
       },
     ])
   })
