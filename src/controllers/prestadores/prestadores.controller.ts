@@ -4,7 +4,6 @@ import { Roles } from '../../common/decorators/roles.decorator'
 import { UserService } from '../../common/services/user.service'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
 import { AddCategoriaDto } from './dto/add-categoria.dto'
-import { AddServicoDto } from './dto/add-servico.dto'
 import { ResponseDefault } from '../../common/interfaces/response-default.interface'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
@@ -13,7 +12,6 @@ import * as admin from 'firebase-admin'
 import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { Claims } from '../../common/guards/interfaces/claims.interface'
 import { AllException } from '../../common/exceptions/all.exception'
-import { Servico } from '../../models/servicos/servico.entity'
 
 @Controller('prestadores')
 export class PrestadoresController {
