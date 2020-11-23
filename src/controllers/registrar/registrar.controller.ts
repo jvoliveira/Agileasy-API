@@ -26,9 +26,10 @@ export class RegistrarController {
       displayName: registerPrestadorDto.nomePublico,
     })
     await this.firebaseAuth.setCustomUserClaims(user.uid, {
-      roles: [TipoUsuario.CLIENTE],
+      roles: [TipoUsuario.PRESTADOR],
     })
     registerPrestadorDto.usuario.uid = user.uid
+    registerPrestadorDto.nota = -1
     registerPrestadorDto.usuario.email = registerPrestadorDto.email
     try {
       const prestador = await this.servPrestador.create(registerPrestadorDto)

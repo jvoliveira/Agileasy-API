@@ -27,6 +27,7 @@ export class RegisterPrestadorDto {
   tipoPessoa: number
   usuario: UsuarioDto
   endereco: EnderecoDto
+  nota?: number
 }
 
 class UsuarioDto {

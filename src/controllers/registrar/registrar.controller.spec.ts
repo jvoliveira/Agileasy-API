@@ -73,6 +73,7 @@ describe('RegistrarController', () => {
     expect(mockPrestadorService.create).toBeCalledWith({
       email: 'vimivini99@gmail.com',
       senha: '123456',
+      nota: -1,
       nomePublico: 'V1pi',
       usuario: {
         nome: 'Vinicius',
@@ -109,6 +110,7 @@ describe('RegistrarController', () => {
       email: 'vimivini99@gmail.com',
       senha: '123456',
       nomePublico: 'V1pi',
+      nota: -1,
       usuario: {
         uid: 'uid-valido',
         nome: 'Vinicius',
