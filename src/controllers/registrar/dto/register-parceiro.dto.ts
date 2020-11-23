@@ -14,11 +14,11 @@ export class RegisterPrestadorDto {
   @Length(128, 128)
   senha: string
   @IsString()
-  cnpj: string
+  cnpj?: string
   @IsBoolean()
   delivery: boolean
   @IsUrl()
-  documentoUrl: string
+  documentoUrl?: string
   @IsString()
   nomePublico: string
   @IsString()

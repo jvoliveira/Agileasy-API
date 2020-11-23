@@ -26,7 +26,7 @@ export class Prestador extends BaseModel<Prestador>
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column('text', { nullable: false, name: 'url_documento' })
+  @Column('text', { nullable: true, name: 'url_documento' })
   documentoUrl!: string
 
   @Column('int', { nullable: false, name: 'tipo_pessoa' })
