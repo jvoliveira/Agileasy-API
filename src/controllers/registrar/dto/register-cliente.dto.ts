@@ -4,6 +4,7 @@ import {
   IsNumberString,
   IsEmail,
   Length,
+  IsOptional,
 } from 'class-validator'
 export class RegisterClienteDto {
   @IsEmail()
@@ -13,7 +14,8 @@ export class RegisterClienteDto {
   senha: string
   usuario: UsuarioDto
   endereco: EnderecoDto
-  enderecos?: [EnderecoDto]
+  @IsOptional()
+  enderecos?: [EnderecoDto] | null
 }
 
 class UsuarioDto {
@@ -28,9 +30,11 @@ class UsuarioDto {
   @IsString()
   cpf: string
   @IsString()
-  uid?: string
+  @IsOptional()
+  uid?: string | null
   @IsString()
-  email?: string
+  @IsOptional()
+  email?: string | null
 }
 
 class EnderecoDto {
@@ -51,5 +55,6 @@ class EnderecoDto {
   @IsString()
   bairro: string
   @IsString()
-  referencia?: string
+  @IsOptional()
+  referencia?: string | null
 }
