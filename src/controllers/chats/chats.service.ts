@@ -35,8 +35,8 @@ export class ChatsService {
 
     if (chatConfigsData) {
       batch.create(mensagemRef, {
-        mensagem: chatConfigsData.mensagemPadrao,
-        autorMensagem: 2,
+        texto: chatConfigsData.mensagemPadrao,
+        autor: 2,
         dataHora: moment()
           .utc()
           .format(),
