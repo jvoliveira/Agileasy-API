@@ -27,7 +27,8 @@ import { PedidosModule } from './controllers/pedidos/pedidos.module'
 import { EnderecosModule } from './controllers/enderecos/enderecos.module'
 import { ClientesModule } from './controllers/clientes/clientes.module'
 import { MetodosPagamentoModule } from './controllers/metodospagamento/metodos-pagamento.module'
-import { DisponibilidadesModule } from './controllers/disponibilidades/disponibilidades.module';
+import { DisponibilidadesModule } from './controllers/disponibilidades/disponibilidades.module'
+import { ChatsModule } from './controllers/chats/chats.module'
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { DisponibilidadesModule } from './controllers/disponibilidades/disponibi
     ClientesModule,
     MetodosPagamentoModule,
     DisponibilidadesModule,
+    ChatsModule,
   ],
   controllers: [AppController],
   providers: [
