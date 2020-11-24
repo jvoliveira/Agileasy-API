@@ -136,7 +136,13 @@ export class PrestadoresService extends BaseService<Prestador> {
 
   async getAllInformationWithoutPedidos(id: number): Promise<Prestador> {
     return this.repo.findOneOrFail(id, {
-      relations: ['usuario', 'endereco', 'servicos', 'categorias'],
+      relations: [
+        'usuario',
+        'endereco',
+        'servicos',
+        'categorias',
+        'disponibilidades',
+      ],
     })
   }
 }
