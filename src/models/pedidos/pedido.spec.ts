@@ -60,6 +60,7 @@ describe('Pedido', () => {
       [serv],
       moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),
       true,
+      'ASD2134FDSF',
     )
 
     expect(JSON.parse(JSON.stringify(mockPedido))).toStrictEqual(
@@ -77,6 +78,7 @@ function expectedJSON() {
     subtotal: 150,
     dataHora: moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),
     observacao: 'Na casa verde',
+    fidChat: 'ASD2134FDSF',
     metodoPagamento: {
       ativo: true,
       id: 1,

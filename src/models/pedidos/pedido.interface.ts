@@ -12,4 +12,5 @@ export interface PedidoInterface {
   endereco: EnderecoInterface
   servicos: ServicoInterface[]
   emDomicilio: boolean
+  fidChat: string
 }
