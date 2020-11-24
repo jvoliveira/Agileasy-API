@@ -1,4 +1,4 @@
-import { Controller, Param, Post } from '@nestjs/common'
+import { Controller, Param, Patch, Post } from '@nestjs/common'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { User } from '../../common/decorators/user.decorator'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
@@ -17,7 +17,7 @@ export class ChatsController {
     private pedidoService: PedidosService,
   ) {}
 
-  @Post(':id/iniciar/cliente/eu')
+  @Patch(':id/iniciar/cliente/eu')
   @Roles(TipoUsuario.CLIENTE)
   public async beginChatAsCliente(
     @Param('id') id: number,
@@ -40,24 +40,27 @@ export class ChatsController {
       }
     }
 
-    const fidChat = this.chatService.createChat(
+    const fidChat = await this.chatService.createChat(
       id,
       pedido.prestador.id,
       cliente.id,
       'cliente',
     )
+
+    const pedidoAtt = await this.pedidoService.update(id, { fidChat })
+
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
       error: false,
       data: {
-        fidChat: fidChat,
+        pedido: pedidoAtt,
       },
     }
   }
 
-  @Post(':id/iniciar/prestador/eu')
-  @Roles(TipoUsuario.CLIENTE)
+  @Patch(':id/iniciar/prestador/eu')
+  @Roles(TipoUsuario.PRESTADOR)
   public async beginChatAsPrestador(
     @Param('id') id: number,
     @User() user: admin.auth.UserRecord,
@@ -79,18 +82,21 @@ export class ChatsController {
       }
     }
 
-    const fidChat = this.chatService.createChat(
+    const fidChat = await this.chatService.createChat(
       id,
       prestador.id,
       pedido.cliente.id,
       'prestador',
     )
+
+    const pedidoAtt = await this.pedidoService.update(id, { fidChat })
+
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
       error: false,
       data: {
-        fidChat: fidChat,
+        pedido: pedidoAtt,
       },
     }
   }
