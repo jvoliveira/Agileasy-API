@@ -131,7 +131,7 @@ describe('PrestadorController (e2e)', () => {
         prestador: { nome: 'oi' } as any,
       },
     }
-    mockService.findOne.mockResolvedValue(shouldReturn.data.prestador)
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.prestador)
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
       uid: 'uid-valido',
     } as any)

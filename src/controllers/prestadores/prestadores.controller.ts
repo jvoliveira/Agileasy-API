@@ -54,7 +54,7 @@ export class PrestadoresController {
   @Get(':id/informacoes')
   @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   public async get(@Param('id') id: number): Promise<ResponseDefault> {
-    const prestador = await this.serv.getByID(id)
+    const prestador = await this.serv.getAllInformation(id)
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
