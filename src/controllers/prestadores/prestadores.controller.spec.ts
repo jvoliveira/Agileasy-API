@@ -101,7 +101,7 @@ describe('Prestadores Service', () => {
       prestador: { nome: 'Vinicius' },
     }
     jest
-      .spyOn(service, 'getAllInformation')
+      .spyOn(service, 'getAllInformationWithoutPedidos')
       .mockImplementation(() => getByIDResponse.data['prestador'])
     await expect(controller.get(1)).resolves.toStrictEqual(getByIDResponse)
   })

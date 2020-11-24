@@ -180,4 +180,28 @@ describe('Prestadores Service', () => {
 
     await expect(service.getAllInformation(1)).rejects.toThrow(Error)
   })
+
+  it('should be get all information without pedidos', async () => {
+    const shouldReturn = [
+      {
+        descricao: 'Vinicius Picanco',
+      },
+    ]
+
+    expect(service).toBeDefined()
+
+    repo.findOneOrFail.mockReturnValue(shouldReturn as any)
+
+    expect(await service.getAllInformationWithoutPedidos(1)).toBe(shouldReturn)
+    expect(repo.findOneOrFail).toHaveBeenCalledWith(1, {
+      relations: ['usuario', 'endereco', 'servicos', 'categorias'],
+    })
+
+    repo.findOneOrFail.mockClear()
+    repo.findOneOrFail.mockRejectedValue(new Error())
+
+    await expect(service.getAllInformationWithoutPedidos(1)).rejects.toThrow(
+      Error,
+    )
+  })
 })
