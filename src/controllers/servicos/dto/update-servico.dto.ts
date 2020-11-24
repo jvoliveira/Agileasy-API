@@ -1,4 +1,10 @@
-import { IsBoolean, IsNumber, IsString, IsUrl } from 'class-validator'
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+} from 'class-validator'
 
 export class UpdateServicoDto {
   @IsString()
@@ -18,6 +24,8 @@ export class UpdateServicoDto {
   @IsBoolean()
   delivery: boolean
   prestador?: UpdatePrestadorDto
+  @IsOptional()
+  variacoesServico: []
 }
 
 class UpdatePrestadorDto {

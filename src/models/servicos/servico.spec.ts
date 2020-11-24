@@ -15,6 +15,8 @@ describe('Servico', () => {
       true,
     )
 
+    mockServico.variacoesServico = []
+
     expect(JSON.parse(JSON.stringify(mockServico))).toStrictEqual(
       JSON.parse(JSON.stringify(expectedJSON())),
     )
@@ -34,5 +36,6 @@ function expectedJSON() {
     tempoMedio: 50,
     noEstabelecimento: false,
     delivery: true,
+    variacoesServico: [],
   }
 }

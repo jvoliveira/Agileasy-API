@@ -57,10 +57,10 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
 
   @OneToMany(
     type => VariacaoServico,
-    variacao => variacao.servico,
+    variacoesServico => variacoesServico.servico,
     { cascade: true },
   )
-  variacao: VariacaoServico
+  variacoesServico?: VariacaoServico[]
 
   @Column('double precision', {
     nullable: false,
@@ -116,8 +116,10 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
     this.tempoMedio = json.tempoMedio
     this.noEstabelecimento = json.noEstabelecimento
     this.delivery = json.delivery
-    if (json.variacao != null) {
-      this.variacao = VariacaoServico.fromJson(json.variacao)
+    if (json.variacoesServico != null) {
+      this.variacoesServico = (json.variacoesServico as any[]).map(variacao =>
+        VariacaoServico.fromJson(variacao),
+      )
     }
 
     return this

@@ -12,7 +12,7 @@ import { JsonHelper } from '../../common/helpers/json.helper'
 import { Alternativa } from '../alternativa/alternativa.entity'
 import { Servico } from '../servicos/servico.entity'
 
-@Entity('variacaoServico')
+@Entity('variacao_servico')
 export class VariacaoServico extends BaseModel<VariacaoServico>
   implements VariacaoServicoInterface {
   @PrimaryGeneratedColumn()
@@ -27,7 +27,7 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
   @Column('boolean', { nullable: false })
   obrigatorio: boolean
 
-  @Column('int', { nullable: false })
+  @Column('int', { nullable: false, name: 'quantidade_maxima' })
   qtsMaxima: number
 
   @OneToMany(
@@ -41,7 +41,7 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
 
   @ManyToOne(
     type => Servico,
-    servico => servico.variacao,
+    servico => servico.variacoesServico,
     { cascade: false },
   )
   @JoinColumn({ name: 'id_servico' })
