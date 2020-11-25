@@ -29,12 +29,28 @@ export class PrestadoresController {
     private auth: FirebaseAuthenticationService,
     private userService: UserService,
   ) {}
-  /** Rotas para nível cliente */
+
   @Get()
-  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
-  @CacheTTL(600)
+  @Roles(TipoUsuario.ADMIN)
+  @CacheTTL(0)
   public async getAll(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getAll()
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestadores,
+      },
+    }
+  }
+
+  /** Rotas para nível cliente */
+  @Get('ativos')
+  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
+  @CacheTTL(0)
+  public async getAllativos(): Promise<ResponseDefault> {
+    const prestadores = await this.serv.getAllPrestadorAtivos()
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',

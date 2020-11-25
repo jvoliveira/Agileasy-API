@@ -3,6 +3,7 @@ import { createMock } from '@golevelup/nestjs-testing'
 import { Test, TestingModule } from '@nestjs/testing'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { AllException } from '../../common/exceptions/all.exception'
+import { TipoStatus } from '../../models/usuarios/usuario.interface'
 import { ClientesService } from '../clientes/clientes.service'
 import { PrestadoresService } from '../prestadores/prestadores.service'
 import { RegistrarController } from './registrar.controller'
@@ -79,6 +80,7 @@ describe('RegistrarController', () => {
         nome: 'Vinicius',
         uid: 'uid-valido',
         email: 'vimivini99@gmail.com',
+        status: TipoStatus.em_analise,
       },
     })
   })
@@ -114,6 +116,7 @@ describe('RegistrarController', () => {
       usuario: {
         uid: 'uid-valido',
         nome: 'Vinicius',
+        status: TipoStatus.em_analise,
         email: 'vimivini99@gmail.com',
       },
     })

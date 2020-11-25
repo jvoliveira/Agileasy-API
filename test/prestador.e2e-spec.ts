@@ -101,10 +101,12 @@ describe('PrestadorController (e2e)', () => {
     const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
     const mockSelect1 = createMock<SelectQueryBuilder<Prestador>>()
     const mockSelect2 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect3 = createMock<SelectQueryBuilder<Prestador>>()
     const mockMany = createMock<SelectQueryBuilder<Prestador>>()
     mockQuery.leftJoinAndSelect.mockReturnValue(mockSelect1)
     mockSelect1.leftJoinAndSelect.mockReturnValue(mockSelect2)
-    mockSelect2.where.mockReturnValue(mockMany)
+    mockSelect2.leftJoinAndSelect.mockReturnValue(mockSelect3)
+    mockSelect3.where.mockReturnValue(mockMany)
     mockMany.getMany.mockResolvedValue(shouldReturn.data.prestadores)
 
     mockService.createQueryBuilder.mockReturnValue(mockQuery)

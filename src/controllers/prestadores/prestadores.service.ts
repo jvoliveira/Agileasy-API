@@ -7,6 +7,7 @@ import { AllException } from '../../common/exceptions/all.exception'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { Servico } from '../../models/servicos/servico.entity'
 import { Disponibilidade } from '../../models/disponibilidades/disponibilidade.entity'
+import { TipoStatus } from '../../models/usuarios/usuario.interface'
 
 @Injectable()
 export class PrestadoresService extends BaseService<Prestador> {
@@ -14,13 +15,27 @@ export class PrestadoresService extends BaseService<Prestador> {
     super(repo)
   }
 
+  async getAllPrestadorAtivos(): Promise<Prestador[]> {
+    const values: Array<Prestador> = await this.repo.find({
+      where: { ativo: true, usuario: { status: TipoStatus.ativo } },
+    })
+
+    if (!values) {
+      throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
+    }
+
+    return values
+  }
+
   async getPrestadorByCategoria(idCategoria: number): Promise<Prestador[]> {
     const values: Array<Prestador> = await this.repo
       .createQueryBuilder('prestador')
       .leftJoinAndSelect('prestador.categorias', 'c')
       .leftJoinAndSelect('prestador.servicos', 's')
+      .leftJoinAndSelect('prestador.usuario', 'u')
       .where(
-        'c.id = :idCategoria and prestador.ativo = true and c.ativo = true',
+        'c.id = :idCategoria and prestador.ativo = true and c.ativo = true and u.status = ' +
+          TipoStatus.ativo,
         { idCategoria },
       )
       .getMany()

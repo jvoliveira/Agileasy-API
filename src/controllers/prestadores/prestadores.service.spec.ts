@@ -6,6 +6,7 @@ import { RelationQueryBuilder, Repository, SelectQueryBuilder } from 'typeorm'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Categoria } from '../../models/categorias/categoria.entity'
 import { AllException } from '../../common/exceptions/all.exception'
+import { TipoStatus } from '../../models/usuarios/usuario.interface'
 
 describe('Prestadores Service', () => {
   let service: PrestadoresService
@@ -47,10 +48,12 @@ describe('Prestadores Service', () => {
     const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
     const mockSelect1 = createMock<SelectQueryBuilder<Prestador>>()
     const mockSelect2 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect3 = createMock<SelectQueryBuilder<Prestador>>()
     const mockMany = createMock<SelectQueryBuilder<Prestador>>()
     mockQuery.leftJoinAndSelect.mockReturnValue(mockSelect1)
     mockSelect1.leftJoinAndSelect.mockReturnValue(mockSelect2)
-    mockSelect2.where.mockReturnValue(mockMany)
+    mockSelect2.leftJoinAndSelect.mockReturnValue(mockSelect3)
+    mockSelect3.where.mockReturnValue(mockMany)
     mockMany.getMany.mockResolvedValue(shouldReturn)
 
     repo.createQueryBuilder.mockReturnValue(mockQuery)
@@ -60,9 +63,10 @@ describe('Prestadores Service', () => {
     )
 
     expect(
-      mockSelect2.where,
+      mockSelect3.where,
     ).toHaveBeenCalledWith(
-      'c.id = :idCategoria and prestador.ativo = true and c.ativo = true',
+      'c.id = :idCategoria and prestador.ativo = true and c.ativo = true and u.status = ' +
+        TipoStatus.ativo,
       { idCategoria: 1 },
     )
     expect(mockQuery.leftJoinAndSelect).toHaveBeenCalledWith(

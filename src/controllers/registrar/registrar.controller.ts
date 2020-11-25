@@ -7,6 +7,7 @@ import { ResponseDefault } from '../../common/interfaces/response-default.interf
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
 import { ClientesService } from '../clientes/clientes.service'
+import { TipoStatus } from '../../models/usuarios/usuario.interface'
 
 @Controller('registrar')
 export class RegistrarController {
@@ -29,6 +30,7 @@ export class RegistrarController {
       roles: [TipoUsuario.PRESTADOR],
     })
     registerPrestadorDto.usuario.uid = user.uid
+    registerPrestadorDto.usuario.status = TipoStatus.em_analise
     registerPrestadorDto.nota = -1
     registerPrestadorDto.usuario.email = registerPrestadorDto.email
     try {
