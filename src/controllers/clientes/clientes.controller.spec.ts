@@ -51,4 +51,26 @@ describe('ClientesController', () => {
       shouldReturn,
     )
   })
+
+  it('should change notificacao', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {},
+    }
+    const mockUser = createMock<admin.auth.UserRecord>()
+    mockUser.uid = 'teste'
+    userService.getClienteByToken.mockResolvedValue({
+      id: 1,
+      usuario: { id: 1 },
+    } as any)
+    userService.update.mockResolvedValue({ id: 1 } as any)
+
+    await expect(
+      controller.changeTokenNotificacao(mockUser, {
+        tokenNotificacao: 'TESTE',
+      }),
+    ).resolves.toStrictEqual(shouldReturn)
+  })
 })
