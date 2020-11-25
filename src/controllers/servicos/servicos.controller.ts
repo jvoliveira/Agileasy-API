@@ -111,8 +111,6 @@ export class ServicosController {
       throw new AllException(TipoErro.USUARIO_SEM_PERMISSAO)
     }
 
-    console.log('passei')
-
     await this.serv.delete(id)
 
     delete updateServicoDto.id
