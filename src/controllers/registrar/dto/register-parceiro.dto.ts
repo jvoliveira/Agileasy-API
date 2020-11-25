@@ -15,6 +15,7 @@ export class RegisterPrestadorDto {
   @Length(128, 128)
   senha: string
   @IsString()
+  @IsOptional()
   cnpj?: string | null
   @IsBoolean()
   delivery: boolean
@@ -24,6 +25,7 @@ export class RegisterPrestadorDto {
   @IsString()
   nomePublico: string
   @IsString()
+  @IsOptional()
   razaoSocial: string
   @IsNumber()
   tipoPessoa: number
