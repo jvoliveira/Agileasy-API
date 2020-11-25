@@ -35,7 +35,7 @@ export class ChatsController {
         message: 'Sucesso!',
         error: false,
         data: {
-          fidChat: pedido.fidChat,
+          pedido,
         },
       }
     }
@@ -77,7 +77,7 @@ export class ChatsController {
         message: 'Sucesso!',
         error: false,
         data: {
-          fidChat: pedido.fidChat,
+          pedido,
         },
       }
     }
