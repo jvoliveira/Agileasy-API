@@ -14,6 +14,7 @@ describe('Usuario', () => {
       'TOKETOP',
       'foto_legal',
       'vimivini99@gmail.com',
+      'SERTVHijmouHINURVta',
     )
     expect(JSON.parse(JSON.stringify(mockUsuario))).toStrictEqual(
       JSON.parse(JSON.stringify(expectedJSON())),
@@ -35,5 +36,6 @@ function expectedJSON() {
     uid: 'TOKETOP',
     foto: 'foto_legal',
     email: 'vimivini99@gmail.com',
+    tokenNotificacao: 'SERTVHijmouHINURVta',
   }
 }

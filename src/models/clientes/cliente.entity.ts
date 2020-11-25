@@ -114,6 +114,7 @@ export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
         'a',
         'a',
         'a',
+        'a',
       ),
       [],
       [],

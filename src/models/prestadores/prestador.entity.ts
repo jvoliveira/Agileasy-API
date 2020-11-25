@@ -207,6 +207,7 @@ export class Prestador extends BaseModel<Prestador>
         'a',
         '1',
         '1',
+        'a',
       ),
       '2',
       true,

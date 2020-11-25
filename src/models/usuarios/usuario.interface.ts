@@ -14,4 +14,5 @@ export interface UsuarioInterface {
   email: string
   status: TipoStatus
   foto: string
+  tokenNotificacao: string
 }

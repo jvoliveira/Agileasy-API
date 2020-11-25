@@ -56,6 +56,7 @@ describe('Prestador', () => {
       'TOKENTOP',
       'foto_top',
       'vimivini99@gmail.com',
+      'SERTVHijmouHINURVta',
     )
     const mockPrestador = new Prestador(
       1,
@@ -106,6 +107,7 @@ function expectedJSON() {
       uid: 'TOKENTOP',
       foto: 'foto_top',
       email: 'vimivini99@gmail.com',
+      tokenNotificacao: 'SERTVHijmouHINURVta',
     },
     endereco: {
       ativo: true,

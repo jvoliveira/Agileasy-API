@@ -41,6 +41,9 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
   @Column('int', { nullable: false })
   status!: TipoStatus
 
+  @Column('text', { nullable: true, name: 'token_notificacao' })
+  tokenNotificacao!: string
+
   @OneToOne(
     type => Cliente,
     cliente => cliente.usuario,
@@ -66,6 +69,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
     uid: string,
     foto: string,
     email: string,
+    tokenNotificacao: string,
     ativo = true,
   ) {
     super(id, ativo)
@@ -77,6 +81,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
     this.uid = uid
     this.status = status
     this.email = email
+    this.tokenNotificacao = tokenNotificacao
     this.foto = foto
   }
 
@@ -92,6 +97,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
     this.nomeSocial = json.nomeSocial as string
     this.nome = json.nome as string
     this.foto = json.foto
+    this.tokenNotificacao = json.tokenNotificacao
     this.telefone = json.telefone as string
     this.uid = json.uid as string
     this.status = json.status as TipoStatus
@@ -112,6 +118,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
       this.uid,
       this.foto,
       this.email,
+      this.tokenNotificacao,
       this.ativo,
     )
     usuario.dados = this.dados
@@ -127,6 +134,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
       moment(),
       't',
       't',
+      '1',
       '1',
       '1',
       '1',
