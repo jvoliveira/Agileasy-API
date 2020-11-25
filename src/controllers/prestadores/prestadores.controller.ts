@@ -1,8 +1,17 @@
-import { Controller, Get, Post, Body, Param, CacheTTL } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  CacheTTL,
+  Put,
+} from '@nestjs/common'
 import { PrestadoresService } from './prestadores.service'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { UserService } from '../../common/services/user.service'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
+import { UpdateTokenDto } from './dto/update-token.dto'
 import { AddCategoriaDto } from './dto/add-categoria.dto'
 import { ResponseDefault } from '../../common/interfaces/response-default.interface'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
@@ -182,6 +191,28 @@ export class PrestadoresController {
       data: {
         prestador,
       },
+    }
+  }
+
+  @Roles(TipoUsuario.PRESTADOR)
+  @Put('/atualizar/notificacao/eu')
+  public async changeTokenNotificacao(
+    @User() user: admin.auth.UserRecord,
+    @Body() token: UpdateTokenDto,
+  ): Promise<ResponseDefault> {
+    const prestadorIncompleto = await this.userService.getPrestadorByToken(
+      user.uid,
+    )
+
+    this.userService.update(prestadorIncompleto.usuario.id, {
+      tokenNotificacao: token.tokenNotificacao,
+    })
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {},
     }
   }
 }

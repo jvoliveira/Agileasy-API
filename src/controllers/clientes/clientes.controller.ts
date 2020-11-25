@@ -1,4 +1,4 @@
-import { CacheTTL, Controller, Get } from '@nestjs/common'
+import { Body, CacheTTL, Controller, Get, Put } from '@nestjs/common'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { ResponseDefault } from '../../common/interfaces/response-default.interface'
 import { UserService } from '../../common/services/user.service'
@@ -7,6 +7,7 @@ import { ClientesService } from './clientes.service'
 import { User } from '../../common/decorators/user.decorator'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
+import { UpdateTokenDto } from './dto/update-token.dto'
 
 @Controller('clientes')
 export class ClientesController {
@@ -31,6 +32,26 @@ export class ClientesController {
       data: {
         cliente,
       },
+    }
+  }
+
+  @Roles(TipoUsuario.CLIENTE)
+  @Put('/atualizar/notificacao/eu')
+  public async changeTokenNotificacao(
+    @User() user: admin.auth.UserRecord,
+    @Body() token: UpdateTokenDto,
+  ): Promise<ResponseDefault> {
+    const clienteIncompleto = await this.userService.getClienteByToken(user.uid)
+
+    this.userService.update(clienteIncompleto.usuario.id, {
+      tokenNotificacao: token.tokenNotificacao,
+    })
+
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {},
     }
   }
 }

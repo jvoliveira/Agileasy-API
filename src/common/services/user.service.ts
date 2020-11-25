@@ -6,12 +6,15 @@ import { Prestador } from '../../models/prestadores/prestador.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Usuario } from '../../models/usuarios/usuario.entity'
+import { BaseService } from './base.service'
 
 @Injectable()
-export class UserService {
+export class UserService extends BaseService<Usuario> {
   constructor(
     @InjectRepository(Usuario) private repoUsuario: Repository<Usuario>,
-  ) {}
+  ) {
+    super(repoUsuario)
+  }
 
   async getPrestadorByToken(uid: string): Promise<Prestador> {
     const status = await this.repoUsuario.findOne({
