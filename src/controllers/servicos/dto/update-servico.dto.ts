@@ -7,6 +7,8 @@ import {
 } from 'class-validator'
 
 export class UpdateServicoDto {
+  @IsOptional()
+  id?: number
   @IsString()
   descricao: string
   @IsNumber()

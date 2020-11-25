@@ -19,6 +19,7 @@ import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { CreateServicoDto } from './dto/create-servico.dto'
 import { UpdateServicoDto } from './dto/update-servico.dto'
 import { AllException } from '../../common/exceptions/all.exception'
+import { Servico } from '../../models/servicos/servico.entity'
 
 @Controller('servicos')
 export class ServicosController {
@@ -105,13 +106,20 @@ export class ServicosController {
     const prestadorIncompleto = await this.userService.getPrestadorByToken(
       user.uid,
     )
-
     const servicoReceive = await this.serv.getByIdWithPrestador(id)
     if (prestadorIncompleto.id !== servicoReceive.prestador.id) {
       throw new AllException(TipoErro.USUARIO_SEM_PERMISSAO)
     }
 
-    const servico = await this.serv.update(servicoReceive.id, updateServicoDto)
+    console.log('passei')
+
+    await this.serv.delete(id)
+
+    delete updateServicoDto.id
+
+    updateServicoDto.prestador = { id: prestadorIncompleto.id }
+
+    const servico = await this.serv.create(updateServicoDto)
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
