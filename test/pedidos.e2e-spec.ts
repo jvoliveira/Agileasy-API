@@ -63,7 +63,7 @@ describe('PedidoController (e2e)', () => {
     app.close()
   })
 
-  it('/pedidos/criar (POST)', async () => {
+  it('/pedidos/novo (POST)', async () => {
     const shouldReturn = {
       error_id: -1,
       message: 'Sucesso!',
@@ -108,6 +108,9 @@ describe('PedidoController (e2e)', () => {
         },
       },
     }
+    mockFirebaseNotification.send.mockReturnThis()
+    mockPrestadorRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
+
     mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
     mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
     mockServicosRepo.findOneOrFail.mockResolvedValue({
@@ -573,6 +576,9 @@ describe('PedidoController (e2e)', () => {
             ativo: true,
             tipoPagamento: 0,
           },
+          cliente: {
+            id: 1,
+          },
           situacoes: [
             {
               id: 1,
@@ -608,6 +614,8 @@ describe('PedidoController (e2e)', () => {
         },
       },
     }
+    mockFirebaseNotification.send.mockReturnThis()
+    mockClienteRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
     mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
 
     mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
@@ -652,6 +660,9 @@ describe('PedidoController (e2e)', () => {
           ativo: true,
           subtotal: 25,
           observacao: 'Quero que faça isso com urgência',
+          cliente: {
+            id: 1,
+          },
           metodoPagamento: {
             id: 1,
             ativo: true,
@@ -693,6 +704,9 @@ describe('PedidoController (e2e)', () => {
       },
     }
     mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockFirebaseNotification.send.mockReturnThis()
+    mockClienteRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
 
     mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
 
@@ -736,6 +750,9 @@ describe('PedidoController (e2e)', () => {
           ativo: true,
           subtotal: 25,
           observacao: 'Quero que faça isso com urgência',
+          cliente: {
+            id: 1,
+          },
           metodoPagamento: {
             id: 1,
             ativo: true,
@@ -776,6 +793,9 @@ describe('PedidoController (e2e)', () => {
         },
       },
     }
+
+    mockFirebaseNotification.send.mockReturnThis()
+    mockClienteRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
     mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
 
     mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
@@ -820,6 +840,9 @@ describe('PedidoController (e2e)', () => {
           ativo: true,
           subtotal: 25,
           observacao: 'Quero que faça isso com urgência',
+          cliente: {
+            id: 1,
+          },
           metodoPagamento: {
             id: 1,
             ativo: true,
@@ -872,6 +895,8 @@ describe('PedidoController (e2e)', () => {
         },
       },
     }
+    mockFirebaseNotification.send.mockReturnThis()
+    mockClienteRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
     mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
 
     mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
@@ -921,6 +946,7 @@ describe('PedidoController (e2e)', () => {
             ativo: true,
             tipoPagamento: 0,
           },
+          cliente: { id: 1 },
           situacoes: [
             {
               id: 1,
@@ -962,6 +988,8 @@ describe('PedidoController (e2e)', () => {
         },
       },
     }
+    mockFirebaseNotification.send.mockReturnThis()
+    mockClienteRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
     mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
 
     mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
@@ -1006,6 +1034,9 @@ describe('PedidoController (e2e)', () => {
           ativo: true,
           subtotal: 25,
           observacao: 'Quero que faça isso com urgência',
+          prestador: {
+            id: 1,
+          },
           metodoPagamento: {
             id: 1,
             ativo: true,
@@ -1052,6 +1083,8 @@ describe('PedidoController (e2e)', () => {
         },
       },
     }
+    mockFirebaseNotification.send.mockReturnThis()
+    mockPrestadorRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
     mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
 
     mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)

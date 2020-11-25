@@ -500,7 +500,7 @@ export class PedidosController {
     })
 
     const prestador = await this.prestadorService.getByID(pedido.prestador.id)
-    if (cliente.usuario.tokenNotificacao) {
+    if (prestador.usuario.tokenNotificacao) {
       try {
         const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
         newNotification.notification.title = 'Seu serviço foi cancelado.'

@@ -109,6 +109,10 @@ describe('PedidosController', () => {
         },
       },
     }
+    prestadorService.getByID.mockResolvedValue({
+      usuario: { tokenNotificacao: 'TESTE' },
+    } as any)
+    mockFirebaseNotification.send.mockReturnThis()
     service.create.mockResolvedValue(shouldReturn.data.pedido as any)
     serviceSevicos.getByIdWithPrestador.mockResolvedValue({
       valor: 25,
@@ -210,6 +214,9 @@ describe('PedidosController', () => {
           ativo: true,
           subtotal: 25,
           observacao: 'Quero que faça isso com urgência',
+          cliente: {
+            id: 1,
+          },
           metodoPagamento: {
             id: 1,
             ativo: true,
@@ -251,6 +258,11 @@ describe('PedidosController', () => {
       },
     }
 
+    clienteService.getByID.mockResolvedValue({
+      usuario: { tokenNotificacao: 'TESTE' },
+    } as any)
+    mockFirebaseNotification.send.mockReturnThis()
+
     const mockUser = createMock<admin.auth.UserRecord>()
     mockUser.uid = 'teste'
 
@@ -284,6 +296,9 @@ describe('PedidosController', () => {
           ativo: true,
           subtotal: 25,
           observacao: 'Quero que faça isso com urgência',
+          cliente: {
+            id: 1,
+          },
           metodoPagamento: {
             id: 1,
             ativo: true,
@@ -333,6 +348,11 @@ describe('PedidosController', () => {
 
     const mockUser = createMock<admin.auth.UserRecord>()
     mockUser.uid = 'teste'
+
+    clienteService.getByID.mockResolvedValue({
+      usuario: { tokenNotificacao: 'TESTE' },
+    } as any)
+    mockFirebaseNotification.send.mockReturnThis()
 
     userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
 
@@ -389,6 +409,9 @@ describe('PedidosController', () => {
             cep: '28300-000',
             referencia: 'Ao lado casa da mercearia',
           },
+          cliente: {
+            id: 1,
+          },
           servicos: [
             {
               id: 1,
@@ -407,6 +430,11 @@ describe('PedidosController', () => {
 
     const mockUser = createMock<admin.auth.UserRecord>()
     mockUser.uid = 'teste'
+
+    clienteService.getByID.mockResolvedValue({
+      usuario: { tokenNotificacao: 'TESTE' },
+    } as any)
+    mockFirebaseNotification.send.mockReturnThis()
 
     userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
 
@@ -432,6 +460,9 @@ describe('PedidosController', () => {
           ativo: true,
           subtotal: 25,
           observacao: 'Quero que faça isso com urgência',
+          cliente: {
+            id: 1,
+          },
           metodoPagamento: {
             id: 1,
             ativo: true,
@@ -476,6 +507,12 @@ describe('PedidosController', () => {
     const mockUser = createMock<admin.auth.UserRecord>()
     mockUser.uid = 'teste'
 
+    clienteService.getByID.mockResolvedValue({
+      usuario: { tokenNotificacao: 'TESTE' },
+    } as any)
+
+    mockFirebaseNotification.send.mockReturnThis()
+
     userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
 
     service.getByIdAsPrestador.mockResolvedValue(
@@ -500,6 +537,9 @@ describe('PedidosController', () => {
           ativo: true,
           subtotal: 25,
           observacao: 'Quero que faça isso com urgência',
+          cliente: {
+            id: 1,
+          },
           metodoPagamento: {
             id: 1,
             ativo: true,
@@ -546,6 +586,12 @@ describe('PedidosController', () => {
         },
       },
     }
+
+    clienteService.getByID.mockResolvedValue({
+      usuario: { tokenNotificacao: 'TESTE' },
+    } as any)
+
+    mockFirebaseNotification.send.mockReturnThis()
 
     const mockUser = createMock<admin.auth.UserRecord>()
     mockUser.uid = 'teste'
@@ -574,6 +620,9 @@ describe('PedidosController', () => {
           ativo: true,
           subtotal: 25,
           observacao: 'Quero que faça isso com urgência',
+          prestador: {
+            id: 1,
+          },
           metodoPagamento: {
             id: 1,
             ativo: true,
@@ -623,6 +672,12 @@ describe('PedidosController', () => {
 
     const mockUser = createMock<admin.auth.UserRecord>()
     mockUser.uid = 'teste'
+
+    prestadorService.getByID.mockResolvedValue({
+      usuario: { tokenNotificacao: 'TESTE' },
+    } as any)
+
+    mockFirebaseNotification.send.mockReturnThis()
 
     userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
 

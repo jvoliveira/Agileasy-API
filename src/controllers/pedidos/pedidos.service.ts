@@ -54,6 +54,7 @@ export class PedidosService extends BaseService<Pedido> {
         })
       : this.repo.findOneOrFail({
           where: { id: idPedido, prestador: { id: idPrestador } },
+          relations: ['cliente'],
         })
   }
 
@@ -79,6 +80,7 @@ export class PedidosService extends BaseService<Pedido> {
         })
       : this.repo.findOneOrFail({
           where: { id: idPedido, cliente: { id: idCliente } },
+          relations: ['prestador'],
         })
   }
 }
