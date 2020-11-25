@@ -98,6 +98,9 @@ export class PedidosController {
     for (const servicoId of newPedido.servicos) {
       const servico = await this.servServicos.getByIdWithPrestador(servicoId.id)
       newPedido.subtotal += servico.valor
+      if (newPedido.emDomicilio) {
+        newPedido.subtotal += servico.valorFrete
+      }
       servicosCompletos.push(servico)
       if (servico.prestador.id !== newPedido.prestador.id) {
         throw new AllException(
