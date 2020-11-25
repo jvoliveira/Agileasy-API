@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
-import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
+import {
+  FirebaseAuthenticationService,
+  FirebaseMessagingService,
+} from '@aginix/nestjs-firebase-admin'
 import { createMock } from '@golevelup/nestjs-testing'
 import { AppModule } from '../src/app.module'
 import { getRepositoryToken } from '@nestjs/typeorm'
@@ -12,14 +15,19 @@ import { Servico } from '../src/models/servicos/servico.entity'
 import * as moment from 'moment-timezone'
 import { Endereco } from '../src/models/enderecos/endereco.entity'
 import { Estado } from '../src/models/situacoes/situacao.interface'
+import { Cliente } from '../src/models/clientes/cliente.entity'
+import { Prestador } from '../src/models/prestadores/prestador.entity'
 
 describe('PedidoController (e2e)', () => {
   let app: INestApplication
   const mockService = createMock<Repository<Pedido>>()
   const mockUsuarioRepo = createMock<Repository<Usuario>>()
   const mockServicosRepo = createMock<Repository<Servico>>()
+  const mockClienteRepo = createMock<Repository<Cliente>>()
+  const mockPrestadorRepo = createMock<Repository<Prestador>>()
   const mockEnderecoRepo = createMock<Repository<Endereco>>()
   const mockFirebaseAuth = createMock<FirebaseAuthenticationService>()
+  const mockFirebaseNotification = createMock<FirebaseMessagingService>()
 
   beforeAll(async () => {
     jest.resetAllMocks()
@@ -32,10 +40,16 @@ describe('PedidoController (e2e)', () => {
       .useValue(mockService)
       .overrideProvider(getRepositoryToken(Usuario))
       .useValue(mockUsuarioRepo)
+      .overrideProvider(getRepositoryToken(Cliente))
+      .useValue(mockClienteRepo)
+      .overrideProvider(getRepositoryToken(Prestador))
+      .useValue(mockPrestadorRepo)
       .overrideProvider(getRepositoryToken(Servico))
       .useValue(mockServicosRepo)
       .overrideProvider(getRepositoryToken(Endereco))
       .useValue(mockEnderecoRepo)
+      .overrideProvider(FirebaseMessagingService)
+      .useValue(mockFirebaseNotification)
       .compile()
     app = moduleFixture.createNestApplication()
     app.init()

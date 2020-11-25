@@ -8,6 +8,10 @@ import { UserService } from '../../common/services/user.service'
 import { UsuariosEntityModule } from '../../models/usuarios/usuarios.module'
 import { EnderecosService } from '../enderecos/enderecos.service'
 import { EnderecosEntityModule } from '../../models/enderecos/enderecos.module'
+import { PrestadoresService } from '../prestadores/prestadores.service'
+import { ClientesService } from '../clientes/clientes.service'
+import { PrestadoresEntityModule } from '../../models/prestadores/prestadores.module'
+import { ClientesEntityModule } from '../../models/clientes/clientes.module'
 
 @Module({
   imports: [
@@ -15,8 +19,17 @@ import { EnderecosEntityModule } from '../../models/enderecos/enderecos.module'
     ServicosEntityModule,
     UsuariosEntityModule,
     EnderecosEntityModule,
+    PrestadoresEntityModule,
+    ClientesEntityModule,
   ],
-  providers: [PedidosService, ServicosService, UserService, EnderecosService],
+  providers: [
+    PedidosService,
+    ServicosService,
+    UserService,
+    EnderecosService,
+    PrestadoresService,
+    ClientesService,
+  ],
   controllers: [PedidosController],
 })
 export class PedidosModule {}

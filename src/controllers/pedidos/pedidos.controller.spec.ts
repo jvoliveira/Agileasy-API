@@ -8,6 +8,9 @@ import { UserService } from '../../common/services/user.service'
 import * as admin from 'firebase-admin'
 import { EnderecosService } from '../enderecos/enderecos.service'
 import { Estado } from '../../models/situacoes/situacao.interface'
+import { FirebaseMessagingService } from '@aginix/nestjs-firebase-admin'
+import { ClientesService } from '../clientes/clientes.service'
+import { PrestadoresService } from '../prestadores/prestadores.service'
 
 describe('PedidosController', () => {
   let controller: PedidosController
@@ -15,6 +18,9 @@ describe('PedidosController', () => {
   const serviceSevicos = createMock<ServicosService>()
   const userService = createMock<UserService>()
   const enderecoService = createMock<EnderecosService>()
+  const clienteService = createMock<ClientesService>()
+  const prestadorService = createMock<PrestadoresService>()
+  const mockFirebaseNotification = createMock<FirebaseMessagingService>()
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,6 +41,18 @@ describe('PedidosController', () => {
         {
           provide: ServicosService,
           useValue: serviceSevicos,
+        },
+        {
+          provide: FirebaseMessagingService,
+          useValue: mockFirebaseNotification,
+        },
+        {
+          provide: PrestadoresService,
+          useValue: prestadorService,
+        },
+        {
+          provide: ClientesService,
+          useValue: clienteService,
         },
       ],
     }).compile()

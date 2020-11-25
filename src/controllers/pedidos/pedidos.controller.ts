@@ -11,6 +11,7 @@ import { Roles } from '../../common/decorators/roles.decorator'
 import { PedidosService } from './pedidos.service'
 import { CreatePedidoDto } from './dto/create-pedido.dto'
 import { ResponseDefault } from '../../common/interfaces/response-default.interface'
+import { DEFAULT_NOTIFICATION } from '../../common/constants/notification'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import * as moment from 'moment-timezone'
 import { Estado } from '../../models/situacoes/situacao.interface'
@@ -21,6 +22,9 @@ import { User } from '../../common/decorators/user.decorator'
 import * as admin from 'firebase-admin'
 import { EnderecosService } from '../enderecos/enderecos.service'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
+import { FirebaseMessagingService } from '@aginix/nestjs-firebase-admin'
+import { PrestadoresService } from '../prestadores/prestadores.service'
+import { ClientesService } from '../clientes/clientes.service'
 
 @Controller('pedidos')
 export class PedidosController {
@@ -29,6 +33,9 @@ export class PedidosController {
     private servServicos: ServicosService,
     private userService: UserService,
     private enderecoService: EnderecosService,
+    private prestadorService: PrestadoresService,
+    private clienteService: ClientesService,
+    private firebaseNotification: FirebaseMessagingService,
   ) {}
 
   @Roles(TipoUsuario.CLIENTE)
@@ -111,6 +118,15 @@ export class PedidosController {
     }
 
     const pedido = await this.serv.create(newPedido)
+    const prestador = await this.prestadorService.getByID(pedido.prestador.id)
+    if (prestador.usuario.tokenNotificacao) {
+      const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+      newNotification.notification.title = 'Novo pedido para você!! 😁'
+      newNotification.token = prestador.usuario.tokenNotificacao
+
+      await this.firebaseNotification.send(newNotification)
+    }
+
     pedido.endereco = endereco
     pedido.servicos = servicosCompletos
     pedido.cliente = cliente
@@ -228,6 +244,15 @@ export class PedidosController {
       estado: Estado.aceito,
     })
 
+    const cliente = await this.clienteService.getByID(pedido.cliente.id)
+    if (cliente.usuario.tokenNotificacao) {
+      const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+      newNotification.notification.title = 'Seu pedido foi aceito!! 😁'
+      newNotification.token = cliente.usuario.tokenNotificacao
+
+      await this.firebaseNotification.send(newNotification)
+    }
+
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -265,6 +290,15 @@ export class PedidosController {
       data: moment().toDate(),
       estado: Estado.andamento,
     })
+
+    const cliente = await this.clienteService.getByID(pedido.cliente.id)
+    if (cliente.usuario.tokenNotificacao) {
+      const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+      newNotification.notification.title = 'Seu pedido está sendo feito!! 😁'
+      newNotification.token = cliente.usuario.tokenNotificacao
+
+      await this.firebaseNotification.send(newNotification)
+    }
 
     return {
       error_id: TipoErro.SEM_ERROS,
@@ -305,6 +339,15 @@ export class PedidosController {
       estado: Estado.finalizado,
     })
 
+    const cliente = await this.clienteService.getByID(pedido.cliente.id)
+    if (cliente.usuario.tokenNotificacao) {
+      const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+      newNotification.notification.title = 'Seu serviço foi finalizado!! 😁'
+      newNotification.token = cliente.usuario.tokenNotificacao
+
+      await this.firebaseNotification.send(newNotification)
+    }
+
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -344,6 +387,16 @@ export class PedidosController {
       estado: Estado.rejeitado,
     })
 
+    const cliente = await this.clienteService.getByID(pedido.cliente.id)
+    if (cliente.usuario.tokenNotificacao) {
+      const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+      newNotification.notification.title =
+        'Seu serviço foi rejeitado. Peça novamente!! 😊'
+      newNotification.token = cliente.usuario.tokenNotificacao
+
+      await this.firebaseNotification.send(newNotification)
+    }
+
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -381,6 +434,16 @@ export class PedidosController {
       data: moment().toDate(),
       estado: Estado.canceladoPrestador,
     })
+
+    const cliente = await this.clienteService.getByID(pedido.cliente.id)
+    if (cliente.usuario.tokenNotificacao) {
+      const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+      newNotification.notification.title =
+        'Seu serviço foi cancelado. Peça novamente!! 😊'
+      newNotification.token = cliente.usuario.tokenNotificacao
+
+      await this.firebaseNotification.send(newNotification)
+    }
 
     return {
       error_id: TipoErro.SEM_ERROS,
@@ -423,6 +486,15 @@ export class PedidosController {
       data: moment().toDate(),
       estado: Estado.canceladoCliente,
     })
+
+    const prestador = await this.prestadorService.getByID(pedido.prestador.id)
+    if (cliente.usuario.tokenNotificacao) {
+      const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+      newNotification.notification.title = 'Seu serviço foi cancelado.'
+      newNotification.token = prestador.usuario.tokenNotificacao
+
+      await this.firebaseNotification.send(newNotification)
+    }
 
     return {
       error_id: TipoErro.SEM_ERROS,
