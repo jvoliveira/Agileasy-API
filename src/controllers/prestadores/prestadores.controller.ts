@@ -32,7 +32,7 @@ export class PrestadoresController {
 
   @Get()
   @Roles(TipoUsuario.ADMIN)
-  @CacheTTL(0)
+  @CacheTTL(5)
   public async getAll(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getAll()
     return {
@@ -48,7 +48,7 @@ export class PrestadoresController {
   /** Rotas para nível cliente */
   @Get('ativos')
   @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
-  @CacheTTL(0)
+  @CacheTTL(5)
   public async getAllAtivos(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getAllPrestadorAtivos()
     return {
