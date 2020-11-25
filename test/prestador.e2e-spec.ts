@@ -411,4 +411,33 @@ describe('PrestadorController (e2e)', () => {
     expect(response.status).toBe(200)
     expect(response.body).toStrictEqual(shouldReturn)
   })
+
+  it('/prestadores/atualizar/notificacao/eu (PUT)', async () => {
+    const shouldReturn = {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {},
+    }
+    mockUsuarioRepo.update.mockResolvedValue({ affected: 1 } as any)
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100, 200] },
+    } as any)
+
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { nome: 'Vinicius', id: 1, usuario: { id: 1 } },
+    } as any)
+
+    mockUsuarioRepo.findOneOrFail.mockResolvedValue({ id: 1 } as any)
+
+    const response = await request(app.getHttpServer())
+      .put('/prestadores/atualizar/notificacao/eu')
+      .auth('token-valido', { type: 'bearer' })
+      .send({ tokenNotificacao: 'TESTE' })
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
 })
