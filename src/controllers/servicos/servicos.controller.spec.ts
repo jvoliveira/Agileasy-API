@@ -150,9 +150,10 @@ describe('ServicosController', () => {
       id: 1,
       prestador: { id: 1 },
     } as any)
-    repo.update.mockResolvedValue(shouldReturn.data.servico as any)
+    repo.create.mockResolvedValue(shouldReturn.data.servico as any)
+    repo.delete.mockResolvedValue(shouldReturn.data.servico as any)
     await expect(
-      controller.updateServico(mockUser, 1, shouldReturn.data.servico),
+      controller.updateServico(mockUser, 1, shouldReturn.data.servico as any),
     ).resolves.toStrictEqual(shouldReturn)
   })
 
