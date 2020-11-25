@@ -49,7 +49,7 @@ export class PrestadoresController {
   @Get('ativos')
   @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   @CacheTTL(0)
-  public async getAllativos(): Promise<ResponseDefault> {
+  public async getAllAtivos(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getAllPrestadorAtivos()
     return {
       error_id: TipoErro.SEM_ERROS,

@@ -16,9 +16,12 @@ export class PrestadoresService extends BaseService<Prestador> {
   }
 
   async getAllPrestadorAtivos(): Promise<Prestador[]> {
-    const values: Array<Prestador> = await this.repo.find({
-      where: { ativo: true, usuario: { status: TipoStatus.ativo } },
-    })
+    const values: Array<Prestador> = await this.repo
+      .createQueryBuilder('prestador')
+      .leftJoinAndSelect('prestador.usuario', 'u')
+      .leftJoinAndSelect('prestador.categorias', 'c')
+      .where('u.status = ' + TipoStatus.ativo)
+      .getMany()
 
     if (!values) {
       throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
