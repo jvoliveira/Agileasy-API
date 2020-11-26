@@ -69,7 +69,6 @@ export class BaseService<T extends BaseModel<T>> {
     }
     status.ativo = false
     const statusDelete = await this.repo.save(status as any)
-
     if (!statusDelete) {
       throw new AllException(TipoErro.ERROR_AO_DELETAR)
     }

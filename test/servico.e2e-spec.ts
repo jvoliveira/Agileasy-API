@@ -147,7 +147,6 @@ describe('ServicoController (e2e)', () => {
       },
     }
     mockService.find.mockResolvedValue(shouldReturn.data.servico as any)
-    mockService.save(shouldReturn.data.servico as any)
     mockService.findOneOrFail.mockResolvedValue(
       shouldReturn.data.servico as any,
     )
@@ -162,12 +161,11 @@ describe('ServicoController (e2e)', () => {
     mockUsuarioRepo.findOne.mockReturnValue({
       prestador: { id: 1 },
     } as any)
-    mockService.update.mockResolvedValue({ affected: 1 } as any)
+    mockService.save.mockResolvedValue(shouldReturn.data.servico as any)
     const response = await request(app.getHttpServer())
       .put('/servicos/1/alterar/prestador/eu')
       .auth('token-valido', { type: 'bearer' })
       .send(shouldReturn.data.servico)
-    console.log(response.body)
     expect(response.status).toBe(200)
     expect(response.body).toStrictEqual(shouldReturn)
   })
