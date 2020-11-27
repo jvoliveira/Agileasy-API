@@ -34,6 +34,8 @@ describe('Pedido', () => {
       'RJ',
       '28300000',
       null,
+      'São Mateus',
+      false,
     )
     const serv = new Servico(
       1,
@@ -41,10 +43,25 @@ describe('Pedido', () => {
       150.0,
       'Pintura profissional',
       'URLDAFOTO',
+
+      10,
+      50,
+      false,
+      true,
+      true,
     )
-    const mockPedido = new Pedido(1, 150.0, 2, 'Na casa verde', p, [s], e, [
-      serv,
-    ])
+    const mockPedido = new Pedido(
+      1,
+      150.0,
+      'Na casa verde',
+      p,
+      [s],
+      e,
+      [serv],
+      moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),
+      true,
+      'ASD2134FDSF',
+    )
 
     expect(JSON.parse(JSON.stringify(mockPedido))).toStrictEqual(
       JSON.parse(JSON.stringify(expectedJSON())),
@@ -56,10 +73,12 @@ describe('Pedido', () => {
 function expectedJSON() {
   return {
     ativo: true,
+    emDomicilio: true,
     id: 1,
     subtotal: 150,
-    tipoPagamento: 2,
+    dataHora: moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),
     observacao: 'Na casa verde',
+    fidChat: 'ASD2134FDSF',
     metodoPagamento: {
       ativo: true,
       id: 1,
@@ -93,6 +112,8 @@ function expectedJSON() {
       estado: 'RJ',
       cep: '28300000',
       referencia: null,
+      bairro: 'São Mateus',
+      favorito: false,
     },
     servicos: [
       {
@@ -102,6 +123,10 @@ function expectedJSON() {
         valor: 150,
         nome: 'Pintura profissional',
         urlFoto: 'URLDAFOTO',
+        valorFrete: 10,
+        tempoMedio: 50,
+        noEstabelecimento: false,
+        delivery: true,
       },
     ],
   }

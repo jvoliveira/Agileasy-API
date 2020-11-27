@@ -4,6 +4,7 @@ import {
   Entity,
   OneToMany,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
 import { CartaoInterface } from './cartao.interface'
@@ -44,6 +45,7 @@ export class Cartao extends BaseModel<Cartao> implements CartaoInterface {
     cliente => cliente.cartoes,
     { cascade: false },
   )
+  @JoinColumn({ name: 'id_cliente' })
   cliente!: Cliente
 
   constructor(

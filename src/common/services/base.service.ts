@@ -1,7 +1,8 @@
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { TipoErro } from '../enums/tipo-erro.enum'
 import { AllException } from '../exceptions/all.exception'
 import { BaseModel } from '../../models/basis/base.entity'
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 
 export class BaseService<T extends BaseModel<T>> {
   constructor(protected repo: Repository<T>) {}
@@ -37,13 +38,27 @@ export class BaseService<T extends BaseModel<T>> {
     return values
   }
 
-  async update(obj: any): Promise<T> {
-    const status = await this.repo.save(obj)
-    if (!status) {
+  async update(id: number, obj: QueryDeepPartialEntity<T>): Promise<T> {
+    const status = await this.repo.update(id, obj)
+    if (!status.affected) {
       throw new AllException(TipoErro.ERROR_AO_ATUALIZAR)
     }
+    return this.repo.findOneOrFail(id)
+  }
 
-    return status
+  async bulkUpdate(
+    id: number[],
+    obj: QueryDeepPartialEntity<T>,
+  ): Promise<void> {
+    const status = await this.repo
+      .createQueryBuilder()
+      .update(obj)
+      .where({ id: In(id) })
+      .execute()
+
+    if (!status.affected) {
+      throw new AllException(TipoErro.ERROR_AO_ATUALIZAR)
+    }
   }
 
   async delete(id: number): Promise<T> {
@@ -54,7 +69,6 @@ export class BaseService<T extends BaseModel<T>> {
     }
     status.ativo = false
     const statusDelete = await this.repo.save(status as any)
-
     if (!statusDelete) {
       throw new AllException(TipoErro.ERROR_AO_DELETAR)
     }

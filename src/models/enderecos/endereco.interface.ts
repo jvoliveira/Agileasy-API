@@ -6,5 +6,7 @@ export interface EnderecoInterface {
   cidade: string
   estado: string
   cep: string
+  bairro: string
   referencia: string | null
+  favorito: boolean
 }

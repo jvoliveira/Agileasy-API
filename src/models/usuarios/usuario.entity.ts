@@ -26,14 +26,23 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
   @Column('text', { nullable: false })
   telefone!: string
 
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: true })
   cpf!: string
 
-  @Column('text', { nullable: false, name: 'token_acesso' })
-  token!: string
+  @Column('text', { nullable: true })
+  foto!: string
+
+  @Column('text', { nullable: true })
+  email!: string
+
+  @Column('text', { nullable: false, name: 'uid' })
+  uid!: string
 
   @Column('int', { nullable: false })
   status!: TipoStatus
+
+  @Column('text', { nullable: true, name: 'token_notificacao' })
+  tokenNotificacao!: string
 
   @OneToOne(
     type => Cliente,
@@ -57,7 +66,10 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
     dataNascimento: Moment,
     telefone: string,
     cpf: string,
-    token: string,
+    uid: string,
+    foto: string,
+    email: string,
+    tokenNotificacao: string,
     ativo = true,
   ) {
     super(id, ativo)
@@ -66,8 +78,11 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
     this.dataNascimento = moment(dataNascimento).toDate()
     this.telefone = telefone
     this.cpf = cpf
-    this.token = token
+    this.uid = uid
     this.status = status
+    this.email = email
+    this.tokenNotificacao = tokenNotificacao
+    this.foto = foto
   }
 
   fillFromJson(json: any, recursive?: string[] | undefined): Usuario {
@@ -81,10 +96,13 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
       .toDate()
     this.nomeSocial = json.nomeSocial as string
     this.nome = json.nome as string
+    this.foto = json.foto
+    this.tokenNotificacao = json.tokenNotificacao
     this.telefone = json.telefone as string
-    this.token = json.token as string
+    this.uid = json.uid as string
     this.status = json.status as TipoStatus
     this.ativo = json.ativo
+    this.email = json.email
     return this
   }
 
@@ -97,7 +115,10 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
       moment(this.dataNascimento),
       this.telefone,
       this.cpf,
-      this.token,
+      this.uid,
+      this.foto,
+      this.email,
+      this.tokenNotificacao,
       this.ativo,
     )
     usuario.dados = this.dados
@@ -113,6 +134,9 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
       moment(),
       't',
       't',
+      '1',
+      '1',
+      '1',
       '1',
     ).fillFromJson(json)
   }

@@ -1,20 +1,50 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing'
-import { Repository } from 'typeorm'
+import {
+  Connection,
+  Repository,
+  SelectQueryBuilder,
+  UpdateQueryBuilder,
+} from 'typeorm'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { PrestadoresService } from '../../prestadores/prestadores.service'
+import { PrestadoresService } from '../../controllers/prestadores/prestadores.service'
 import { Prestador } from '../../models/prestadores/prestador.entity'
 import { AllException } from '../exceptions/all.exception'
 import { Provider } from '@nestjs/common'
 import { BaseService } from './base.service'
+import { Categoria } from '../../models/categorias/categoria.entity'
+import { CategoriasService } from '../../controllers/categorias/categorias.service'
+import { PedidosService } from '../../controllers/pedidos/pedidos.service'
+import { Pedido } from '../../models/pedidos/pedido.entity'
+import { ServicosService } from '../../controllers/servicos/servicos.service'
+import { Servico } from '../../models/servicos/servico.entity'
+import { Cliente } from '../../models/clientes/cliente.entity'
+import { ClientesService } from '../../controllers/clientes/clientes.service'
+import { Disponibilidade } from '../../models/disponibilidades/disponibilidade.entity'
+import { DisponibilidadesService } from '../../controllers/disponibilidades/disponibilidades.service'
 
 describe('Base Service Test', () => {
   const services: BaseService<any>[] = []
   const repos: DeepMocked<Repository<any>>[] = []
+  const connection = createMock<Connection>()
   beforeEach(async () => {
-    const servicesTemp = [PrestadoresService] // Aqui coloca todos os services que utilizam o base.service
+    const servicesTemp = [
+      PrestadoresService,
+      CategoriasService,
+      PedidosService,
+      ServicosService,
+      ClientesService,
+      DisponibilidadesService,
+    ] // Aqui coloca todos os services que utilizam o base.service
 
-    const models = [Prestador] // Aqui coloca todos os models que utilizam o base.service nos seus services
+    const models = [
+      Prestador,
+      Categoria,
+      Pedido,
+      Servico,
+      Cliente,
+      Disponibilidade,
+    ] // Aqui coloca todos os models que utilizam o base.service nos seus services
     const providers: Provider<any>[] = []
     services.length = 0
     repos.length = 0
@@ -28,11 +58,15 @@ describe('Base Service Test', () => {
     }
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [...servicesTemp, ...providers],
+      providers: [
+        ...servicesTemp,
+        ...providers,
+        { provide: Connection, useValue: connection },
+      ],
     }).compile()
 
     for (const service of servicesTemp) {
-      services.push(module.get(service))
+      services.push(module.get(service as any))
     }
   })
 
@@ -126,17 +160,54 @@ describe('Base Service Test', () => {
 
       expect(service).toBeDefined()
 
-      repo.save.mockReturnValue(shouldReturn as any)
+      repo.update.mockResolvedValue({ affected: 1 } as any)
+      repo.findOneOrFail.mockResolvedValue(shouldReturn as any)
 
-      expect(await service.update(updateParam)).toBe(shouldReturn)
+      expect(await service.update(1, updateParam as any)).toBe(shouldReturn)
 
-      expect(repo.save).toHaveBeenCalledTimes(1)
-      expect(repo.save).toHaveBeenCalledWith(updateParam)
+      expect(repo.update).toHaveBeenCalledTimes(1)
+      expect(repo.update).toHaveBeenCalledWith(1, updateParam)
 
-      repo.save.mockClear()
-      repo.save.mockReturnValue(null)
+      repo.update.mockClear()
+      repo.update.mockResolvedValue({ affected: 0 } as any)
 
-      await expect(service.update(updateParam)).rejects.toThrow(AllException)
+      await expect(service.update(1, updateParam as any)).rejects.toThrow(
+        AllException,
+      )
+    }
+  })
+
+  it('should be bulk update', async () => {
+    const updateParam = {
+      nome: 'Vinicius Picanco',
+    }
+    for (let i = 0; i < services.length; i++) {
+      const repo = repos[i]
+      const service = services[i]
+
+      expect(service).toBeDefined()
+
+      const mockUpdate = createMock<SelectQueryBuilder<any>>()
+      const mockWhere = createMock<UpdateQueryBuilder<any>>()
+      const mockExecute = createMock<UpdateQueryBuilder<any>>()
+      mockUpdate.update.mockReturnValue(mockWhere)
+      mockWhere.where.mockReturnValue(mockExecute)
+      mockExecute.execute.mockResolvedValue({ affected: 3 } as any)
+
+      repo.createQueryBuilder.mockReturnValue(mockUpdate)
+
+      await expect(
+        service.bulkUpdate([1, 2, 3], updateParam as any),
+      ).resolves.toBeUndefined()
+
+      expect(mockExecute.execute).toHaveBeenCalledTimes(1)
+
+      mockExecute.execute.mockClear()
+      mockExecute.execute.mockResolvedValue({ affected: 0 } as any)
+
+      await expect(
+        service.bulkUpdate([1, 2, 3], updateParam as any),
+      ).rejects.toThrow(AllException)
     }
   })
 

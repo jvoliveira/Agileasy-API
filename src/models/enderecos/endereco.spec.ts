@@ -12,6 +12,8 @@ describe('Endereco', () => {
       'RJ',
       '28300000',
       null,
+      'São Mateus',
+      true,
     )
 
     expect(JSON.parse(JSON.stringify(mockEndereco))).toStrictEqual(
@@ -30,8 +32,10 @@ function expectedJSON() {
     complemento: 'Baixos',
     numero: '105',
     cidade: 'Itaperuna',
+    bairro: 'São Mateus',
     estado: 'RJ',
     cep: '28300000',
     referencia: null,
+    favorito: true,
   }
 }

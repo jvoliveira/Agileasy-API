@@ -4,22 +4,37 @@ import {
   IsNumber,
   IsBoolean,
   IsNumberString,
+  IsEmail,
+  Length,
+  IsOptional,
 } from 'class-validator'
-export class CreatePrestadorDto {
+export class RegisterPrestadorDto {
+  @IsEmail()
+  email: string
   @IsString()
-  cnpj: string
+  @Length(128, 128)
+  senha: string
+  @IsString()
+  @IsOptional()
+  cnpj?: string | null
   @IsBoolean()
   delivery: boolean
   @IsUrl()
-  documentoUrl: string
+  @IsOptional()
+  documentoUrl?: string
   @IsString()
   nomePublico: string
   @IsString()
+  @IsOptional()
   razaoSocial: string
   @IsNumber()
   tipoPessoa: number
   usuario: UsuarioDto
   endereco: EnderecoDto
+  @IsNumber()
+  @IsOptional()
+  nota?: number | null
+  taxa?: number
 }
 
 class UsuarioDto {
@@ -34,7 +49,11 @@ class UsuarioDto {
   @IsString()
   cpf: string
   @IsString()
-  token?: string
+  @IsOptional()
+  uid?: string | null
+  @IsString()
+  @IsOptional()
+  email?: string | null
 }
 
 class EnderecoDto {
@@ -53,5 +72,8 @@ class EnderecoDto {
   @IsString()
   cep: string
   @IsString()
-  referencia?: string
+  bairro: string
+  @IsString()
+  @IsOptional()
+  referencia?: string | null
 }

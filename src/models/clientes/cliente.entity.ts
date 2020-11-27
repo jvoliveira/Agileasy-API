@@ -14,6 +14,8 @@ import { ClienteInterface } from './cliente.interface'
 import { JsonHelper } from '../../common/helpers/json.helper'
 import { TipoStatus } from '../usuarios/usuario.interface'
 import { Cartao } from '../cartoes/cartao.entity'
+import { Pedido } from '../pedidos/pedido.entity'
+import { Cupom } from '../cupons/cupom.entity'
 
 @Entity('cliente')
 export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
@@ -37,6 +39,19 @@ export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
     { cascade: true },
   )
   enderecos!: Endereco[]
+
+  @OneToMany(
+    type => Cupom,
+    cupons => cupons.cliente,
+    { cascade: true },
+  )
+  cupons!: Cupom[]
+
+  @OneToMany(
+    type => Pedido,
+    pedidos => pedidos.cliente,
+  )
+  pedidos!: Pedido[]
 
   @OneToMany(
     type => Cartao,
@@ -88,7 +103,19 @@ export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
   public static fromJson(json: any): Cliente {
     return new Cliente(
       0,
-      new Usuario(1, TipoStatus.ativo, 'a', 'a', moment(), 'a', 'a', 'a'),
+      new Usuario(
+        1,
+        TipoStatus.ativo,
+        'a',
+        'a',
+        moment(),
+        'a',
+        'a',
+        'a',
+        'a',
+        'a',
+        'a',
+      ),
       [],
       [],
     ).fillFromJson(json)

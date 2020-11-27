@@ -1,0 +1,1120 @@
+import { Test, TestingModule } from '@nestjs/testing'
+import { INestApplication } from '@nestjs/common'
+import * as request from 'supertest'
+import {
+  FirebaseAuthenticationService,
+  FirebaseMessagingService,
+} from '@aginix/nestjs-firebase-admin'
+import { createMock } from '@golevelup/nestjs-testing'
+import { AppModule } from '../src/app.module'
+import { getRepositoryToken } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { Usuario } from '../src/models/usuarios/usuario.entity'
+import { Pedido } from '../src/models/pedidos/pedido.entity'
+import { Servico } from '../src/models/servicos/servico.entity'
+import * as moment from 'moment-timezone'
+import { Endereco } from '../src/models/enderecos/endereco.entity'
+import { Estado } from '../src/models/situacoes/situacao.interface'
+import { Cliente } from '../src/models/clientes/cliente.entity'
+import { Prestador } from '../src/models/prestadores/prestador.entity'
+
+describe('PedidoController (e2e)', () => {
+  let app: INestApplication
+  const mockService = createMock<Repository<Pedido>>()
+  const mockUsuarioRepo = createMock<Repository<Usuario>>()
+  const mockServicosRepo = createMock<Repository<Servico>>()
+  const mockClienteRepo = createMock<Repository<Cliente>>()
+  const mockPrestadorRepo = createMock<Repository<Prestador>>()
+  const mockEnderecoRepo = createMock<Repository<Endereco>>()
+  const mockFirebaseAuth = createMock<FirebaseAuthenticationService>()
+  const mockFirebaseNotification = createMock<FirebaseMessagingService>()
+
+  beforeAll(async () => {
+    jest.resetAllMocks()
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    })
+      .overrideProvider(FirebaseAuthenticationService)
+      .useValue(mockFirebaseAuth)
+      .overrideProvider(getRepositoryToken(Pedido))
+      .useValue(mockService)
+      .overrideProvider(getRepositoryToken(Usuario))
+      .useValue(mockUsuarioRepo)
+      .overrideProvider(getRepositoryToken(Cliente))
+      .useValue(mockClienteRepo)
+      .overrideProvider(getRepositoryToken(Prestador))
+      .useValue(mockPrestadorRepo)
+      .overrideProvider(getRepositoryToken(Servico))
+      .useValue(mockServicosRepo)
+      .overrideProvider(getRepositoryToken(Endereco))
+      .useValue(mockEnderecoRepo)
+      .overrideProvider(FirebaseMessagingService)
+      .useValue(mockFirebaseNotification)
+      .compile()
+    app = moduleFixture.createNestApplication()
+    app.init()
+  })
+
+  beforeEach(async () => {
+    jest.resetAllMocks()
+  })
+
+  afterAll(async () => {
+    app.close()
+  })
+
+  it('/pedidos/novo (POST)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          emDomicilio: true,
+          observacao: 'Quero que faça isso com urgência',
+          dataHora: moment()
+            .add(10, 'minutes')
+            .format(),
+          metodoPagamento: {
+            id: 1,
+          },
+          prestador: {
+            id: 1,
+          },
+          endereco: {
+            id: 1,
+          },
+          cliente: {
+            id: 1,
+          },
+          servicos: [
+            {
+              id: 1,
+              delivery: true,
+              noEstabelecimento: true,
+            },
+          ],
+          situacoes: [
+            {
+              data: '2020-10-24T18:55:31.653Z',
+              estado: 0,
+              id: 1,
+              ativo: true,
+            },
+          ],
+          subtotal: 25,
+          id: 1,
+          ativo: true,
+        },
+      },
+    }
+    mockFirebaseNotification.send.mockReturnThis()
+    mockPrestadorRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
+
+    mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
+    mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
+    mockServicosRepo.findOneOrFail.mockResolvedValue({
+      valor: 25,
+      id: 1,
+      delivery: true,
+      noEstabelecimento: true,
+      prestador: { id: 1 },
+    } as any)
+    mockEnderecoRepo.findOneOrFail.mockResolvedValue({
+      endereco1: 'Rua não sei o que',
+      cliente: {
+        id: 1,
+      },
+    } as any)
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 200] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      cliente: { id: 1, nome: 'Vinicius' },
+    } as any)
+    const response = await request(app.getHttpServer())
+      .post('/pedidos/novo')
+      .auth('token-valido', { type: 'bearer' })
+      .send(shouldReturn.data.pedido)
+    expect(response.status).toBe(201)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/pedidos/cliente/eu (GET)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedidos: [
+          {
+            id: 1,
+            ativo: true,
+            subtotal: 25,
+            observacao: 'Quero que faça isso com urgência',
+            metodoPagamento: {
+              id: 1,
+              ativo: true,
+              tipoPagamento: 0,
+            },
+            situacoes: [
+              {
+                id: 1,
+                ativo: true,
+                estado: 0,
+                data: '2020-11-05T14:17:07.312Z',
+              },
+            ],
+            endereco: {
+              id: 2,
+              ativo: true,
+              apelido: 'Casa',
+              endereco: 'Rua Euclides Poubel de Lima',
+              complemento: 'Apto',
+              numero: 125,
+              cidade: 'Itaperuna',
+              estado: 'RJ',
+              cep: '28300-000',
+              referencia: 'Ao lado casa da mercearia',
+            },
+            servicos: [
+              {
+                id: 1,
+                ativo: true,
+                descricao: 'Serviço completo de pé e mão',
+                valor: 25,
+                nome: 'Pé e mão',
+                urlFoto:
+                  'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/download.jpeg',
+              },
+            ],
+            dataHora: '2030-10-24T13:12:32.162Z',
+          },
+        ],
+      },
+    }
+    mockService.find.mockResolvedValue(shouldReturn.data.pedidos as any)
+    mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 200] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      cliente: { id: 1, nome: 'Vinicius' },
+    } as any)
+    const response = await request(app.getHttpServer())
+      .get('/pedidos/cliente/eu')
+      .auth('token-valido', { type: 'bearer' })
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/pedidos/:id/cliente/eu (GET)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 30,
+          observacao: 'Quero estrelinha.',
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: 0,
+              data: '2020-11-10T21:44:00.000Z',
+            },
+            {
+              id: 2,
+              ativo: true,
+              estado: 1,
+              data: '2020-11-13T18:18:25.388Z',
+            },
+            {
+              id: 3,
+              ativo: true,
+              estado: 3,
+              data: '2020-11-13T18:18:58.946Z',
+            },
+            {
+              id: 4,
+              ativo: true,
+              estado: 6,
+              data: '2020-11-13T18:19:03.102Z',
+            },
+          ],
+          endereco: {
+            id: 3,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Green Stravenue',
+            complemento: 'Hill',
+            numero: 223,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: null,
+            favorito: false,
+          },
+          servicos: [
+            {
+              id: 2,
+              ativo: true,
+              descricao: 'Corte popular de cabelo',
+              valor: 30,
+              nome: 'Corte de cabelo',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/Dyed-Udon-with-Shaved-Hairline-702x1024.jpg',
+            },
+          ],
+          dataHora: '2021-02-11T14:30:00.000Z',
+          cliente: {
+            id: 1,
+            ativo: true,
+            usuario: {
+              id: 2,
+              ativo: true,
+              nome: 'Joao Picanco',
+              nomeSocial: 'Jaozin',
+              dataNascimento: '1987-06-27T03:00:00.000Z',
+              telefone: '22998047269',
+              cpf: '678.532.458-87',
+              token: 't0V7MEE9kiTP2f7T6la9WIedxee2',
+              status: 0,
+              foto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/estilo-geek-masculino7.jpg',
+            },
+          },
+          prestador: {
+            id: 1,
+            ativo: true,
+            usuario: {
+              id: 1,
+              ativo: true,
+              nome: 'Alice Medeiros',
+              nomeSocial: 'Lice',
+              dataNascimento: '1999-03-25T03:00:00.000Z',
+              telefone: '22998047269',
+              cpf: '010.677.458-23',
+              token: '1I80WG9tuUTIRS3XW8Z6627XYkB2',
+              status: 0,
+              foto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/maquiadora.jpg',
+            },
+            cnpj: '',
+            delivery: true,
+            documentoUrl:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/Nova-Carteira-de-Identidade_site.jpg',
+            nomePublico: 'Unhas da Alice',
+            razaoSocial: '',
+            tipoPessoa: 0,
+            logo:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/unhas-decoradas-alice-no-pai%CC%81s-das-maravilhas-4.jpg',
+            nota: 4.3,
+            capa:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/capa-maquiagem-blog.png?alt=media',
+          },
+          avaliacoes: [],
+        },
+      },
+    }
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
+    mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 200] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      cliente: { id: 1, nome: 'Vinicius' },
+    } as any)
+    const response = await request(app.getHttpServer())
+      .get('/pedidos/1/cliente/eu')
+      .auth('token-valido', { type: 'bearer' })
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/pedidos/:id/prestador/eu (GET)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 30,
+          observacao: 'Quero estrelinha.',
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: 0,
+              data: '2020-11-10T21:44:00.000Z',
+            },
+            {
+              id: 2,
+              ativo: true,
+              estado: 1,
+              data: '2020-11-13T18:18:25.388Z',
+            },
+            {
+              id: 3,
+              ativo: true,
+              estado: 3,
+              data: '2020-11-13T18:18:58.946Z',
+            },
+            {
+              id: 4,
+              ativo: true,
+              estado: 6,
+              data: '2020-11-13T18:19:03.102Z',
+            },
+          ],
+          endereco: {
+            id: 3,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Green Stravenue',
+            complemento: 'Hill',
+            numero: 223,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: null,
+            favorito: false,
+          },
+          servicos: [
+            {
+              id: 2,
+              ativo: true,
+              descricao: 'Corte popular de cabelo',
+              valor: 30,
+              nome: 'Corte de cabelo',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/Dyed-Udon-with-Shaved-Hairline-702x1024.jpg',
+            },
+          ],
+          dataHora: '2021-02-11T14:30:00.000Z',
+          cliente: {
+            id: 1,
+            ativo: true,
+            usuario: {
+              id: 2,
+              ativo: true,
+              nome: 'Joao Picanco',
+              nomeSocial: 'Jaozin',
+              dataNascimento: '1987-06-27T03:00:00.000Z',
+              telefone: '22998047269',
+              cpf: '678.532.458-87',
+              token: 't0V7MEE9kiTP2f7T6la9WIedxee2',
+              status: 0,
+              foto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/estilo-geek-masculino7.jpg',
+            },
+          },
+          prestador: {
+            id: 1,
+            ativo: true,
+            usuario: {
+              id: 1,
+              ativo: true,
+              nome: 'Alice Medeiros',
+              nomeSocial: 'Lice',
+              dataNascimento: '1999-03-25T03:00:00.000Z',
+              telefone: '22998047269',
+              cpf: '010.677.458-23',
+              token: '1I80WG9tuUTIRS3XW8Z6627XYkB2',
+              status: 0,
+              foto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/maquiadora.jpg',
+            },
+            cnpj: '',
+            delivery: true,
+            documentoUrl:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/Nova-Carteira-de-Identidade_site.jpg',
+            nomePublico: 'Unhas da Alice',
+            razaoSocial: '',
+            tipoPessoa: 0,
+            logo:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/unhas-decoradas-alice-no-pai%CC%81s-das-maravilhas-4.jpg',
+            nota: 4.3,
+            capa:
+              'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/capa-maquiagem-blog.png?alt=media',
+          },
+          avaliacoes: [],
+        },
+      },
+    }
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
+    mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { id: 1, nome: 'Vinicius' },
+    } as any)
+    const response = await request(app.getHttpServer())
+      .get('/pedidos/1/prestador/eu')
+      .auth('token-valido', { type: 'bearer' })
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/pedidos/prestador/eu (GET)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedidos: [
+          {
+            id: 1,
+            ativo: true,
+            subtotal: 25,
+            observacao: 'Quero que faça isso com urgência',
+            metodoPagamento: {
+              id: 1,
+              ativo: true,
+              tipoPagamento: 0,
+            },
+            situacoes: [
+              {
+                id: 1,
+                ativo: true,
+                estado: Estado.solicitado,
+                data: '2020-11-05T14:17:07.312Z',
+              },
+            ],
+            endereco: {
+              id: 2,
+              ativo: true,
+              apelido: 'Casa',
+              endereco: 'Rua Euclides Poubel de Lima',
+              complemento: 'Apto',
+              numero: 125,
+              cidade: 'Itaperuna',
+              estado: 'RJ',
+              cep: '28300-000',
+              referencia: 'Ao lado casa da mercearia',
+            },
+            servicos: [
+              {
+                id: 1,
+                ativo: true,
+                descricao: 'Serviço completo de pé e mão',
+                valor: 25,
+                nome: 'Pé e mão',
+                urlFoto:
+                  'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/download.jpeg',
+              },
+            ],
+            dataHora: '2030-10-24T13:12:32.162Z',
+          },
+        ],
+      },
+    }
+    mockService.find.mockResolvedValue(shouldReturn.data.pedidos as any)
+    mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { id: 1, nome: 'Vinicius' },
+    } as any)
+    const response = await request(app.getHttpServer())
+      .get('/pedidos/prestador/eu')
+      .auth('token-valido', { type: 'bearer' })
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/pedidos/1/marcar-andamento (PATCH)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 25,
+          observacao: 'Quero que faça isso com urgência',
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          cliente: {
+            id: 1,
+          },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: Estado.aceito,
+              data: '2020-11-05T14:17:07.312Z',
+            },
+          ],
+          endereco: {
+            id: 2,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Rua Euclides Poubel de Lima',
+            complemento: 'Apto',
+            numero: 125,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: 'Ao lado casa da mercearia',
+          },
+          servicos: [
+            {
+              id: 1,
+              ativo: true,
+              descricao: 'Serviço completo de pé e mão',
+              valor: 25,
+              nome: 'Pé e mão',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/download.jpeg',
+            },
+          ],
+          dataHora: '2030-10-24T13:12:32.162Z',
+        },
+      },
+    }
+    mockFirebaseNotification.send.mockReturnThis()
+    mockClienteRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
+    mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.save(shouldReturn.data.pedido as any)
+
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { id: 1, nome: 'Vinicius' },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .patch('/pedidos/1/marcar-andamento')
+      .auth('token-valido', { type: 'bearer' })
+      .send(shouldReturn.data.pedido)
+    expect(response.status).toBe(200)
+
+    const lastSituacao = shouldReturn.data.pedido.situacoes.pop()
+    lastSituacao.data = moment(lastSituacao.data)
+      .toDate()
+      .toJSON()
+
+    shouldReturn.data.pedido.situacoes.push(lastSituacao)
+
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/pedidos/1/marcar-aceito (PATCH)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 25,
+          observacao: 'Quero que faça isso com urgência',
+          cliente: {
+            id: 1,
+          },
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: Estado.solicitado,
+              data: '2020-11-05T14:17:07.312Z',
+            },
+          ],
+          endereco: {
+            id: 2,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Rua Euclides Poubel de Lima',
+            complemento: 'Apto',
+            numero: 125,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: 'Ao lado casa da mercearia',
+          },
+          servicos: [
+            {
+              id: 1,
+              ativo: true,
+              descricao: 'Serviço completo de pé e mão',
+              valor: 25,
+              nome: 'Pé e mão',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/download.jpeg',
+            },
+          ],
+          dataHora: '2030-10-24T13:12:32.162Z',
+        },
+      },
+    }
+    mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockFirebaseNotification.send.mockReturnThis()
+    mockClienteRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
+
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.save(shouldReturn.data.pedido as any)
+
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { id: 1, nome: 'Vinicius' },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .patch('/pedidos/1/marcar-aceito')
+      .auth('token-valido', { type: 'bearer' })
+      .send(shouldReturn.data.pedido)
+    expect(response.status).toBe(200)
+
+    const lastSituacao = shouldReturn.data.pedido.situacoes.pop()
+    lastSituacao.data = moment(lastSituacao.data)
+      .toDate()
+      .toJSON()
+
+    shouldReturn.data.pedido.situacoes.push(lastSituacao)
+
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/pedidos/1/marcar-rejeitado (PATCH)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 25,
+          observacao: 'Quero que faça isso com urgência',
+          cliente: {
+            id: 1,
+          },
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: Estado.solicitado,
+              data: '2020-11-05T14:17:07.312Z',
+            },
+          ],
+          endereco: {
+            id: 2,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Rua Euclides Poubel de Lima',
+            complemento: 'Apto',
+            numero: 125,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: 'Ao lado casa da mercearia',
+          },
+          servicos: [
+            {
+              id: 1,
+              ativo: true,
+              descricao: 'Serviço completo de pé e mão',
+              valor: 25,
+              nome: 'Pé e mão',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/download.jpeg',
+            },
+          ],
+          dataHora: '2030-10-24T13:12:32.162Z',
+        },
+      },
+    }
+
+    mockFirebaseNotification.send.mockReturnThis()
+    mockClienteRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
+    mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.save(shouldReturn.data.pedido as any)
+
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { id: 1, nome: 'Vinicius' },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .patch('/pedidos/1/marcar-rejeitado')
+      .auth('token-valido', { type: 'bearer' })
+      .send(shouldReturn.data.pedido)
+    expect(response.status).toBe(200)
+
+    const lastSituacao = shouldReturn.data.pedido.situacoes.pop()
+    lastSituacao.data = moment(lastSituacao.data)
+      .toDate()
+      .toJSON()
+
+    shouldReturn.data.pedido.situacoes.push(lastSituacao)
+
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/pedidos/1/marcar-finalizado (PATCH)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 25,
+          observacao: 'Quero que faça isso com urgência',
+          cliente: {
+            id: 1,
+          },
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: Estado.solicitado,
+              data: '2020-11-05T14:17:07.312Z',
+            },
+            {
+              id: 2,
+              ativo: true,
+              estado: Estado.aceito,
+              data: '2020-11-05T19:19:07.312Z',
+            },
+            {
+              id: 3,
+              ativo: true,
+              estado: Estado.andamento,
+              data: '2020-11-05T20:20:07.312Z',
+            },
+          ],
+          endereco: {
+            id: 2,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Rua Euclides Poubel de Lima',
+            complemento: 'Apto',
+            numero: 125,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: 'Ao lado casa da mercearia',
+          },
+          servicos: [
+            {
+              id: 1,
+              ativo: true,
+              descricao: 'Serviço completo de pé e mão',
+              valor: 25,
+              nome: 'Pé e mão',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/download.jpeg',
+            },
+          ],
+          dataHora: '2030-10-24T13:12:32.162Z',
+        },
+      },
+    }
+    mockFirebaseNotification.send.mockReturnThis()
+    mockClienteRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
+    mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.save(shouldReturn.data.pedido as any)
+
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { id: 1, nome: 'Vinicius' },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .patch('/pedidos/1/marcar-finalizado')
+      .auth('token-valido', { type: 'bearer' })
+      .send(shouldReturn.data.pedido)
+    expect(response.status).toBe(200)
+
+    const lastSituacao = shouldReturn.data.pedido.situacoes.pop()
+    lastSituacao.data = moment(lastSituacao.data)
+      .toDate()
+      .toJSON()
+
+    shouldReturn.data.pedido.situacoes.push(lastSituacao)
+
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/pedidos/1/prestador/cancelar (PATCH)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 25,
+          observacao: 'Quero que faça isso com urgência',
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          cliente: { id: 1 },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: Estado.solicitado,
+              data: '2020-11-05T14:17:07.312Z',
+            },
+            {
+              id: 2,
+              ativo: true,
+              estado: Estado.aceito,
+              data: '2020-11-05T19:17:07.312Z',
+            },
+          ],
+          endereco: {
+            id: 2,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Rua Euclides Poubel de Lima',
+            complemento: 'Apto',
+            numero: 125,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: 'Ao lado casa da mercearia',
+          },
+          servicos: [
+            {
+              id: 1,
+              ativo: true,
+              descricao: 'Serviço completo de pé e mão',
+              valor: 25,
+              nome: 'Pé e mão',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/download.jpeg',
+            },
+          ],
+          dataHora: '2030-10-24T13:12:32.162Z',
+        },
+      },
+    }
+    mockFirebaseNotification.send.mockReturnThis()
+    mockClienteRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
+    mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.save(shouldReturn.data.pedido as any)
+
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 100] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      prestador: { id: 1, nome: 'Vinicius' },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .patch('/pedidos/1/prestador/cancelar')
+      .auth('token-valido', { type: 'bearer' })
+      .send(shouldReturn.data.pedido)
+    expect(response.status).toBe(200)
+
+    const lastSituacao = shouldReturn.data.pedido.situacoes.pop()
+    lastSituacao.data = moment(lastSituacao.data)
+      .toDate()
+      .toJSON()
+
+    shouldReturn.data.pedido.situacoes.push(lastSituacao)
+
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+
+  it('/pedidos/1/cliente/cancelar (PATCH)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        pedido: {
+          id: 1,
+          ativo: true,
+          subtotal: 25,
+          observacao: 'Quero que faça isso com urgência',
+          prestador: {
+            id: 1,
+          },
+          metodoPagamento: {
+            id: 1,
+            ativo: true,
+            tipoPagamento: 0,
+          },
+          situacoes: [
+            {
+              id: 1,
+              ativo: true,
+              estado: Estado.solicitado,
+              data: '2020-11-05T14:17:07.312Z',
+            },
+            {
+              id: 2,
+              ativo: true,
+              estado: Estado.aceito,
+              data: '2020-11-05T19:17:07.312Z',
+            },
+          ],
+          endereco: {
+            id: 2,
+            ativo: true,
+            apelido: 'Casa',
+            endereco: 'Rua Euclides Poubel de Lima',
+            complemento: 'Apto',
+            numero: 125,
+            cidade: 'Itaperuna',
+            estado: 'RJ',
+            cep: '28300-000',
+            referencia: 'Ao lado casa da mercearia',
+          },
+          servicos: [
+            {
+              id: 1,
+              ativo: true,
+              descricao: 'Serviço completo de pé e mão',
+              valor: 25,
+              nome: 'Pé e mão',
+              urlFoto:
+                'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/download.jpeg',
+            },
+          ],
+          dataHora: '2030-10-24T13:12:32.162Z',
+        },
+      },
+    }
+    mockFirebaseNotification.send.mockReturnThis()
+    mockPrestadorRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
+    mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.findOneOrFail.mockResolvedValue(shouldReturn.data.pedido as any)
+
+    mockService.save(shouldReturn.data.pedido as any)
+
+    mockFirebaseAuth.verifyIdToken.mockResolvedValue({
+      uid: 'uid-valido',
+    } as any)
+    mockFirebaseAuth.getUser.mockResolvedValue({
+      customClaims: { roles: [0, 200] },
+      uid: 'oi',
+    } as any)
+    mockUsuarioRepo.findOne.mockReturnValue({
+      cliente: { id: 1, nome: 'Vinicius' },
+    } as any)
+
+    const response = await request(app.getHttpServer())
+      .patch('/pedidos/1/cliente/cancelar')
+      .auth('token-valido', { type: 'bearer' })
+      .send(shouldReturn.data.pedido)
+    expect(response.status).toBe(200)
+
+    const lastSituacao = shouldReturn.data.pedido.situacoes.pop()
+    lastSituacao.data = moment(lastSituacao.data)
+      .toDate()
+      .toJSON()
+
+    shouldReturn.data.pedido.situacoes.push(lastSituacao)
+
+    expect(response.body).toStrictEqual(shouldReturn)
+  })
+})

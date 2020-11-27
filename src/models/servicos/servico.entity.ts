@@ -5,12 +5,14 @@ import {
   Column,
   PrimaryGeneratedColumn,
   JoinColumn,
+  OneToMany,
 } from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
 import { ServicoInterface } from './servico.interface'
 import { Prestador } from '../prestadores/prestador.entity'
 import { Categoria } from '../categorias/categoria.entity'
 import { Pedido } from '../pedidos/pedido.entity'
+import { VariacaoServico } from '../servico-variacao/variacao-servico.entity'
 
 @Entity('servico')
 export class Servico extends BaseModel<Servico> implements ServicoInterface {
@@ -53,12 +55,40 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
   )
   categorias?: Categoria[]
 
+  @OneToMany(
+    type => VariacaoServico,
+    variacoesServico => variacoesServico.servico,
+    { cascade: true },
+  )
+  variacoesServico?: VariacaoServico[]
+
+  @Column('double precision', {
+    nullable: false,
+    name: 'valor_frete',
+    default: 0,
+  })
+  valorFrete: number
+  @Column('int', { nullable: false, name: 'tempo_medio', default: 60 })
+  tempoMedio: number
+  @Column('boolean', {
+    nullable: false,
+    name: 'no_estabelecimento',
+    default: false,
+  })
+  noEstabelecimento: boolean
+  @Column('boolean', { nullable: false, name: 'delivery', default: true })
+  delivery: boolean
+
   constructor(
     id: number,
     descricao: string,
     valor: number,
     nome: string,
     urlFoto: string,
+    valorFrete: number,
+    tempoMedio: number,
+    noEstabelecimento: boolean,
+    delivery: boolean,
     ativo = true,
   ) {
     super(id, ativo)
@@ -66,6 +96,10 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
     this.valor = valor
     this.nome = nome
     this.urlFoto = urlFoto
+    this.valorFrete = valorFrete
+    this.tempoMedio = tempoMedio
+    this.noEstabelecimento = noEstabelecimento
+    this.delivery = delivery
   }
 
   fillFromJson(json: any, recursive?: string[] | undefined): Servico {
@@ -78,12 +112,21 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
     this.nome = json.nome
     this.urlFoto = json.urlFoto
     this.ativo = json.ativo
+    this.valorFrete = json.valorFrete
+    this.tempoMedio = json.tempoMedio
+    this.noEstabelecimento = json.noEstabelecimento
+    this.delivery = json.delivery
+    if (json.variacoesServico != null) {
+      this.variacoesServico = (json.variacoesServico as any[]).map(variacao =>
+        VariacaoServico.fromJson(variacao),
+      )
+    }
 
     return this
   }
 
   public static fromJson(json: any): Servico {
-    return new Servico(1, 't', 1, 't', 'r').fillFromJson(json)
+    return new Servico(1, '', 1, '', '', 1, 1, false, false).fillFromJson(json)
   }
 
   copy(): Servico {
@@ -93,6 +136,10 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
       this.valor,
       this.nome,
       this.urlFoto,
+      this.valorFrete,
+      this.tempoMedio,
+      this.noEstabelecimento,
+      this.delivery,
       this.ativo,
     )
     servico.dados = this.dados

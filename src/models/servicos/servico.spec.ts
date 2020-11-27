@@ -5,10 +5,18 @@ describe('Servico', () => {
     const mockServico = new Servico(
       1,
       'Pintura de cômodo',
-      150.0,
+      150,
       'Pintura profissional',
       'URLDAFOTO',
+      10,
+      50,
+      false,
+      true,
+      true,
     )
+
+    mockServico.variacoesServico = []
+
     expect(JSON.parse(JSON.stringify(mockServico))).toStrictEqual(
       JSON.parse(JSON.stringify(expectedJSON())),
     )
@@ -18,11 +26,16 @@ describe('Servico', () => {
 
 function expectedJSON() {
   return {
-    ativo: true,
     id: 1,
-    nome: 'Pintura profissional',
+    ativo: true,
     descricao: 'Pintura de cômodo',
     valor: 150,
+    nome: 'Pintura profissional',
     urlFoto: 'URLDAFOTO',
+    valorFrete: 10,
+    tempoMedio: 50,
+    noEstabelecimento: false,
+    delivery: true,
+    variacoesServico: [],
   }
 }

@@ -18,6 +18,8 @@ describe('Prestador', () => {
       'RJ',
       '28300000',
       null,
+      'São Mateus',
+      false,
     )
     const serv = new Servico(
       1,
@@ -25,9 +27,24 @@ describe('Prestador', () => {
       150.0,
       'Pintura profissional',
       'URLDAFOTO',
+      10,
+      50,
+      false,
+      true,
+      true,
     )
-    const categoriaPai = new Categoria(1, null, 'Manutenção Residencial')
-    const categoriaFilho = new Categoria(2, categoriaPai, 'Troca de Chuveiro')
+    const categoriaPai = new Categoria(
+      1,
+      null,
+      'Manutenção Residencial',
+      'icone_legal',
+    )
+    const categoriaFilho = new Categoria(
+      2,
+      categoriaPai,
+      'Troca de Chuveiro',
+      'icone_legal',
+    )
     const mockUsuario = new Usuario(
       1,
       TipoStatus.ativo,
@@ -37,6 +54,9 @@ describe('Prestador', () => {
       '22999496547',
       '14582486722',
       'TOKENTOP',
+      'foto_top',
+      'vimivini99@gmail.com',
+      'SERTVHijmouHINURVta',
     )
     const mockPrestador = new Prestador(
       1,
@@ -50,6 +70,9 @@ describe('Prestador', () => {
       e,
       [serv],
       [categoriaPai, categoriaFilho],
+      'logo_top',
+      4.2,
+      'capa_legal',
     )
 
     expect(JSON.parse(JSON.stringify(mockPrestador))).toStrictEqual(
@@ -68,6 +91,9 @@ function expectedJSON() {
     documentoUrl: 'UrlDoDocumento',
     nomePublico: 'OLIVEIRA TECH',
     razaoSocial: 'Oliveira prestação de serviços',
+    logo: 'logo_top',
+    nota: 4.2,
+    capa: 'capa_legal',
     tipoPessoa: 1,
     usuario: {
       ativo: true,
@@ -78,7 +104,10 @@ function expectedJSON() {
       dataNascimento: moment('1996-12-27T00:00:00-02:00').tz(moment.tz.guess()),
       telefone: '22999496547',
       cpf: '14582486722',
-      token: 'TOKENTOP',
+      uid: 'TOKENTOP',
+      foto: 'foto_top',
+      email: 'vimivini99@gmail.com',
+      tokenNotificacao: 'SERTVHijmouHINURVta',
     },
     endereco: {
       ativo: true,
@@ -91,6 +120,8 @@ function expectedJSON() {
       estado: 'RJ',
       cep: '28300000',
       referencia: null,
+      favorito: false,
+      bairro: 'São Mateus',
     },
     servicos: [
       {
@@ -100,10 +131,20 @@ function expectedJSON() {
         valor: 150,
         nome: 'Pintura profissional',
         urlFoto: 'URLDAFOTO',
+        valorFrete: 10,
+        tempoMedio: 50,
+        noEstabelecimento: false,
+        delivery: true,
       },
     ],
     categorias: [
-      { ativo: true, id: 1, catPai: null, descricao: 'Manutenção Residencial' },
+      {
+        ativo: true,
+        id: 1,
+        catPai: null,
+        descricao: 'Manutenção Residencial',
+        icone: 'icone_legal',
+      },
       {
         ativo: true,
         id: 2,
@@ -112,8 +153,10 @@ function expectedJSON() {
           id: 1,
           catPai: null,
           descricao: 'Manutenção Residencial',
+          icone: 'icone_legal',
         },
         descricao: 'Troca de Chuveiro',
+        icone: 'icone_legal',
       },
     ],
   }

@@ -17,6 +17,8 @@ describe('Cliente', () => {
       'RJ',
       '28300-000',
       null,
+      'São Mateus',
+      false,
     )
     const cartaoCliente = new Cartao(
       1,
@@ -35,6 +37,9 @@ describe('Cliente', () => {
       '22999486347',
       '14582486722',
       'TOKENTOP',
+      'foto_top',
+      'vimivini99@gmail.com',
+      'SERTVHijmouHINURVta',
     )
     const mockCliente = new Cliente(
       1,
@@ -63,7 +68,10 @@ function expectedJSON() {
       dataNascimento: moment('2020-08-14T16:12:13-03:00').tz(moment.tz.guess()),
       telefone: '22999486347',
       cpf: '14582486722',
-      token: 'TOKENTOP',
+      uid: 'TOKENTOP',
+      foto: 'foto_top',
+      email: 'vimivini99@gmail.com',
+      tokenNotificacao: 'SERTVHijmouHINURVta',
     },
     enderecos: [
       {
@@ -77,6 +85,8 @@ function expectedJSON() {
         estado: 'RJ',
         cep: '28300-000',
         referencia: null,
+        bairro: 'São Mateus',
+        favorito: false,
       },
     ],
     cartoes: [

@@ -1,6 +1,12 @@
 import * as moment from 'moment-timezone'
 import { Moment } from 'moment-timezone'
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm'
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm'
 import { SituacaoInterface, Estado } from './situacao.interface'
 import { BaseModel } from '../basis/base.entity'
 import { Pedido } from '../pedidos/pedido.entity'
@@ -16,7 +22,7 @@ export class Situacao extends BaseModel<Situacao> implements SituacaoInterface {
   @Column('int', { nullable: false })
   estado!: Estado
 
-  @Column('timestamptz', { nullable: false })
+  @Column('timestamptz', { nullable: false, name: 'data_hora' })
   data!: Date
 
   @ManyToOne(
@@ -24,6 +30,7 @@ export class Situacao extends BaseModel<Situacao> implements SituacaoInterface {
     pedido => pedido.situacoes,
     { cascade: false },
   )
+  @JoinColumn({ name: 'id_pedido' })
   pedido!: Pedido
 
   constructor(id: number, estado: Estado, data: Moment, ativo = true) {

@@ -1,8 +1,9 @@
 export enum TipoStatus {
-  ativo,
-  suspenso,
-  desativado,
-  banido,
+  ativo = 0,
+  em_analise = 1,
+  suspenso = 2,
+  desativado = 3,
+  banido = 4,
 }
 
 export interface UsuarioInterface {
@@ -10,6 +11,9 @@ export interface UsuarioInterface {
   dataNascimento: Date
   telefone: string
   cpf: string
-  token: string
+  uid: string
+  email: string
   status: TipoStatus
+  foto: string
+  tokenNotificacao: string
 }

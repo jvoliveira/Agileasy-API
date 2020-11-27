@@ -7,6 +7,7 @@ import {
   OneToMany,
   ManyToMany,
   JoinColumn,
+  JoinTable,
 } from 'typeorm'
 import { JsonHelper } from '../../common/helpers/json.helper'
 import { Usuario } from '../usuarios/usuario.entity'
@@ -16,6 +17,8 @@ import { Endereco } from '../enderecos/endereco.entity'
 import { Servico } from '../servicos/servico.entity'
 import { Categoria } from '../categorias/categoria.entity'
 import { TipoStatus } from '../usuarios/usuario.interface'
+import { Pedido } from '../pedidos/pedido.entity'
+import { Disponibilidade } from '../disponibilidades/disponibilidade.entity'
 
 @Entity('prestador')
 export class Prestador extends BaseModel<Prestador>
@@ -23,11 +26,14 @@ export class Prestador extends BaseModel<Prestador>
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column('text', { nullable: false, name: 'url_documento' })
+  @Column('text', { nullable: true, name: 'url_documento' })
   documentoUrl!: string
 
   @Column('int', { nullable: false, name: 'tipo_pessoa' })
   tipoPessoa!: number
+
+  @Column('int', { nullable: false, name: 'taxa', default: 10 })
+  taxa!: number
 
   @Column('text', { nullable: true })
   cnpj!: string | null
@@ -41,8 +47,23 @@ export class Prestador extends BaseModel<Prestador>
   @Column('text', { nullable: false, name: 'nome_publico' })
   nomePublico!: string
 
+  @Column('double precision', { nullable: false, name: 'nota', default: 0 })
+  nota!: number
+
+  @Column('text', { nullable: true, name: 'capa' })
+  capa!: string
+
+  @Column('text', { nullable: true })
+  logo!: string
+
   @Column('boolean', { nullable: false })
   delivery!: boolean
+
+  @OneToMany(
+    type => Pedido,
+    pedidos => pedidos.prestador,
+  )
+  pedidos!: Pedido[]
 
   @OneToOne(
     type => Usuario,
@@ -61,6 +82,13 @@ export class Prestador extends BaseModel<Prestador>
   endereco!: Endereco
 
   @OneToMany(
+    type => Disponibilidade,
+    disponibilidades => disponibilidades.prestador,
+    { cascade: true },
+  )
+  disponibilidades!: Disponibilidade[]
+
+  @OneToMany(
     type => Servico,
     servicos => servicos.prestador,
     { cascade: true },
@@ -72,6 +100,17 @@ export class Prestador extends BaseModel<Prestador>
     categorias => categorias.prestadores,
     { cascade: false },
   )
+  @JoinTable({
+    name: 'categoria_prestador',
+    joinColumn: {
+      name: 'id_prestador',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'id_categoria',
+      referencedColumnName: 'id',
+    },
+  })
   categorias!: Categoria[]
 
   constructor(
@@ -86,6 +125,9 @@ export class Prestador extends BaseModel<Prestador>
     endereco: Endereco,
     servicos: Servico[],
     categorias: Categoria[],
+    logo: string,
+    nota: number,
+    capa: string,
     ativo = true,
   ) {
     super(id, ativo)
@@ -96,9 +138,12 @@ export class Prestador extends BaseModel<Prestador>
     this.nomePublico = nomePublico
     this.razaoSocial = razaoSocial
     this.tipoPessoa = tipoPessoa
+    this.logo = logo
     this.endereco = endereco
     this.servicos = servicos
     this.categorias = categorias
+    this.nota = nota
+    this.capa = capa
   }
 
   fillFromJson(json: any, recursive?: string[] | undefined): Prestador {
@@ -113,6 +158,9 @@ export class Prestador extends BaseModel<Prestador>
     this.nomePublico = json.nomePublico
     this.razaoSocial = json.razaoSocial
     this.tipoPessoa = json.tipoPessoa
+    this.logo = json.logo
+    this.nota = json.nota
+    this.capa = json.capa
     this.endereco = Endereco.fromJson(json.endereco)
     this.servicos = JsonHelper.jsonToArray<Servico>(
       json.servicos,
@@ -139,6 +187,9 @@ export class Prestador extends BaseModel<Prestador>
       this.endereco,
       this.servicos,
       this.categorias,
+      this.logo,
+      this.nota,
+      this.capa,
       this.ativo,
     )
     prestador.dados = this.dados
@@ -148,16 +199,31 @@ export class Prestador extends BaseModel<Prestador>
   public static fromJson(json: any): Prestador {
     const prestador = new Prestador(
       0,
-      new Usuario(1, TipoStatus.ativo, 'a', 'a', moment(), 'a', 'a', 'a'),
+      new Usuario(
+        1,
+        TipoStatus.ativo,
+        'a',
+        'a',
+        moment(),
+        'a',
+        'a',
+        'a',
+        '1',
+        '1',
+        'a',
+      ),
       '2',
       true,
       't',
       't',
       'r',
       3,
-      new Endereco(1, 'r', 'e', 'r', 'd', 'f', 'f', 'f', 'f'),
+      new Endereco(1, 'r', 'e', 'r', 'd', 'f', 'f', 'f', 'f', 'a', false),
       [],
       [],
+      '1',
+      4.5,
+      'a',
     ).fillFromJson(json)
     return prestador
   }

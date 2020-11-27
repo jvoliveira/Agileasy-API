@@ -27,6 +27,9 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
   @Column('text', { nullable: false })
   endereco!: string
 
+  @Column('text', { nullable: false })
+  bairro!: string
+
   @Column('text', { nullable: true })
   complemento: string | null
 
@@ -44,6 +47,9 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
 
   @Column('text', { nullable: true })
   referencia: string | null
+
+  @Column('boolean', { nullable: false, default: false })
+  favorito: boolean
 
   @ManyToOne(
     type => Cliente,
@@ -77,6 +83,8 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
     estado: string,
     cep: string,
     referencia: string | null,
+    bairro: string,
+    favorito: boolean,
     ativo = true,
   ) {
     super(id, ativo)
@@ -87,7 +95,9 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
     this.cidade = cidade
     this.estado = estado
     this.cep = cep
+    this.bairro = bairro
     this.referencia = referencia
+    this.favorito = favorito
   }
 
   fillFromJson(json: any, recursive?: string[] | undefined): Endereco {
@@ -100,14 +110,26 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
     this.estado = json.estado
     this.cep = json.cep
     this.referencia = json.referencia
+    this.bairro = json.bairro
     this.ativo = json.ativo
+    this.favorito = json.favorito
     return this
   }
 
   public static fromJson(json: any): Endereco {
-    return new Endereco(1, 'f', 'f', 'd', 'd', 'd', 'd', 'd', 'd').fillFromJson(
-      json,
-    )
+    return new Endereco(
+      1,
+      'f',
+      'f',
+      'd',
+      'd',
+      'd',
+      'd',
+      'd',
+      'd',
+      'd',
+      false,
+    ).fillFromJson(json)
   }
 
   copy(): Endereco {
@@ -121,6 +143,8 @@ export class Endereco extends BaseModel<Endereco> implements EnderecoInterface {
       this.estado,
       this.cep,
       this.referencia,
+      this.bairro,
+      this.favorito,
       this.ativo,
     )
     endereco.dados = this.dados

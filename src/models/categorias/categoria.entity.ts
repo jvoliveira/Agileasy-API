@@ -21,12 +21,15 @@ export class Categoria extends BaseModel<Categoria>
   @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
+  @Column({ type: 'text', nullable: true })
+  icone!: string
+
   @OneToOne(
     type => Categoria,
     catPai => catPai.catPai,
     { cascade: false },
   )
-  @JoinColumn()
+  @JoinColumn({ name: 'id_pai', referencedColumnName: 'id' })
   catPai: Categoria | null
 
   @Column('text', { nullable: false })
@@ -37,7 +40,11 @@ export class Categoria extends BaseModel<Categoria>
     prestador => prestador.categorias,
     { cascade: false },
   )
-  @JoinTable({ name: 'categoria_prestador' })
+  @ManyToMany(
+    type => Categoria,
+    categorias => categorias.prestadores,
+    { cascade: false },
+  )
   prestadores?: Prestador[]
 
   @ManyToMany(
@@ -45,22 +52,34 @@ export class Categoria extends BaseModel<Categoria>
     servicos => servicos.categorias,
     { cascade: false },
   )
-  @JoinTable({ name: 'categoria_servico' })
+  @JoinTable({
+    name: 'categoria_servico',
+    inverseJoinColumn: {
+      name: 'id_categoria',
+      referencedColumnName: 'id',
+    },
+    joinColumn: {
+      name: 'id_servico',
+      referencedColumnName: 'id',
+    },
+  })
   servicos?: Servico[]
 
   constructor(
     id: number,
     catPai: Categoria | null,
     descricao: string,
+    icone: string,
     ativo = true,
   ) {
     super(id, ativo)
     this.catPai = catPai
     this.descricao = descricao
+    this.icone = icone
   }
 
   public static fromJson(json: any): Categoria {
-    return new Categoria(1, null, 'd').fillFromJson(json)
+    return new Categoria(1, null, 'd', 'd').fillFromJson(json)
   }
 
   fillFromJson(json?: any, recursive?: string[] | undefined): Categoria {
@@ -71,6 +90,7 @@ export class Categoria extends BaseModel<Categoria>
     this.catPai = json.catPai == null ? null : Categoria.fromJson(json.catPai)
     this.descricao = json.descricao as string
     this.ativo = json.ativo
+    this.icone = json.icone
     return this
   }
 
@@ -79,6 +99,7 @@ export class Categoria extends BaseModel<Categoria>
       this.id,
       this.catPai,
       this.descricao,
+      this.icone,
       this.ativo,
     )
     categoria.dados = this.dados
