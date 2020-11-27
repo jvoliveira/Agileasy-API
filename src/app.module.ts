@@ -44,7 +44,7 @@ import { ChatsModule } from './controllers/chats/chats.module'
       }),
     }),
     CacheModule.register({
-      ttl: 5, // seconds
+      ttl: 0, // seconds
       max: 10, // maximum number of items in cache
     }),
     PgModelsConfigModule,
