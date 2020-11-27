@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Connection, Repository } from 'typeorm'
+import { Repository } from 'typeorm'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { AllException } from '../../common/exceptions/all.exception'
 import { BaseService } from '../../common/services/base.service'
@@ -10,7 +10,6 @@ import { Disponibilidade } from '../../models/disponibilidades/disponibilidade.e
 export class DisponibilidadesService extends BaseService<Disponibilidade> {
   constructor(
     @InjectRepository(Disponibilidade) repo: Repository<Disponibilidade>,
-    private connection: Connection,
   ) {
     super(repo)
   }
@@ -27,7 +26,7 @@ export class DisponibilidadesService extends BaseService<Disponibilidade> {
     idPrestador: number,
     disponibilidades: Disponibilidade[],
   ): Promise<Disponibilidade[]> {
-    const queryRunner = this.connection.createQueryRunner()
+    const queryRunner = this.repo.manager.connection.createQueryRunner()
 
     await queryRunner.connect()
     await queryRunner.startTransaction()

@@ -65,10 +65,19 @@ describe('DisponibilidadesService', () => {
         fim: '2020-08-14T19:12:13.000Z',
       },
     ]
-
+    const masterEntityManager = createMock<EntityManager>()
+    const masterConnection = createMock<Connection>()
     const mockQueryRunner = createMock<QueryRunner>()
     const mockEntityManager = createMock<EntityManager>()
-    mockConnection.createQueryRunner.mockReturnValue(mockQueryRunner)
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    repo.manager = masterEntityManager
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    masterEntityManager.connection = masterConnection
+    masterConnection.createQueryRunner.mockReturnValue(mockQueryRunner)
+
     mockQueryRunner.connect.mockReturnThis()
     mockQueryRunner.startTransaction.mockReturnThis()
     mockQueryRunner.release.mockReturnThis()

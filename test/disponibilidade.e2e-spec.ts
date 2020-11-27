@@ -5,7 +5,7 @@ import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { createMock } from '@golevelup/nestjs-testing'
 import { AppModule } from '../src/app.module'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Connection, EntityManager, QueryRunner, Repository } from 'typeorm'
 import { Usuario } from '../src/models/usuarios/usuario.entity'
 import { Disponibilidade } from '../src/models/disponibilidades/disponibilidade.entity'
 import { DiaSemana } from '../src/models/disponibilidades/disponibilidade.interface'
@@ -108,7 +108,33 @@ describe('DisponibilidadeController (e2e)', () => {
     mockUsuarioRepo.findOne.mockReturnValue({
       prestador: { id: 1 },
     } as any)
-    mockService.save.mockReturnValue(shouldReturn.data.disponibilidades as any)
+    const masterEntityManager = createMock<EntityManager>()
+    const masterConnection = createMock<Connection>()
+    const mockQueryRunner = createMock<QueryRunner>()
+    const mockEntityManager = createMock<EntityManager>()
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    mockService.manager = masterEntityManager
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    masterEntityManager.connection = masterConnection
+    masterConnection.createQueryRunner.mockReturnValue(mockQueryRunner)
+
+    mockQueryRunner.connect.mockReturnThis()
+    mockQueryRunner.startTransaction.mockReturnThis()
+    mockQueryRunner.release.mockReturnThis()
+    mockQueryRunner.commitTransaction.mockReturnThis()
+
+    mockEntityManager.save.mockReturnValue(
+      shouldReturn.data.disponibilidades as any,
+    )
+
+    mockEntityManager.delete.mockReturnThis()
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    mockQueryRunner.manager = mockEntityManager
     const response = await request(app.getHttpServer())
       .post('/disponibilidades/adicionar/prestador/eu')
       .auth('token-valido', { type: 'bearer' })
