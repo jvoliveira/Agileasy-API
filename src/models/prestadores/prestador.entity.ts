@@ -32,6 +32,9 @@ export class Prestador extends BaseModel<Prestador>
   @Column('int', { nullable: false, name: 'tipo_pessoa' })
   tipoPessoa!: number
 
+  @Column('int', { nullable: false, name: 'taxa', default: 10 })
+  taxa!: number
+
   @Column('text', { nullable: true })
   cnpj!: string | null
 

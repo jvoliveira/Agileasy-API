@@ -34,6 +34,7 @@ export class RegisterPrestadorDto {
   @IsNumber()
   @IsOptional()
   nota?: number | null
+  taxa?: number
 }
 
 class UsuarioDto {

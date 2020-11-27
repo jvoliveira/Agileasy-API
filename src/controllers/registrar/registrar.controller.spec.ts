@@ -76,6 +76,7 @@ describe('RegistrarController', () => {
       senha: '123456',
       nota: -1,
       nomePublico: 'V1pi',
+      taxa: 10,
       usuario: {
         nome: 'Vinicius',
         uid: 'uid-valido',
@@ -113,6 +114,7 @@ describe('RegistrarController', () => {
       senha: '123456',
       nomePublico: 'V1pi',
       nota: -1,
+      taxa: 10,
       usuario: {
         uid: 'uid-valido',
         nome: 'Vinicius',

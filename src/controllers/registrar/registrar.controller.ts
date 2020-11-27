@@ -32,6 +32,7 @@ export class RegistrarController {
     registerPrestadorDto.usuario.uid = user.uid
     registerPrestadorDto.usuario.status = TipoStatus.em_analise
     registerPrestadorDto.nota = -1
+    registerPrestadorDto.taxa = 10
     registerPrestadorDto.usuario.email = registerPrestadorDto.email
     try {
       const prestador = await this.servPrestador.create(registerPrestadorDto)

@@ -15,4 +15,5 @@ export interface PrestadorInterface {
   logo: string
   capa: string
   nota: number
+  taxa: number
 }
