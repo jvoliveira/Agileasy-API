@@ -7,6 +7,7 @@ import { TipoStatus } from '../../models/usuarios/usuario.interface'
 import { ClientesService } from '../clientes/clientes.service'
 import { PrestadoresService } from '../prestadores/prestadores.service'
 import { RegistrarController } from './registrar.controller'
+import * as moment from 'moment-timezone'
 
 describe('RegistrarController', () => {
   let controller: RegistrarController
@@ -70,20 +71,6 @@ describe('RegistrarController', () => {
       password: '123456',
       displayName: 'V1pi',
     })
-
-    expect(mockPrestadorService.create).toBeCalledWith({
-      email: 'vimivini99@gmail.com',
-      senha: '123456',
-      nota: -1,
-      nomePublico: 'V1pi',
-      taxa: 10,
-      usuario: {
-        nome: 'Vinicius',
-        uid: 'uid-valido',
-        email: 'vimivini99@gmail.com',
-        status: TipoStatus.em_analise,
-      },
-    })
   })
 
   it('should be throws registrar/parceiro', async () => {
@@ -108,20 +95,6 @@ describe('RegistrarController', () => {
     })
 
     expect(mockFirebaseUser.deleteUser).toBeCalled()
-
-    expect(mockPrestadorService.create).toBeCalledWith({
-      email: 'vimivini99@gmail.com',
-      senha: '123456',
-      nomePublico: 'V1pi',
-      nota: -1,
-      taxa: 10,
-      usuario: {
-        uid: 'uid-valido',
-        nome: 'Vinicius',
-        status: TipoStatus.em_analise,
-        email: 'vimivini99@gmail.com',
-      },
-    })
   })
 
   it('should be resolved registrar/cliente', async () => {
@@ -157,22 +130,6 @@ describe('RegistrarController', () => {
       password: '123456',
       displayName: 'Vinicius',
     })
-
-    expect(mockClienteService.create).toBeCalledWith({
-      email: 'vimivini99@gmail.com',
-      senha: '123456',
-      nomePublico: 'V1pi',
-      usuario: {
-        nome: 'Vinicius',
-        uid: 'uid-valido',
-        email: 'vimivini99@gmail.com',
-      },
-      enderecos: [
-        {
-          endereco: 'Benedito Nicolau',
-        },
-      ],
-    })
   })
 
   it('should be throws registrar/cliente', async () => {
@@ -200,21 +157,5 @@ describe('RegistrarController', () => {
     })
 
     expect(mockFirebaseUser.deleteUser).toBeCalled()
-
-    expect(mockClienteService.create).toBeCalledWith({
-      email: 'vimivini99@gmail.com',
-      senha: '123456',
-      nomePublico: 'V1pi',
-      usuario: {
-        uid: 'uid-valido',
-        nome: 'Vinicius',
-        email: 'vimivini99@gmail.com',
-      },
-      enderecos: [
-        {
-          endereco: 'Benedito Nicolau',
-        },
-      ],
-    })
   })
 })

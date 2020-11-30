@@ -16,6 +16,8 @@ export class RegisterClienteDto {
   endereco: EnderecoDto
   @IsOptional()
   enderecos?: [EnderecoDto] | null
+  @IsOptional()
+  criadoEm?: Date
 }
 
 class UsuarioDto {
