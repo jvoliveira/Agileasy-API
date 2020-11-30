@@ -60,6 +60,9 @@ export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
   )
   cartoes!: Cartao[]
 
+  @Column('timestamptz', { nullable: false, name: 'criado_em' })
+  criadoEm!: Date
+
   constructor(
     id: number,
     usuario: Usuario,
