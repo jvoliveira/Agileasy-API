@@ -8,6 +8,7 @@ import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
 import { ClientesService } from '../clientes/clientes.service'
 import { TipoStatus } from '../../models/usuarios/usuario.interface'
+import * as moment from 'moment-timezone'
 
 @Controller('registrar')
 export class RegistrarController {
@@ -33,6 +34,9 @@ export class RegistrarController {
     registerPrestadorDto.usuario.status = TipoStatus.em_analise
     registerPrestadorDto.nota = -1
     registerPrestadorDto.taxa = 10
+    registerPrestadorDto.criadoEm = moment()
+      .utc()
+      .toDate()
     registerPrestadorDto.usuario.email = registerPrestadorDto.email
     try {
       const prestador = await this.servPrestador.create(registerPrestadorDto)
@@ -65,6 +69,9 @@ export class RegistrarController {
     registerClienteDto.usuario.uid = user.uid
     registerClienteDto.enderecos = [registerClienteDto.endereco]
     delete registerClienteDto.endereco
+    registerClienteDto.criadoEm = moment()
+      .utc()
+      .toDate()
     registerClienteDto.usuario.email = registerClienteDto.email
     try {
       const cliente = await this.servCliente.create(registerClienteDto)

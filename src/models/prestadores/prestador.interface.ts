@@ -16,4 +16,5 @@ export interface PrestadorInterface {
   capa: string
   nota: number
   taxa: number
+  criadoEm: Date
 }

@@ -59,6 +59,9 @@ export class Prestador extends BaseModel<Prestador>
   @Column('boolean', { nullable: false })
   delivery!: boolean
 
+  @Column('timestamptz', { nullable: false, name: 'criado_em' })
+  criadoEm!: Date
+
   @OneToMany(
     type => Pedido,
     pedidos => pedidos.prestador,
