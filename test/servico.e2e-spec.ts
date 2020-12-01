@@ -89,6 +89,11 @@ describe('ServicoController (e2e)', () => {
         servico: {
           descricao: 'Esse serviço é novo',
           valor: 256.6,
+          categorias: [
+            {
+              id: 1,
+            },
+          ],
           nome: 'Novo serviço',
           urlFoto: 'www.fotourl.com.br',
           valorFrete: 10,
