@@ -39,7 +39,7 @@ describe('Prestadores Service', () => {
     )
     expect(repo.findOne).toBeCalledWith({
       where: { id: 1 },
-      relations: ['servicos'],
+      relations: ['servicos', 'endereco', 'disponibilidades'],
     })
   })
 
@@ -152,7 +152,7 @@ describe('Prestadores Service', () => {
     expect(await service.getPrestadoresWithCategoria()).toBe(shouldReturn)
     expect(repo.find).toHaveBeenCalledWith({
       where: { ativo: true },
-      relations: ['categorias'],
+      relations: ['categorias', 'endereco', 'disponibilidades'],
     })
 
     repo.find.mockClear()

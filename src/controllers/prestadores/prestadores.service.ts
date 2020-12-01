@@ -123,7 +123,7 @@ export class PrestadoresService extends BaseService<Prestador> {
   async getServicosByPrestador(id: number): Promise<Prestador> {
     const prestador = await this.repo.findOne({
       where: { id: id },
-      relations: ['servicos'],
+      relations: ['servicos', 'endereco', 'disponibilidades'],
     })
 
     if (!prestador) {
@@ -136,7 +136,7 @@ export class PrestadoresService extends BaseService<Prestador> {
   async getPrestadoresWithCategoria(): Promise<Prestador[]> {
     const values: Array<Prestador> = await this.repo.find({
       where: { ativo: true },
-      relations: ['categorias'],
+      relations: ['categorias', 'endereco', 'disponibilidades'],
     })
 
     if (!values) {
