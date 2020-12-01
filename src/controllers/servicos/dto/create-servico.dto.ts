@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsDefined,
   IsNumber,
   IsOptional,
   IsString,
@@ -26,6 +27,12 @@ export class CreateServicoDto {
   prestador?: UpdatePrestadorDto
   @IsOptional()
   variacoesServico: []
+  @IsDefined()
+  categorias: AddCategoriaDto[]
+}
+
+class AddCategoriaDto {
+  id: number
 }
 
 class UpdatePrestadorDto {
