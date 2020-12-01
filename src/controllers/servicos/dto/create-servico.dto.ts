@@ -27,7 +27,7 @@ export class CreateServicoDto {
   prestador?: UpdatePrestadorDto
   @IsOptional()
   variacoesServico: []
-  @IsDefined()
+  @IsOptional()
   categorias: AddCategoriaDto[]
 }
 
