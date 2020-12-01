@@ -32,7 +32,10 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
   @Column('text', { nullable: true })
   foto!: string
 
-  @Column('text', { nullable: true })
+  @Column('text', { nullable: false })
+  sexo!: string
+
+  @Column('text', { nullable: false })
   email!: string
 
   @Column('text', { nullable: false, name: 'uid' })
@@ -70,6 +73,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
     foto: string,
     email: string,
     tokenNotificacao: string,
+    sexo: string,
     ativo = true,
   ) {
     super(id, ativo)
@@ -83,6 +87,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
     this.email = email
     this.tokenNotificacao = tokenNotificacao
     this.foto = foto
+    this.sexo = sexo
   }
 
   fillFromJson(json: any, recursive?: string[] | undefined): Usuario {
@@ -102,6 +107,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
     this.uid = json.uid as string
     this.status = json.status as TipoStatus
     this.ativo = json.ativo
+    this.sexo = json.sexo
     this.email = json.email
     return this
   }
@@ -119,6 +125,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
       this.foto,
       this.email,
       this.tokenNotificacao,
+      this.sexo,
       this.ativo,
     )
     usuario.dados = this.dados
@@ -134,6 +141,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
       moment(),
       't',
       't',
+      '1',
       '1',
       '1',
       '1',
