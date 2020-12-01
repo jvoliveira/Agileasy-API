@@ -51,7 +51,7 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
   @ManyToMany(
     type => Categoria,
     categorias => categorias.servicos,
-    { cascade: false },
+    { cascade: true },
   )
   categorias?: Categoria[]
 

@@ -40,11 +40,6 @@ export class Categoria extends BaseModel<Categoria>
     prestador => prestador.categorias,
     { cascade: false },
   )
-  @ManyToMany(
-    type => Categoria,
-    categorias => categorias.prestadores,
-    { cascade: false },
-  )
   prestadores?: Prestador[]
 
   @ManyToMany(
