@@ -17,6 +17,9 @@ import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
 import { FirebaseMessagingService } from '@aginix/nestjs-firebase-admin'
 import { PrestadoresService } from '../prestadores/prestadores.service'
 import { ClientesService } from '../clientes/clientes.service'
+import { sendEmail } from '../../common/helpers/mailSend/mailer'
+import { ServicosController } from '../servicos/servicos.controller'
+import { Servico } from '../../models/servicos/servico.entity'
 
 @Controller('pedidos')
 export class PedidosController {
@@ -345,6 +348,20 @@ export class PedidosController {
 
         await this.firebaseNotification.send(newNotification)
       } catch (error) {}
+    }
+
+    try {
+      const newServico = await this.servServicos.getByIdWithPrestador(
+        pedido.servicos[pedido.servicos.length - 1].id,
+      )
+      sendEmail(
+        pedido.cliente.usuario.email,
+        'Seu pedido foi concluído!',
+        pedido,
+        newServico,
+      )
+    } catch (error) {
+      console.log(error)
     }
 
     return {
