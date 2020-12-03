@@ -1,10 +1,13 @@
 import * as nodemailer from 'nodemailer'
-import { ModelHtml, TipoEmail } from './modelHtml'
+import { Pedido } from '../../../models/pedidos/pedido.entity'
+import { Servico } from '../../../models/servicos/servico.entity'
+import { ModelComprovante } from './model_Comprovante'
 
-export async function main(
+export async function sendEmail(
   emailDestinatario: string,
   assunto: string,
-  tipoEmail: TipoEmail,
+  pedido: Pedido,
+  servico: any,
 ) {
   const transporter = nodemailer.createTransport({
     host: 'smtp.agileasyapp.com.br',
@@ -16,7 +19,7 @@ export async function main(
     },
     tls: { rejectUnauthorized: false },
   })
-  const model = new ModelHtml(tipoEmail)
+  const model = new ModelComprovante(pedido, servico)
   const mailOptions = {
     from: 'Equipe Agileasy <contato@agileasyapp.com.br>',
     to: emailDestinatario,
@@ -31,6 +34,4 @@ export async function main(
       console.log('Email enviado: ' + info.response)
     }
   })
-
-  console.log('infooo: ' + info)
 }
