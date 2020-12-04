@@ -28,6 +28,12 @@ export class UpdateServicoDto {
   prestador?: UpdatePrestadorDto
   @IsOptional()
   variacoesServico: []
+  @IsOptional()
+  categorias: UpdateCategoriaDto[]
+}
+
+class UpdateCategoriaDto {
+  id: number
 }
 
 class UpdatePrestadorDto {

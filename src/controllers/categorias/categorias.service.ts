@@ -23,4 +23,18 @@ export class CategoriasService extends BaseService<Categoria> {
 
     return values
   }
+
+  async getCategoriasByPrestador(idPrestador: number): Promise<Categoria[]> {
+    const values: Array<Categoria> = await this.repo
+      .createQueryBuilder()
+      .relation(Categoria, 'prestadores')
+      .of(idPrestador)
+      .loadMany()
+
+    if (!values) {
+      throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
+    }
+
+    return values
+  }
 }

@@ -1,12 +1,4 @@
-import {
-  Body,
-  CacheTTL,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Patch,
-} from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Patch } from '@nestjs/common'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { PedidosService } from './pedidos.service'
 import { CreatePedidoDto } from './dto/create-pedido.dto'
@@ -147,7 +139,6 @@ export class PedidosController {
 
   @Roles(TipoUsuario.CLIENTE)
   @Get('cliente/eu')
-  @CacheTTL(5)
   public async myPedidosAsCliente(
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
@@ -165,7 +156,6 @@ export class PedidosController {
 
   @Roles(TipoUsuario.PRESTADOR)
   @Get('prestador/eu')
-  @CacheTTL(5)
   public async myPedidosAsPrestador(
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
@@ -183,7 +173,6 @@ export class PedidosController {
 
   @Roles(TipoUsuario.PRESTADOR)
   @Get(':id/prestador/eu')
-  @CacheTTL(5)
   public async getPedidoAsPrestadorById(
     @User() user: admin.auth.UserRecord,
     @Param('id') id: number,
@@ -202,7 +191,6 @@ export class PedidosController {
 
   @Roles(TipoUsuario.CLIENTE)
   @Get(':id/cliente/eu')
-  @CacheTTL(5)
   public async getPedidoAsClienteById(
     @User() user: admin.auth.UserRecord,
     @Param('id') id: number,

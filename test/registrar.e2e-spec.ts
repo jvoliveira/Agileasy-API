@@ -56,6 +56,7 @@ describe('PrestadorController (e2e)', () => {
             dataNascimento: '2020-09-10T18:51:22.931Z',
             telefone: '22999496547',
             cpf: '14582486722',
+            sexo: 'Masculino',
           },
           cnpj: '30419000166',
           delivery: true,
@@ -109,6 +110,7 @@ describe('PrestadorController (e2e)', () => {
             nomeSocial: null,
             foto: null,
             id: 6,
+            sexo: 'Masculino',
             ativo: true,
           },
           endereco: {

@@ -1,6 +1,5 @@
 import {
   Body,
-  CacheTTL,
   Controller,
   Delete,
   Get,
@@ -30,7 +29,6 @@ export class EnderecosController {
 
   @Roles(TipoUsuario.CLIENTE)
   @Get('cliente/eu')
-  @CacheTTL(1)
   public async getEnderecosByCliente(
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {

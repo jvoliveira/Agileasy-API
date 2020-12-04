@@ -12,6 +12,8 @@
     "deploy:app-engine": "npm run build:dev && cp ./app.yaml ./dist && cp ./package.json ./dist",
     "get:sql": "git archive --remote='git@gitlab.com:v1pi/webservicenest-servicos/snippets/2021646.git' master | tar -x -C ./",
     "up:postgres": "npm run get:sql && docker-compose -f docker-compose-local.yml up -d",
+    "up-windows:postgres": "docker-compose -f docker-compose-local.yml up -d",
+    "down:postgres": "docker-compose -f docker-compose-local.yml down",
     "format": "npx prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "cross-env NODE_ENV=development node main",
     "start:dev": "cross-env NODE_ENV=development nest start --watch",

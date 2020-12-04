@@ -1,14 +1,5 @@
 import { ServicosService } from './servicos.service'
-import {
-  Body,
-  CacheTTL,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { User } from '../../common/decorators/user.decorator'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
@@ -30,7 +21,6 @@ export class ServicosController {
 
   @Roles(TipoUsuario.PRESTADOR)
   @Get('prestador/eu')
-  @CacheTTL(1)
   public async getServicosByPrestador(
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
@@ -62,6 +52,8 @@ export class ServicosController {
     createServicoDto.prestador = {
       id: prestadorIncompleto.id,
     }
+    createServicoDto.urlFoto =
+      'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/imagens_padrao%2Ficone_servico.png?alt=media'
     const servico = await this.serv.create(createServicoDto)
     return {
       error_id: TipoErro.SEM_ERROS,

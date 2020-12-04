@@ -119,7 +119,7 @@ describe('ServicosController', () => {
     userService.getPrestadorByToken.mockResolvedValue({ id: 1 } as any)
     repo.create.mockResolvedValue(shouldReturn.data.servico as any)
     await expect(
-      controller.addServico(mockUser, shouldReturn.data.servico),
+      controller.addServico(mockUser, shouldReturn.data.servico as any),
     ).resolves.toStrictEqual(shouldReturn)
   })
 

@@ -30,6 +30,8 @@ class UsuarioDto {
   @IsString()
   telefone: string
   @IsString()
+  sexo: string
+  @IsString()
   cpf: string
   @IsString()
   @IsOptional()

@@ -40,6 +40,7 @@ describe('Cliente', () => {
       'foto_top',
       'vimivini99@gmail.com',
       'SERTVHijmouHINURVta',
+      'Feminino',
     )
     const mockCliente = new Cliente(
       1,
@@ -72,6 +73,7 @@ function expectedJSON() {
       foto: 'foto_top',
       email: 'vimivini99@gmail.com',
       tokenNotificacao: 'SERTVHijmouHINURVta',
+      sexo: 'Feminino',
     },
     enderecos: [
       {

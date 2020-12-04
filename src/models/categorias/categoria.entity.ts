@@ -40,11 +40,6 @@ export class Categoria extends BaseModel<Categoria>
     prestador => prestador.categorias,
     { cascade: false },
   )
-  @ManyToMany(
-    type => Categoria,
-    categorias => categorias.prestadores,
-    { cascade: false },
-  )
   prestadores?: Prestador[]
 
   @ManyToMany(
@@ -54,11 +49,11 @@ export class Categoria extends BaseModel<Categoria>
   )
   @JoinTable({
     name: 'categoria_servico',
-    inverseJoinColumn: {
+    joinColumn: {
       name: 'id_categoria',
       referencedColumnName: 'id',
     },
-    joinColumn: {
+    inverseJoinColumn: {
       name: 'id_servico',
       referencedColumnName: 'id',
     },
