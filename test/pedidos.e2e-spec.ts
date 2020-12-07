@@ -17,6 +17,7 @@ import { Endereco } from '../src/models/enderecos/endereco.entity'
 import { Estado } from '../src/models/situacoes/situacao.interface'
 import { Cliente } from '../src/models/clientes/cliente.entity'
 import { Prestador } from '../src/models/prestadores/prestador.entity'
+import { MailerService } from '@nestjs-modules/mailer'
 
 describe('PedidoController (e2e)', () => {
   let app: INestApplication
@@ -28,6 +29,7 @@ describe('PedidoController (e2e)', () => {
   const mockEnderecoRepo = createMock<Repository<Endereco>>()
   const mockFirebaseAuth = createMock<FirebaseAuthenticationService>()
   const mockFirebaseNotification = createMock<FirebaseMessagingService>()
+  const mockMailerService = createMock<MailerService>()
 
   beforeAll(async () => {
     jest.resetAllMocks()
@@ -50,6 +52,8 @@ describe('PedidoController (e2e)', () => {
       .useValue(mockEnderecoRepo)
       .overrideProvider(FirebaseMessagingService)
       .useValue(mockFirebaseNotification)
+      .overrideProvider(MailerService)
+      .useValue(mockMailerService)
       .compile()
     app = moduleFixture.createNestApplication()
     app.init()
@@ -110,6 +114,7 @@ describe('PedidoController (e2e)', () => {
     }
     mockFirebaseNotification.send.mockReturnThis()
     mockPrestadorRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
+    mockMailerService.sendMail.mockReturnThis()
 
     mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
     mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
@@ -199,6 +204,7 @@ describe('PedidoController (e2e)', () => {
     }
     mockService.find.mockResolvedValue(shouldReturn.data.pedidos as any)
     mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
+    mockMailerService.sendMail.mockReturnThis()
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
       uid: 'uid-valido',
     } as any)

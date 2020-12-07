@@ -12,6 +12,7 @@ import { PrestadoresService } from '../prestadores/prestadores.service'
 import { ClientesService } from '../clientes/clientes.service'
 import { PrestadoresEntityModule } from '../../models/prestadores/prestadores.module'
 import { ClientesEntityModule } from '../../models/clientes/clientes.module'
+import { MailManager } from '../../common/mails/mail.manager'
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ClientesEntityModule } from '../../models/clientes/clientes.module'
     ServicosService,
     UserService,
     EnderecosService,
+    MailManager,
     PrestadoresService,
     ClientesService,
   ],
