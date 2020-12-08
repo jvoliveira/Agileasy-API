@@ -28,6 +28,7 @@ import { MetodosPagamentoModule } from './controllers/metodospagamento/metodos-p
 import { DisponibilidadesModule } from './controllers/disponibilidades/disponibilidades.module'
 import { ChatsModule } from './controllers/chats/chats.module'
 import { MailerModule } from '@nestjs-modules/mailer'
+import { CuponsModule } from './controllers/cupons/cupons.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { MailerModule } from '@nestjs-modules/mailer'
     MetodosPagamentoModule,
     DisponibilidadesModule,
     ChatsModule,
+    CuponsModule,
   ],
   controllers: [AppController],
   providers: [
