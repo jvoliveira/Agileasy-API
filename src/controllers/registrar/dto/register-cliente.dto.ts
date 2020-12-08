@@ -41,8 +41,10 @@ class UsuarioDto {
   @IsString()
   dataNascimento: string
   @IsString()
+  @IsOptional()
   telefone: string
   @IsString()
+  @IsOptional()
   sexo: string
   @IsString()
   @IsOptional()

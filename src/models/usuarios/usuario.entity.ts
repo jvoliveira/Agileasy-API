@@ -23,7 +23,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
   @Column('timestamptz', { nullable: false, name: 'data_nascimento' })
   dataNascimento!: Date
 
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: true })
   telefone!: string
 
   @Column('text', { nullable: true })
@@ -32,7 +32,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
   @Column('text', { nullable: true })
   foto!: string
 
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: true })
   sexo!: string
 
   @Column('text', { nullable: false })
