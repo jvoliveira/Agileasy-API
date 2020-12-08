@@ -38,6 +38,10 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
   tipoCupom!: number
   @Column('int', { nullable: false, name: 'tipo_desconto' })
   tipoDesconto!: number
+  @Column('int', { nullable: false, name: 'quantidade_maxima' })
+  quantidadeMaxima!: number
+  @Column('int', { nullable: false, name: 'restantes' })
+  restantes!: number
   @Column('boolean', { nullable: false, default: false })
   indicacao!: boolean
   @ManyToMany(

@@ -19,4 +19,6 @@ export interface CupomInterface {
   tipoCupom: number
   indicacao: boolean
   tipoDesconto: number
+  quantidadeMaxima: number
+  restantes: number
 }
