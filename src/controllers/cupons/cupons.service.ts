@@ -14,20 +14,7 @@ export class CuponsService extends BaseService<Cupom> {
     super(repo)
   }
 
-  public async validateCupomNormal(codigo: string): Promise<Cupom> {
-    const cupons = await this.repo.find({
-      where: { codigo, ativo: true },
-    })
-
-    if (!cupons || cupons.length == 0) {
-      throw new AllException(
-        TipoErro.ID_NAO_ENCONTRADO,
-        'Código não encontrado.',
-      )
-    }
-
-    const cupom = cupons[0]
-
+  public async basicValidateCupom(cupom: Cupom) {
     if (!cupom) {
       throw new AllException(
         TipoErro.ID_NAO_ENCONTRADO,
@@ -49,6 +36,46 @@ export class CuponsService extends BaseService<Cupom> {
     if (cupom.restantes <= 0) {
       throw new AllException(TipoErro.DADOS_INVALIDOS, 'Cupom esgotado.')
     }
+  }
+
+  public async validateCupomNormal(codigo: string): Promise<Cupom> {
+    const cupons = await this.repo.find({
+      where: { codigo, ativo: true },
+    })
+
+    if (!cupons || cupons.length == 0) {
+      throw new AllException(
+        TipoErro.ID_NAO_ENCONTRADO,
+        'Código não encontrado.',
+      )
+    }
+
+    const cupom = cupons[0]
+
+    this.basicValidateCupom(cupom)
+
+    if (cupom.tipoCupom !== TipoCupom.NORMAL) {
+      throw new AllException(TipoErro.DADOS_INVALIDOS, 'Tipo de cupom inválido')
+    }
+
+    return cupom
+  }
+
+  public async validateCupomNormalById(idCupom: number): Promise<Cupom> {
+    const cupons = await this.repo.find({
+      where: { id: idCupom, ativo: true },
+    })
+
+    if (!cupons || cupons.length == 0) {
+      throw new AllException(
+        TipoErro.ID_NAO_ENCONTRADO,
+        'Código não encontrado.',
+      )
+    }
+
+    const cupom = cupons[0]
+
+    this.basicValidateCupom(cupom)
 
     if (cupom.tipoCupom !== TipoCupom.NORMAL) {
       throw new AllException(TipoErro.DADOS_INVALIDOS, 'Tipo de cupom inválido')

@@ -13,6 +13,8 @@ import { ClientesService } from '../clientes/clientes.service'
 import { PrestadoresEntityModule } from '../../models/prestadores/prestadores.module'
 import { ClientesEntityModule } from '../../models/clientes/clientes.module'
 import { MailManager } from '../../common/mails/mail.manager'
+import { CuponsService } from '../cupons/cupons.service'
+import { CuponsEntityModule } from '../../models/cupons/cupom.module'
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { MailManager } from '../../common/mails/mail.manager'
     EnderecosEntityModule,
     PrestadoresEntityModule,
     ClientesEntityModule,
+    CuponsEntityModule,
   ],
   providers: [
     PedidosService,
@@ -31,6 +34,7 @@ import { MailManager } from '../../common/mails/mail.manager'
     MailManager,
     PrestadoresService,
     ClientesService,
+    CuponsService,
   ],
   controllers: [PedidosController],
 })
