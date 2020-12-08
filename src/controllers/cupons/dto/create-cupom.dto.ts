@@ -1,4 +1,10 @@
-import { IsBoolean, IsDateString, IsNumber, IsString } from 'class-validator'
+import {
+  IsBoolean,
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator'
 export class CreateCupomDto {
   @IsString()
   codigo: string
@@ -16,4 +22,7 @@ export class CreateCupomDto {
   indicacao: boolean
   @IsNumber()
   tipoDesconto: number
+  @IsBoolean()
+  @IsOptional()
+  ativo: boolean
 }
