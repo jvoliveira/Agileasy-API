@@ -15,6 +15,7 @@ export class CuponsController {
   public async createNewCupom(
     @Body() createCupomDto: CreateCupomDto,
   ): Promise<ResponseDefault> {
+    createCupomDto.ativo = true
     createCupomDto.validade = moment(createCupomDto.validade)
       .utc()
       .format()
