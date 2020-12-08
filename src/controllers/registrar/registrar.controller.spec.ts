@@ -8,12 +8,14 @@ import { ClientesService } from '../clientes/clientes.service'
 import { PrestadoresService } from '../prestadores/prestadores.service'
 import { RegistrarController } from './registrar.controller'
 import * as moment from 'moment-timezone'
+import { UserService } from '../../common/services/user.service'
 
 describe('RegistrarController', () => {
   let controller: RegistrarController
   const mockFirebaseUser = createMock<FirebaseAuthenticationService>()
   const mockPrestadorService = createMock<PrestadoresService>()
   const mockClienteService = createMock<ClientesService>()
+  const mockUserService = createMock<UserService>()
   beforeEach(async () => {
     jest.resetAllMocks()
     const module: TestingModule = await Test.createTestingModule({
@@ -26,6 +28,10 @@ describe('RegistrarController', () => {
         {
           provide: ClientesService,
           useValue: mockClienteService,
+        },
+        {
+          provide: UserService,
+          useValue: mockUserService,
         },
         {
           provide: FirebaseAuthenticationService,
@@ -70,6 +76,21 @@ describe('RegistrarController', () => {
       email: 'vimivini99@gmail.com',
       password: '123456',
       displayName: 'V1pi',
+    })
+  })
+
+  it('should be check is registrado', async () => {
+    mockUserService.isRegistred.mockResolvedValue(true)
+
+    await expect(
+      controller.checkIsRegistred('vimivini99@gmail.com'),
+    ).resolves.toStrictEqual({
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        registrado: true,
+      },
     })
   })
 

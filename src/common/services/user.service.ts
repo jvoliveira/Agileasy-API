@@ -41,4 +41,16 @@ export class UserService extends BaseService<Usuario> {
 
     return status.cliente
   }
+
+  async isRegistred(email: string): Promise<boolean> {
+    const status = await this.repoUsuario.findOne({
+      where: { email },
+    })
+
+    if (status) {
+      return true
+    }
+
+    return false
+  }
 }

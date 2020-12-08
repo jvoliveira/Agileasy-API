@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common'
+import { Controller, Post, Body, Get, Param } from '@nestjs/common'
 import { RegisterPrestadorDto } from './dto/register-parceiro.dto'
 import {
   RegisterClienteDto,
@@ -12,12 +12,14 @@ import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
 import { ClientesService } from '../clientes/clientes.service'
 import { TipoStatus } from '../../models/usuarios/usuario.interface'
 import * as moment from 'moment-timezone'
+import { UserService } from '../../common/services/user.service'
 
 @Controller('registrar')
 export class RegistrarController {
   constructor(
     private servPrestador: PrestadoresService,
     private servCliente: ClientesService,
+    private servUser: UserService,
     private firebaseAuth: FirebaseAuthenticationService,
   ) {}
 
@@ -89,6 +91,21 @@ export class RegistrarController {
     } catch (error) {
       this.firebaseAuth.deleteUser(user.uid)
       throw error
+    }
+  }
+
+  @Get(':email/e-registrado')
+  public async checkIsRegistred(
+    @Param('email') email: string,
+  ): Promise<ResponseDefault> {
+    const isRegistred = await this.servUser.isRegistred(email)
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        registrado: isRegistred,
+      },
     }
   }
 
