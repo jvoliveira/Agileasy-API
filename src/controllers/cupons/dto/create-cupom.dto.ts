@@ -22,6 +22,10 @@ export class CreateCupomDto {
   indicacao: boolean
   @IsNumber()
   tipoDesconto: number
+  @IsNumber()
+  quantidadeMaxima: number
+  @IsNumber()
+  restantes: number
   @IsBoolean()
   @IsOptional()
   ativo: boolean
