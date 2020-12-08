@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Repository, SelectQueryBuilder } from 'typeorm'
 import { Pedido } from '../../models/pedidos/pedido.entity'
 import { PedidosService } from './pedidos.service'
 import { createMock } from '@golevelup/nestjs-testing'
@@ -9,6 +9,7 @@ import {
   SituacaoInterface,
 } from '../../models/situacoes/situacao.interface'
 import * as moment from 'moment-timezone'
+import { AllException } from '../../common/exceptions/all.exception'
 
 describe('PedidosService', () => {
   let service: PedidosService
@@ -116,5 +117,24 @@ describe('PedidosService', () => {
     await expect(
       service.changeSituacao({ situacoes: [] } as any, situacao),
     ).resolves.toStrictEqual(shouldReturn)
+  })
+
+  it('should check pedido and cliente', async () => {
+    const mockQueryBuilder = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect1 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect2 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockWhere = createMock<SelectQueryBuilder<Pedido>>()
+
+    repo.createQueryBuilder.mockReturnValue(mockQueryBuilder)
+    mockQueryBuilder.leftJoinAndSelect.mockReturnValue(mockLeftJoinAndSelect1)
+    mockLeftJoinAndSelect1.leftJoinAndSelect.mockReturnValue(
+      mockLeftJoinAndSelect2,
+    )
+    mockLeftJoinAndSelect2.where.mockReturnValue(mockWhere)
+    mockWhere.getCount.mockResolvedValue(1)
+
+    await expect(service.hasUsedCupomByCliente(1, 1)).rejects.toThrow(
+      AllException,
+    )
   })
 })
