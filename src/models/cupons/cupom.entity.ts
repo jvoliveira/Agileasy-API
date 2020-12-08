@@ -21,6 +21,9 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
   @PrimaryGeneratedColumn()
   id!: number
 
+  @Column({ type: 'boolean', nullable: false, default: true })
+  ativo!: boolean
+
   @Column('text', { nullable: false })
   codigo!: string
   @Column('double precision', { nullable: false })
