@@ -15,14 +15,31 @@ export class PedidosService extends BaseService<Pedido> {
   }
 
   public async getPedidosAsCliente(id: number): Promise<Pedido[]> {
-    return this.repo.find({
-      where: { cliente: { id } },
-      relations: ['prestador'],
-    })
+    return this.repo
+      .createQueryBuilder('pedido')
+      .leftJoinAndSelect('pedido.prestador', 'prestador')
+      .leftJoin('pedido.cliente', 'cliente')
+      .leftJoinAndSelect('pedido.situacoes', 'situacoes')
+      .leftJoinAndSelect('pedido.metodoPagamento', 'mp')
+      .leftJoinAndSelect('pedido.endereco', 'endereco')
+      .leftJoinAndSelect('pedido.servicos', 'servicos')
+      .where('cliente.id = :id', { id })
+      .orderBy({ 'situacoes.estado': 'ASC', 'pedido.dataHora': 'DESC' })
+      .getMany()
   }
 
   public async getPedidosAsPrestador(id: number): Promise<Pedido[]> {
-    return this.repo.find({ where: { prestador: { id } } })
+    return this.repo
+      .createQueryBuilder('pedido')
+      .leftJoinAndSelect('pedido.cliente', 'cliente')
+      .leftJoin('pedido.prestador', 'prestador')
+      .leftJoinAndSelect('pedido.situacoes', 'situacoes')
+      .leftJoinAndSelect('pedido.metodoPagamento', 'mp')
+      .leftJoinAndSelect('pedido.endereco', 'endereco')
+      .leftJoinAndSelect('pedido.servicos', 'servicos')
+      .where('prestador.id = :id', { id })
+      .orderBy({ 'situacoes.estado': 'ASC', 'pedido.dataHora': 'DESC' })
+      .getMany()
   }
 
   public async hasUsedCupomByCliente(

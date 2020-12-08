@@ -8,7 +8,7 @@ import {
 import { createMock } from '@golevelup/nestjs-testing'
 import { AppModule } from '../src/app.module'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Repository, SelectQueryBuilder } from 'typeorm'
 import { Usuario } from '../src/models/usuarios/usuario.entity'
 import { Pedido } from '../src/models/pedidos/pedido.entity'
 import { Servico } from '../src/models/servicos/servico.entity'
@@ -202,7 +202,33 @@ describe('PedidoController (e2e)', () => {
         ],
       },
     }
-    mockService.find.mockResolvedValue(shouldReturn.data.pedidos as any)
+    const mockQueryBuilder = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect1 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoin1 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect2 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect3 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect4 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect5 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockWhere = createMock<SelectQueryBuilder<Pedido>>()
+    const mockOrder = createMock<SelectQueryBuilder<Pedido>>()
+
+    mockService.createQueryBuilder.mockReturnValue(mockQueryBuilder)
+    mockQueryBuilder.leftJoinAndSelect.mockReturnValue(mockLeftJoinAndSelect1)
+    mockLeftJoinAndSelect1.leftJoin.mockReturnValue(mockLeftJoin1)
+    mockLeftJoin1.leftJoinAndSelect.mockReturnValue(mockLeftJoinAndSelect2)
+    mockLeftJoinAndSelect2.leftJoinAndSelect.mockReturnValue(
+      mockLeftJoinAndSelect3,
+    )
+    mockLeftJoinAndSelect3.leftJoinAndSelect.mockReturnValue(
+      mockLeftJoinAndSelect4,
+    )
+    mockLeftJoinAndSelect4.leftJoinAndSelect.mockReturnValue(
+      mockLeftJoinAndSelect5,
+    )
+    mockLeftJoinAndSelect5.where.mockReturnValue(mockWhere)
+    mockWhere.orderBy.mockReturnValue(mockOrder)
+    mockOrder.getMany.mockResolvedValue(shouldReturn.data.pedidos as any)
+
     mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
     mockMailerService.sendMail.mockReturnThis()
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
@@ -547,7 +573,32 @@ describe('PedidoController (e2e)', () => {
         ],
       },
     }
-    mockService.find.mockResolvedValue(shouldReturn.data.pedidos as any)
+    const mockQueryBuilder = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect1 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoin1 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect2 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect3 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect4 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockLeftJoinAndSelect5 = createMock<SelectQueryBuilder<Pedido>>()
+    const mockWhere = createMock<SelectQueryBuilder<Pedido>>()
+    const mockOrder = createMock<SelectQueryBuilder<Pedido>>()
+
+    mockService.createQueryBuilder.mockReturnValue(mockQueryBuilder)
+    mockQueryBuilder.leftJoinAndSelect.mockReturnValue(mockLeftJoinAndSelect1)
+    mockLeftJoinAndSelect1.leftJoin.mockReturnValue(mockLeftJoin1)
+    mockLeftJoin1.leftJoinAndSelect.mockReturnValue(mockLeftJoinAndSelect2)
+    mockLeftJoinAndSelect2.leftJoinAndSelect.mockReturnValue(
+      mockLeftJoinAndSelect3,
+    )
+    mockLeftJoinAndSelect3.leftJoinAndSelect.mockReturnValue(
+      mockLeftJoinAndSelect4,
+    )
+    mockLeftJoinAndSelect4.leftJoinAndSelect.mockReturnValue(
+      mockLeftJoinAndSelect5,
+    )
+    mockLeftJoinAndSelect5.where.mockReturnValue(mockWhere)
+    mockWhere.orderBy.mockReturnValue(mockOrder)
+    mockOrder.getMany.mockResolvedValue(shouldReturn.data.pedidos as any)
     mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
       uid: 'uid-valido',
