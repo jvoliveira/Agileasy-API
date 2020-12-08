@@ -86,7 +86,7 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
   @OneToMany(
     type => Pedido,
     pedidos => pedidos.cupom,
-    { cascade: true },
+    { cascade: false },
   )
   pedidos!: Pedido[]
 
