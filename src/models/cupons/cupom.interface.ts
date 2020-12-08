@@ -6,4 +6,5 @@ export interface CupomInterface {
   validade: Date
   tipoCupom: number
   indicacao: boolean
+  tipoDesconto: number
 }

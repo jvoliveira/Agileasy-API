@@ -7,6 +7,7 @@ import {
   OneToOne,
   JoinColumn,
   Column,
+  ManyToMany,
 } from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
 import { Usuario } from '../usuarios/usuario.entity'
@@ -40,12 +41,19 @@ export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
   )
   enderecos!: Endereco[]
 
-  @OneToMany(
+  @OneToOne(
     type => Cupom,
-    cupons => cupons.cliente,
+    cupomIndicacao => cupomIndicacao.cliente,
     { cascade: true },
   )
-  cupons!: Cupom[]
+  cupomIndicacao!: Cupom
+
+  @ManyToMany(
+    type => Cupom,
+    cuponsDisponiveis => cuponsDisponiveis.clientesPermitidos,
+    { cascade: false },
+  )
+  cuponsDisponiveis?: Cupom[]
 
   @OneToMany(
     type => Pedido,

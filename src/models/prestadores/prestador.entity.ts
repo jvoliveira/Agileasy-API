@@ -19,6 +19,7 @@ import { Categoria } from '../categorias/categoria.entity'
 import { TipoStatus } from '../usuarios/usuario.interface'
 import { Pedido } from '../pedidos/pedido.entity'
 import { Disponibilidade } from '../disponibilidades/disponibilidade.entity'
+import { Cupom } from '../cupons/cupom.entity'
 
 @Entity('prestador')
 export class Prestador extends BaseModel<Prestador>
@@ -46,6 +47,13 @@ export class Prestador extends BaseModel<Prestador>
 
   @Column('text', { nullable: false, name: 'nome_publico' })
   nomePublico!: string
+
+  @ManyToMany(
+    type => Cupom,
+    cuponsDisponiveis => cuponsDisponiveis.prestadores,
+    { cascade: false },
+  )
+  cuponsDisponiveis?: Cupom[]
 
   @Column('double precision', { nullable: false, name: 'nota', default: 0 })
   nota!: number

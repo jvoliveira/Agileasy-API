@@ -12,6 +12,7 @@ describe('Cupom', () => {
       2,
       20,
       moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),
+      1,
       true,
     )
 
@@ -31,6 +32,7 @@ function expectedJSON() {
     valorMinimo: 10,
     tipoCupom: 2,
     voucher: 20,
+    tipoDesconto: 1,
     validade: moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),
     ativo: true,
   }
