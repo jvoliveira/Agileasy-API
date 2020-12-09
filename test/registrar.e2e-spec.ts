@@ -9,12 +9,14 @@ import { Prestador } from '../src/models/prestadores/prestador.entity'
 import { Repository } from 'typeorm'
 import { TipoErro } from '../src/common/enums/tipo-erro.enum'
 import { Cliente } from '../src/models/clientes/cliente.entity'
+import { Usuario } from '../src/models/usuarios/usuario.entity'
 
 describe('PrestadorController (e2e)', () => {
   let app: INestApplication
   const mockService = createMock<Repository<Prestador>>()
   const mockClienteService = createMock<Repository<Cliente>>()
   const mockFirebaseAuth = createMock<FirebaseAuthenticationService>()
+  const mockUserService = createMock<Repository<Usuario>>()
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -26,6 +28,8 @@ describe('PrestadorController (e2e)', () => {
       .useValue(mockService)
       .overrideProvider(getRepositoryToken(Cliente))
       .useValue(mockClienteService)
+      .overrideProvider(getRepositoryToken(Usuario))
+      .useValue(mockUserService)
       .compile()
     app = moduleFixture.createNestApplication()
     app.init()
@@ -137,6 +141,27 @@ describe('PrestadorController (e2e)', () => {
       .post('/registrar/cliente')
       .send(shouldReturn.data.cliente)
     expect(response.status).toBe(201)
+    expect(response.body).toStrictEqual(shouldReturn)
+    expect(mockFirebaseAuth.verifyIdToken).toBeCalledTimes(0)
+  })
+
+  it('/registrar/:email/e-registrado (GET)', async () => {
+    const shouldReturn = {
+      error_id: -1,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        registrado: true,
+      },
+    }
+    mockUserService.findOne.mockReturnValue({
+      prestador: { nome: 'Vinicius' },
+    } as any)
+
+    const response = await request(app.getHttpServer()).get(
+      '/registrar/prestador%40naodelete.com/e-registrado',
+    )
+    expect(response.status).toBe(200)
     expect(response.body).toStrictEqual(shouldReturn)
     expect(mockFirebaseAuth.verifyIdToken).toBeCalledTimes(0)
   })

@@ -3,8 +3,10 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
+  JoinTable,
+  ManyToMany,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { CupomInterface } from './cupom.interface'
@@ -12,11 +14,15 @@ import { BaseModel } from '../basis/base.entity'
 import { Moment } from 'moment-timezone'
 import { Cliente } from '../clientes/cliente.entity'
 import { Pedido } from '../pedidos/pedido.entity'
+import { Prestador } from '../prestadores/prestador.entity'
 
 @Entity('cupom')
 export class Cupom extends BaseModel<Cupom> implements CupomInterface {
   @PrimaryGeneratedColumn()
   id!: number
+
+  @Column({ type: 'boolean', nullable: false, default: true })
+  ativo!: boolean
 
   @Column('text', { nullable: false })
   codigo!: string
@@ -30,12 +36,53 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
   validade!: Date
   @Column('int', { nullable: false, name: 'tipo_cupom' })
   tipoCupom!: number
+  @Column('int', { nullable: false, name: 'tipo_desconto' })
+  tipoDesconto!: number
+  @Column('int', { nullable: false, name: 'quantidade_maxima' })
+  quantidadeMaxima!: number
+  @Column('int', { nullable: false, name: 'restantes' })
+  restantes!: number
   @Column('boolean', { nullable: false, default: false })
   indicacao!: boolean
-
-  @ManyToOne(
+  @ManyToMany(
     type => Cliente,
-    cliente => cliente.cupons,
+    clientesPermitidos => clientesPermitidos.cuponsDisponiveis,
+    { cascade: false },
+  )
+  @JoinTable({
+    name: 'cupom_cliente',
+    joinColumn: {
+      name: 'id_cupom',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'id_cliente',
+      referencedColumnName: 'id',
+    },
+  })
+  clientesPermitidos?: Cliente[]
+
+  @ManyToMany(
+    type => Prestador,
+    prestadores => prestadores.cuponsDisponiveis,
+    { cascade: false },
+  )
+  @JoinTable({
+    name: 'cupom_prestador',
+    joinColumn: {
+      name: 'id_cupom',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'id_prestador',
+      referencedColumnName: 'id',
+    },
+  })
+  prestadores?: Prestador[]
+
+  @OneToOne(
+    type => Cliente,
+    cliente => cliente.cupomIndicacao,
   )
   @JoinColumn({ name: 'id_cliente' })
   cliente!: Cliente
@@ -43,7 +90,7 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
   @OneToMany(
     type => Pedido,
     pedidos => pedidos.cupom,
-    { cascade: true },
+    { cascade: false },
   )
   pedidos!: Pedido[]
 
@@ -56,6 +103,7 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
     tipoCupom: number,
     voucher: number,
     validade: Moment,
+    tipoDesconto: number,
     ativo = true,
   ) {
     super(id, ativo)
@@ -64,6 +112,7 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
     this.desconto = desconto
     this.valorMinimo = valorMinimo
     this.tipoCupom = tipoCupom
+    this.tipoDesconto = tipoDesconto
     this.voucher = voucher
     this.validade = moment(validade).toDate()
   }
@@ -80,6 +129,7 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
     this.codigo = json.codigo
     this.desconto = json.desconto
     this.valorMinimo = json.valorMinimo
+    this.tipoDesconto = json.tipoDesconto
     return this
   }
 
@@ -93,6 +143,7 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
       this.tipoCupom,
       this.voucher,
       moment(this.validade),
+      this.tipoDesconto,
       this.ativo,
     )
     prestador.dados = this.dados
@@ -109,6 +160,7 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
       2,
       1,
       moment(),
+      1,
     ).fillFromJson(json)
     return prestador
   }

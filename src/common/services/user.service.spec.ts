@@ -42,6 +42,18 @@ describe('Prestadores Service', () => {
     })
   })
 
+  it('should is registred', async () => {
+    repo.findOne.mockReturnValue({ prestador: { nome: 'Vinicius' } } as any)
+
+    await expect(
+      service.isRegistred('vimivini99@gmail.com'),
+    ).resolves.toStrictEqual(true)
+
+    expect(repo.findOne).toHaveBeenCalledWith({
+      where: { email: 'vimivini99@gmail.com' },
+    })
+  })
+
   it('should get cliente by token', async () => {
     const shouldReturn = { nome: 'Vinicius' }
 

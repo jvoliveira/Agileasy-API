@@ -11,6 +11,8 @@ import { Estado } from '../../models/situacoes/situacao.interface'
 import { FirebaseMessagingService } from '@aginix/nestjs-firebase-admin'
 import { ClientesService } from '../clientes/clientes.service'
 import { PrestadoresService } from '../prestadores/prestadores.service'
+import { MailManager } from '../../common/mails/mail.manager'
+import { CuponsService } from '../cupons/cupons.service'
 
 describe('PedidosController', () => {
   let controller: PedidosController
@@ -20,7 +22,9 @@ describe('PedidosController', () => {
   const enderecoService = createMock<EnderecosService>()
   const clienteService = createMock<ClientesService>()
   const prestadorService = createMock<PrestadoresService>()
+  const cupomService = createMock<CuponsService>()
   const mockFirebaseNotification = createMock<FirebaseMessagingService>()
+  const mockMailManager = createMock<MailManager>()
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -53,6 +57,14 @@ describe('PedidosController', () => {
         {
           provide: ClientesService,
           useValue: clienteService,
+        },
+        {
+          provide: MailManager,
+          useValue: mockMailManager,
+        },
+        {
+          provide: CuponsService,
+          useValue: cupomService,
         },
       ],
     }).compile()
@@ -130,6 +142,7 @@ describe('PedidosController', () => {
       },
     } as any)
     const mockUser = createMock<admin.auth.UserRecord>()
+    mockMailManager.sendEmail.mockReturnThis()
     mockUser.uid = 'teste'
     userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
     await expect(

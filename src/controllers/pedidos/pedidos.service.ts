@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import { TipoErro } from '../../common/enums/tipo-erro.enum'
+import { AllException } from '../../common/exceptions/all.exception'
 import { BaseService } from '../../common/services/base.service'
 import { Pedido } from '../../models/pedidos/pedido.entity'
 import { Situacao } from '../../models/situacoes/situacao.entity'
@@ -13,14 +15,53 @@ export class PedidosService extends BaseService<Pedido> {
   }
 
   public async getPedidosAsCliente(id: number): Promise<Pedido[]> {
-    return this.repo.find({
-      where: { cliente: { id } },
-      relations: ['prestador'],
-    })
+    return this.repo
+      .createQueryBuilder('pedido')
+      .leftJoinAndSelect('pedido.prestador', 'prestador')
+      .leftJoin('pedido.cliente', 'cliente')
+      .leftJoinAndSelect('pedido.situacoes', 'situacoes')
+      .leftJoinAndSelect('pedido.metodoPagamento', 'mp')
+      .leftJoinAndSelect('pedido.endereco', 'endereco')
+      .leftJoinAndSelect('pedido.servicos', 'servicos')
+      .where('cliente.id = :id', { id })
+      .orderBy({ 'situacoes.estado': 'ASC', 'pedido.dataHora': 'DESC' })
+      .getMany()
   }
 
   public async getPedidosAsPrestador(id: number): Promise<Pedido[]> {
-    return this.repo.find({ where: { prestador: { id } } })
+    return this.repo
+      .createQueryBuilder('pedido')
+      .leftJoinAndSelect('pedido.cliente', 'cliente')
+      .leftJoin('pedido.prestador', 'prestador')
+      .leftJoinAndSelect('pedido.situacoes', 'situacoes')
+      .leftJoinAndSelect('pedido.metodoPagamento', 'mp')
+      .leftJoinAndSelect('pedido.endereco', 'endereco')
+      .leftJoinAndSelect('pedido.servicos', 'servicos')
+      .where('prestador.id = :id', { id })
+      .orderBy({ 'situacoes.estado': 'ASC', 'pedido.dataHora': 'DESC' })
+      .getMany()
+  }
+
+  public async hasUsedCupomByCliente(
+    idCliente: number,
+    idCupom: number,
+  ): Promise<void> {
+    const count = await this.repo
+      .createQueryBuilder('pedido')
+      .leftJoinAndSelect('pedido.cupom', 'cup')
+      .leftJoinAndSelect('pedido.cliente', 'cli')
+      .where('cup.id = :idCupom and cli.id = :idCliente', {
+        idCliente,
+        idCupom,
+      })
+      .getCount()
+
+    if (count !== 0) {
+      throw new AllException(
+        TipoErro.DADOS_INVALIDOS,
+        'Você já usou esse cupom',
+      )
+    }
   }
 
   // Muda para a situação enviada por parâmetro

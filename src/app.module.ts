@@ -27,6 +27,8 @@ import { ClientesModule } from './controllers/clientes/clientes.module'
 import { MetodosPagamentoModule } from './controllers/metodospagamento/metodos-pagamento.module'
 import { DisponibilidadesModule } from './controllers/disponibilidades/disponibilidades.module'
 import { ChatsModule } from './controllers/chats/chats.module'
+import { MailerModule } from '@nestjs-modules/mailer'
+import { CuponsModule } from './controllers/cupons/cupons.module';
 
 @Module({
   imports: [
@@ -41,6 +43,21 @@ import { ChatsModule } from './controllers/chats/chats.module'
         credential: admin.credential.cert(FIREBASE_CONFIG),
       }),
     }),
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.agileasyapp.com.br',
+        port: 587,
+        ignoreTLS: true,
+        secure: false,
+        auth: {
+          user: 'contato@agileasyapp.com.br',
+          pass: 'Severino@4565',
+        },
+      },
+      defaults: {
+        from: 'Equipe Agileasy <contato@agileasyapp.com.br>',
+      },
+    }),
     PgModelsConfigModule,
     AppConfigModule,
     PrestadoresModule,
@@ -53,6 +70,7 @@ import { ChatsModule } from './controllers/chats/chats.module'
     MetodosPagamentoModule,
     DisponibilidadesModule,
     ChatsModule,
+    CuponsModule,
   ],
   controllers: [AppController],
   providers: [

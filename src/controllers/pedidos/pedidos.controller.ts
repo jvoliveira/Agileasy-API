@@ -17,6 +17,9 @@ import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
 import { FirebaseMessagingService } from '@aginix/nestjs-firebase-admin'
 import { PrestadoresService } from '../prestadores/prestadores.service'
 import { ClientesService } from '../clientes/clientes.service'
+import { MailManager } from '../../common/mails/mail.manager'
+import { CuponsService } from '../cupons/cupons.service'
+import { TipoDesconto } from '../../models/cupons/cupom.interface'
 
 @Controller('pedidos')
 export class PedidosController {
@@ -28,6 +31,8 @@ export class PedidosController {
     private prestadorService: PrestadoresService,
     private clienteService: ClientesService,
     private firebaseNotification: FirebaseMessagingService,
+    private cupomService: CuponsService,
+    private mailManager: MailManager,
   ) {}
 
   @Roles(TipoUsuario.CLIENTE)
@@ -112,6 +117,50 @@ export class PedidosController {
       }
     }
 
+    /**
+     *public async createNewPedido(pedido: Pedido) : Promise<Pedido> {
+    const queryRunner = this.repo.manager.connection.createQueryRunner()
+
+    await queryRunner.connect()
+    await queryRunner.startTransaction()
+
+    try {
+      queryRunner.manager.save(pedido)
+      queryRunner.manager.update(pedido.cupom)
+
+      await queryRunner.commitTransaction()
+      await queryRunner.release()
+      return newDisponibilidades
+    } catch (err) {
+      // since we have errors lets rollback the changes we made
+      await queryRunner.rollbackTransaction()
+      await queryRunner.release()
+      throw new AllException(TipoErro.ERROR_AO_SALVAR)
+    }
+    return pedido
+  }
+     */
+
+    const cupom = newPedido.cupom
+    newPedido.total = newPedido.subtotal
+
+    if (cupom) {
+      const newCupom = await this.cupomService.validateCupomNormalById(cupom.id)
+      await this.serv.hasUsedCupomByCliente(newPedido.cliente.id, newCupom.id)
+      if (newCupom.valorMinimo > newPedido.subtotal) {
+        throw new AllException(
+          TipoErro.DADOS_INVALIDOS,
+          'O valor do pedido muito baixo para o cupom.',
+        )
+      }
+      newCupom.restantes -= 1
+      newPedido.cupom = newCupom
+      newPedido.total -=
+        newCupom.tipoDesconto === TipoDesconto.PORCENTAGEM
+          ? newPedido.subtotal * (1 - newCupom.desconto / 100)
+          : newCupom.desconto
+    }
+
     const pedido = await this.serv.create(newPedido)
     const prestador = await this.prestadorService.getByID(pedido.prestador.id)
     if (prestador.usuario.tokenNotificacao) {
@@ -127,6 +176,7 @@ export class PedidosController {
     pedido.endereco = endereco
     pedido.servicos = servicosCompletos
     pedido.cliente = cliente
+
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -345,6 +395,20 @@ export class PedidosController {
 
         await this.firebaseNotification.send(newNotification)
       } catch (error) {}
+    }
+
+    try {
+      const newServico = await this.servServicos.getByIdWithPrestador(
+        pedido.servicos[pedido.servicos.length - 1].id,
+      )
+      this.mailManager.sendEmail(
+        pedido.cliente.usuario.email,
+        'Seu pedido foi concluído!',
+        pedido,
+        newServico,
+      )
+    } catch (error) {
+      console.log(error)
     }
 
     return {

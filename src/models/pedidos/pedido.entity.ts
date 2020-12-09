@@ -47,6 +47,9 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   @Column('double precision', { nullable: false })
   subtotal!: number
 
+  @Column('double precision', { nullable: false })
+  total!: number
+
   @Column('text', { nullable: true })
   observacao!: string | null
 
@@ -95,7 +98,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   @ManyToOne(
     type => Cupom,
     cupom => cupom.pedidos,
-    { cascade: false },
+    { cascade: true },
   )
   @JoinColumn({ name: 'id_cupom' })
   cupom!: Cupom

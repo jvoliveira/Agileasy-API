@@ -13,4 +13,5 @@ export interface PedidoInterface {
   servicos: ServicoInterface[]
   emDomicilio: boolean
   fidChat: string
+  total: number
 }

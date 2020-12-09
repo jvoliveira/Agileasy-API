@@ -20,18 +20,35 @@ export class RegisterClienteDto {
   criadoEm?: Date
 }
 
+export class RegisterClienteSocialNetworkDto {
+  @IsEmail()
+  email: string
+  @IsString()
+  senha: string
+  usuario: UsuarioDto
+  endereco: EnderecoDto
+  @IsOptional()
+  enderecos?: [EnderecoDto] | null
+  @IsOptional()
+  criadoEm?: Date
+}
+
 class UsuarioDto {
   @IsNumber()
   status: number
   @IsString()
   nome: string
   @IsString()
+  @IsOptional()
   dataNascimento: string
   @IsString()
+  @IsOptional()
   telefone: string
   @IsString()
+  @IsOptional()
   sexo: string
   @IsString()
+  @IsOptional()
   cpf: string
   @IsString()
   @IsOptional()
