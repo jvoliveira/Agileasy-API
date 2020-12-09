@@ -20,7 +20,7 @@ export class Usuario extends BaseModel<Usuario> implements UsuarioInterface {
   @Column('text', { name: 'nome_social', nullable: true })
   nomeSocial!: string | null
 
-  @Column('timestamptz', { nullable: false, name: 'data_nascimento' })
+  @Column('timestamptz', { nullable: true, name: 'data_nascimento' })
   dataNascimento!: Date
 
   @Column('text', { nullable: true })
