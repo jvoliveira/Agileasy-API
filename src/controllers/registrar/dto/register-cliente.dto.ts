@@ -39,6 +39,7 @@ class UsuarioDto {
   @IsString()
   nome: string
   @IsString()
+  @IsOptional()
   dataNascimento: string
   @IsString()
   @IsOptional()
