@@ -1,4 +1,4 @@
-import { Body, CacheTTL, Controller, Get, Put } from '@nestjs/common'
+import { Body, Controller, Get, Put } from '@nestjs/common'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { ResponseDefault } from '../../common/interfaces/response-default.interface'
 import { UserService } from '../../common/services/user.service'
@@ -9,6 +9,7 @@ import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
 import { UpdateTokenDto } from './dto/update-token.dto'
 import { UpdateClienteDto } from './dto/update-cliente.dto'
+import * as moment from 'moment-timezone'
 
 @Controller('clientes')
 export class ClientesController {
@@ -64,6 +65,12 @@ export class ClientesController {
     const clienteIncompleto = await this.userService.getClienteByToken(user.uid)
     if (clienteIncompleto.usuario.cpf) {
       usuario.cpf = clienteIncompleto.usuario.cpf
+    }
+
+    if (clienteIncompleto.usuario.dataNascimento) {
+      usuario.dataNascimento = moment(
+        clienteIncompleto.usuario.dataNascimento,
+      ).format()
     }
 
     this.userService.update(clienteIncompleto.usuario.id, usuario)
