@@ -63,23 +63,36 @@ export class ClientesController {
     @Body() usuario: UpdateClienteDto,
   ): Promise<ResponseDefault> {
     const clienteIncompleto = await this.userService.getClienteByToken(user.uid)
-    if (clienteIncompleto.usuario.cpf) {
-      usuario.cpf = clienteIncompleto.usuario.cpf
+    if (!clienteIncompleto.usuario.cpf && usuario.cpf) {
+      clienteIncompleto.usuario.cpf = usuario.cpf
     }
 
-    if (clienteIncompleto.usuario.dataNascimento) {
-      usuario.dataNascimento = moment(
-        clienteIncompleto.usuario.dataNascimento,
-      ).format()
+    if (!clienteIncompleto.usuario.dataNascimento && usuario.dataNascimento) {
+      clienteIncompleto.usuario.dataNascimento = moment(
+        usuario.dataNascimento,
+      ).toDate()
     }
 
-    this.userService.update(clienteIncompleto.usuario.id, usuario)
+    if (usuario.telefone) {
+      clienteIncompleto.usuario.telefone = usuario.telefone
+    }
+
+    if (usuario.sexo) {
+      clienteIncompleto.usuario.sexo = usuario.sexo
+    }
+
+    this.userService.update(
+      clienteIncompleto.usuario.id,
+      clienteIncompleto.usuario,
+    )
 
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
       error: false,
-      data: {},
+      data: {
+        cliente: clienteIncompleto,
+      },
     }
   }
 }
