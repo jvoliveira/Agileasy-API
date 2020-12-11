@@ -117,30 +117,6 @@ export class PedidosController {
       }
     }
 
-    /**
-     *public async createNewPedido(pedido: Pedido) : Promise<Pedido> {
-    const queryRunner = this.repo.manager.connection.createQueryRunner()
-
-    await queryRunner.connect()
-    await queryRunner.startTransaction()
-
-    try {
-      queryRunner.manager.save(pedido)
-      queryRunner.manager.update(pedido.cupom)
-
-      await queryRunner.commitTransaction()
-      await queryRunner.release()
-      return newDisponibilidades
-    } catch (err) {
-      // since we have errors lets rollback the changes we made
-      await queryRunner.rollbackTransaction()
-      await queryRunner.release()
-      throw new AllException(TipoErro.ERROR_AO_SALVAR)
-    }
-    return pedido
-  }
-     */
-
     const cupom = newPedido.cupom
     newPedido.total = newPedido.subtotal
 
@@ -157,7 +133,7 @@ export class PedidosController {
       newPedido.cupom = newCupom
       newPedido.total -=
         newCupom.tipoDesconto === TipoDesconto.PORCENTAGEM
-          ? newPedido.subtotal * (1 - newCupom.desconto / 100)
+          ? (newPedido.subtotal * newCupom.desconto) / 100
           : newCupom.desconto
     }
 
