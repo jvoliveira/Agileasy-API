@@ -37,7 +37,7 @@ export class PrestadoresService extends BaseService<Prestador> {
       .leftJoinAndSelect('prestador.servicos', 's')
       .leftJoinAndSelect('prestador.usuario', 'u')
       .where(
-        'c.id = :idCategoria and prestador.ativo = true and c.ativo = true and u.status = ' +
+        'c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
           TipoStatus.ativo,
         { idCategoria },
       )
@@ -130,6 +130,15 @@ export class PrestadoresService extends BaseService<Prestador> {
       throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
     }
 
+    const servicos = []
+    for (const s of prestador.servicos) {
+      if (s.ativo) {
+        servicos.push(s)
+      }
+    }
+
+    prestador.servicos = servicos
+
     return prestador
   }
 
@@ -147,9 +156,20 @@ export class PrestadoresService extends BaseService<Prestador> {
   }
 
   async getAllInformation(id: number): Promise<Prestador> {
-    return this.repo.findOneOrFail(id, {
+    const prestador = await this.repo.findOneOrFail(id, {
       relations: ['usuario', 'endereco', 'pedidos', 'servicos', 'categorias'],
     })
+
+    const servicos = []
+    for (const s of prestador.servicos) {
+      if (s.ativo) {
+        servicos.push(s)
+      }
+    }
+
+    prestador.servicos = servicos
+
+    return prestador
   }
 
   async getAllInformationWithoutPedidos(id: number): Promise<Prestador> {
