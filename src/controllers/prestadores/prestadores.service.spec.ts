@@ -31,8 +31,8 @@ describe('Prestadores Service', () => {
   })
 
   it('should get servicos by prestador id', async () => {
-    const shouldReturn = { nome: 'Vinicius' } as any
-    repo.findOne.mockResolvedValue({ nome: 'Vinicius' } as any)
+    const shouldReturn = { nome: 'Vinicius', servicos: [] } as any
+    repo.findOne.mockResolvedValue({ nome: 'Vinicius', servicos: [] } as any)
 
     await expect(service.getServicosByPrestador(1)).resolves.toStrictEqual(
       shouldReturn,
@@ -65,7 +65,7 @@ describe('Prestadores Service', () => {
     expect(
       mockSelect3.where,
     ).toHaveBeenCalledWith(
-      'c.id = :idCategoria and prestador.ativo = true and c.ativo = true and u.status = ' +
+      'c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
         TipoStatus.ativo,
       { idCategoria: 1 },
     )
@@ -164,11 +164,10 @@ describe('Prestadores Service', () => {
   })
 
   it('should be get all information', async () => {
-    const shouldReturn = [
-      {
-        descricao: 'Vinicius Picanco',
-      },
-    ]
+    const shouldReturn = {
+      descricao: 'Vinicius Picanco',
+      servicos: [],
+    }
 
     expect(service).toBeDefined()
 

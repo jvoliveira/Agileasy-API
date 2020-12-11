@@ -95,7 +95,7 @@ describe('PrestadorController (e2e)', () => {
       message: 'Sucesso!',
       error: false,
       data: {
-        prestadores: [{ nome: 'oi' } as any],
+        prestadores: [{ nome: 'oi', servicos: [] } as any],
       },
     }
     const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
@@ -390,7 +390,7 @@ describe('PrestadorController (e2e)', () => {
       message: 'Sucesso!',
       error: false,
       data: {
-        prestador: { nome: 'oi' } as any,
+        prestador: { nome: 'oi', servicos: [] } as any,
       },
     }
     mockService.findOneOrFail.mockResolvedValue(
