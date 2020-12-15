@@ -88,6 +88,7 @@ export class PrestadoresController {
     @Param('id') id: number,
   ): Promise<ResponseDefault> {
     const prestadores = await this.serv.getPrestadorByCategoria(id)
+    UtilsHelper.shuffle(prestadores)
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
