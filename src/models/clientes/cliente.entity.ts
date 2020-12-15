@@ -71,6 +71,9 @@ export class Cliente extends BaseModel<Cliente> implements ClienteInterface {
   @Column('timestamptz', { nullable: false, name: 'criado_em' })
   criadoEm!: Date
 
+  @Column('text', { nullable: true, name: 'token_notificacao' })
+  tokenNotificacao!: string
+
   constructor(
     id: number,
     usuario: Usuario,

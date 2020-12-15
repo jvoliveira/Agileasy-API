@@ -209,7 +209,7 @@ export class PrestadoresController {
       user.uid,
     )
 
-    this.userService.update(prestadorIncompleto.usuario.id, {
+    this.serv.update(prestadorIncompleto.id, {
       tokenNotificacao: token.tokenNotificacao,
     })
 

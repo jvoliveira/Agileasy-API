@@ -4,11 +4,15 @@ import { UserService } from '../../common/services/user.service'
 import { ClientesController } from './clientes.controller'
 import { ClientesService } from './clientes.service'
 import * as admin from 'firebase-admin'
+import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
+import { PrestadoresService } from '../prestadores/prestadores.service'
 
 describe('ClientesController', () => {
   let controller: ClientesController
   const repo = createMock<ClientesService>()
   const userService = createMock<UserService>()
+  const authService = createMock<FirebaseAuthenticationService>()
+  const prestadorService = createMock<PrestadoresService>()
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,6 +25,14 @@ describe('ClientesController', () => {
         {
           provide: UserService,
           useValue: userService,
+        },
+        {
+          provide: FirebaseAuthenticationService,
+          useValue: authService,
+        },
+        {
+          provide: PrestadoresService,
+          useValue: prestadorService,
         },
       ],
     }).compile()

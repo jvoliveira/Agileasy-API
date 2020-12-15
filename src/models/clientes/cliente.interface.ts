@@ -5,4 +5,5 @@ export interface ClienteInterface {
   enderecos: Array<EnderecoInterface>
   cartoes: Array<CartaoInterface> | null
   criadoEm: Date
+  tokenNotificacao: string
 }
