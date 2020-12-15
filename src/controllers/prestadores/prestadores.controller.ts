@@ -13,6 +13,7 @@ import * as admin from 'firebase-admin'
 import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { Claims } from '../../common/guards/interfaces/claims.interface'
 import { AllException } from '../../common/exceptions/all.exception'
+import { UtilsHelper } from '../../common/helpers/utils.helper'
 
 @Controller('prestadores')
 export class PrestadoresController {
@@ -41,6 +42,7 @@ export class PrestadoresController {
   @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
   public async getAllAtivos(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getAllPrestadorAtivos()
+    UtilsHelper.shuffle(prestadores)
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -55,6 +57,7 @@ export class PrestadoresController {
   @Roles(0, 200)
   public async getPrestadoresWithCategorias(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getPrestadoresWithCategoria()
+    UtilsHelper.shuffle(prestadores)
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
