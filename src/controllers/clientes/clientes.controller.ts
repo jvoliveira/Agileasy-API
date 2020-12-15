@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Put } from '@nestjs/common'
+import { Body, Controller, Get, Patch, Post, Put } from '@nestjs/common'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { ResponseDefault } from '../../common/interfaces/response-default.interface'
 import { UserService } from '../../common/services/user.service'
@@ -10,12 +10,19 @@ import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
 import { UpdateTokenDto } from './dto/update-token.dto'
 import { UpdateClienteDto } from './dto/update-cliente.dto'
 import * as moment from 'moment-timezone'
+import { AllException } from '../../common/exceptions/all.exception'
+import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
+import { Claims } from '../../common/guards/interfaces/claims.interface'
+import { Cliente } from '../../models/clientes/cliente.entity'
+import { PrestadoresService } from '../prestadores/prestadores.service'
 
 @Controller('clientes')
 export class ClientesController {
   constructor(
     private serv: ClientesService,
     private userService: UserService,
+    private auth: FirebaseAuthenticationService,
+    private prestadorService: PrestadoresService,
   ) {}
 
   @Roles(TipoUsuario.CLIENTE)
@@ -36,6 +43,58 @@ export class ClientesController {
     }
   }
 
+  @Patch('novo')
+  @Roles(TipoUsuario.PRESTADOR)
+  public async create(
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    const claims = user.customClaims as Claims
+    const prestadorIncompleto = await this.userService.getPrestadorByToken(
+      user.uid,
+    )
+    const prestador = await this.prestadorService.getPrestadorWithEndereco(
+      prestadorIncompleto.id,
+    )
+    if (claims.roles.includes(TipoUsuario.CLIENTE)) {
+      throw new AllException(TipoErro.USUARIO_JA_EXISTE)
+    }
+
+    try {
+      claims.roles.push(TipoUsuario.CLIENTE)
+      await this.auth.setCustomUserClaims(user.uid, claims)
+
+      const newCliente = new Cliente(
+        0,
+        prestador.usuario,
+        [prestador.endereco],
+        [],
+        true,
+      )
+
+      delete prestador.endereco.id
+
+      delete newCliente.id
+
+      newCliente.criadoEm = moment()
+        .utc()
+        .toDate()
+
+      const cliente = await this.serv.create(newCliente)
+      return {
+        error_id: TipoErro.SEM_ERROS,
+        message: 'Sucesso!',
+        error: false,
+        data: {
+          cliente,
+        },
+      }
+    } catch (error) {
+      claims.roles.pop()
+      await this.auth.setCustomUserClaims(user.uid, claims)
+      throw error
+    }
+  }
+
   @Roles(TipoUsuario.CLIENTE)
   @Put('/atualizar/notificacao/eu')
   public async changeTokenNotificacao(
@@ -44,7 +103,7 @@ export class ClientesController {
   ): Promise<ResponseDefault> {
     const clienteIncompleto = await this.userService.getClienteByToken(user.uid)
 
-    this.userService.update(clienteIncompleto.usuario.id, {
+    this.serv.update(clienteIncompleto.id, {
       tokenNotificacao: token.tokenNotificacao,
     })
 

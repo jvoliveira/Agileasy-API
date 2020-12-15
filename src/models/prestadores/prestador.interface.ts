@@ -17,4 +17,5 @@ export interface PrestadorInterface {
   nota: number
   taxa: number
   criadoEm: Date
+  tokenNotificacao: string
 }

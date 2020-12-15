@@ -139,7 +139,16 @@ export class PedidosController {
 
     const pedido = await this.serv.create(newPedido)
     const prestador = await this.prestadorService.getByID(pedido.prestador.id)
-    if (prestador.usuario.tokenNotificacao) {
+
+    if (prestador.tokenNotificacao) {
+      try {
+        const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+        newNotification.notification.title = 'Novo pedido para você!! 😁'
+        newNotification.token = prestador.tokenNotificacao
+
+        await this.firebaseNotification.send(newNotification)
+      } catch (error) {}
+    } else if (prestador.usuario.tokenNotificacao) {
       try {
         const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
         newNotification.notification.title = 'Novo pedido para você!! 😁'
@@ -264,7 +273,15 @@ export class PedidosController {
     })
 
     const cliente = await this.clienteService.getByID(pedido.cliente.id)
-    if (cliente.usuario.tokenNotificacao) {
+    if (cliente.tokenNotificacao) {
+      try {
+        const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+        newNotification.notification.title = 'Seu pedido foi aceito!! 😁'
+        newNotification.token = cliente.tokenNotificacao
+
+        await this.firebaseNotification.send(newNotification)
+      } catch (error) {}
+    } else if (cliente.usuario.tokenNotificacao) {
       try {
         const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
         newNotification.notification.title = 'Seu pedido foi aceito!! 😁'
@@ -313,7 +330,15 @@ export class PedidosController {
     })
 
     const cliente = await this.clienteService.getByID(pedido.cliente.id)
-    if (cliente.usuario.tokenNotificacao) {
+    if (cliente.tokenNotificacao) {
+      try {
+        const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+        newNotification.notification.title = 'Seu pedido está sendo feito!! 😁'
+        newNotification.token = cliente.tokenNotificacao
+
+        await this.firebaseNotification.send(newNotification)
+      } catch (error) {}
+    } else if (cliente.usuario.tokenNotificacao) {
       try {
         const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
         newNotification.notification.title = 'Seu pedido está sendo feito!! 😁'
@@ -363,7 +388,15 @@ export class PedidosController {
     })
 
     const cliente = await this.clienteService.getByID(pedido.cliente.id)
-    if (cliente.usuario.tokenNotificacao) {
+    if (cliente.tokenNotificacao) {
+      try {
+        const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+        newNotification.notification.title = 'Seu serviço foi finalizado!! 😁'
+        newNotification.token = cliente.tokenNotificacao
+
+        await this.firebaseNotification.send(newNotification)
+      } catch (error) {}
+    } else if (cliente.usuario.tokenNotificacao) {
       try {
         const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
         newNotification.notification.title = 'Seu serviço foi finalizado!! 😁'
@@ -427,7 +460,16 @@ export class PedidosController {
     })
 
     const cliente = await this.clienteService.getByID(pedido.cliente.id)
-    if (cliente.usuario.tokenNotificacao) {
+    if (cliente.tokenNotificacao) {
+      try {
+        const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+        newNotification.notification.title =
+          'Seu serviço foi rejeitado. Peça novamente!! 😊'
+        newNotification.token = cliente.tokenNotificacao
+
+        await this.firebaseNotification.send(newNotification)
+      } catch (error) {}
+    } else if (cliente.usuario.tokenNotificacao) {
       try {
         const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
         newNotification.notification.title =
@@ -477,7 +519,16 @@ export class PedidosController {
     })
 
     const cliente = await this.clienteService.getByID(pedido.cliente.id)
-    if (cliente.usuario.tokenNotificacao) {
+    if (cliente.tokenNotificacao) {
+      try {
+        const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+        newNotification.notification.title =
+          'Seu serviço foi cancelado. Peça novamente!! 😊'
+        newNotification.token = cliente.tokenNotificacao
+
+        await this.firebaseNotification.send(newNotification)
+      } catch (error) {}
+    } else if (cliente.usuario.tokenNotificacao) {
       try {
         const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
         newNotification.notification.title =
@@ -531,7 +582,15 @@ export class PedidosController {
     })
 
     const prestador = await this.prestadorService.getByID(pedido.prestador.id)
-    if (prestador.usuario.tokenNotificacao) {
+    if (prestador.tokenNotificacao) {
+      try {
+        const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
+        newNotification.notification.title = 'Seu serviço foi cancelado.'
+        newNotification.token = prestador.tokenNotificacao
+
+        await this.firebaseNotification.send(newNotification)
+      } catch (error) {}
+    } else if (prestador.usuario.tokenNotificacao) {
       try {
         const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
         newNotification.notification.title = 'Seu serviço foi cancelado.'

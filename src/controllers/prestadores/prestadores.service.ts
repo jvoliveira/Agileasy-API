@@ -30,6 +30,10 @@ export class PrestadoresService extends BaseService<Prestador> {
     return values
   }
 
+  async getPrestadorWithEndereco(id: number): Promise<Prestador> {
+    return this.repo.findOne(id, { relations: ['endereco'] })
+  }
+
   async getPrestadorByCategoria(idCategoria: number): Promise<Prestador[]> {
     const values: Array<Prestador> = await this.repo
       .createQueryBuilder('prestador')

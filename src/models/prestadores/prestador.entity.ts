@@ -58,6 +58,9 @@ export class Prestador extends BaseModel<Prestador>
   @Column('double precision', { nullable: false, name: 'nota', default: 0 })
   nota!: number
 
+  @Column('text', { nullable: true, name: 'token_notificacao' })
+  tokenNotificacao!: string
+
   @Column('text', { nullable: true, name: 'capa' })
   capa!: string
 
