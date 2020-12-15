@@ -60,7 +60,7 @@ export class ClientesController {
     }
 
     try {
-      claims.roles.push(TipoUsuario.PRESTADOR)
+      claims.roles.push(TipoUsuario.CLIENTE)
       await this.auth.setCustomUserClaims(user.uid, claims)
 
       const newCliente = new Cliente(
