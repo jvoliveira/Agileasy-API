@@ -17,7 +17,7 @@ export class RolesGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Lê as roles permitidas daquela requisição em específico para o método
     const roles = this.reflector.get<number[]>('roles', context.getHandler())
-    if (!roles) {
+    if (!roles || roles.includes(-1)) {
       return true
     }
     const ctx = context.switchToHttp()
@@ -28,7 +28,7 @@ export class RolesGuard implements CanActivate {
     if (auth.customClaims !== undefined) {
       const claims = auth.customClaims as Claims
       // Verifica realmente se tem a permissão para determinado método
-      if (roles.includes(-1) || roles.some(r => claims.roles.indexOf(r) >= 0)) {
+      if (roles.some(r => claims.roles.indexOf(r) >= 0)) {
         return true
       } else {
         throw new AllException(TipoErro.USUARIO_SEM_PERMISSAO)
