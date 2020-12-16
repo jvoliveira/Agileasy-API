@@ -8,7 +8,7 @@ import { CategoriasService } from './categorias.service'
 export class CategoriasController {
   constructor(private serv: CategoriasService) {}
   @Get('pai')
-  @Roles(0, 100, 200)
+  @Roles(-1)
   public async getCategoriaPai(): Promise<ResponseDefault> {
     const categorias = await this.serv.getParents()
     return {
