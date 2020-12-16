@@ -142,10 +142,11 @@ export class PrestadoresController {
     }
   }
 
-  @Roles(TipoUsuario.CLIENTE)
+  @Roles(-1)
   @Get(':id/servicos')
   public async getServicos(@Param('id') id: number): Promise<ResponseDefault> {
     const prestador = await this.serv.getServicosByPrestador(id)
+    this.removeDataPrestador(prestador)
 
     return {
       error_id: TipoErro.SEM_ERROS,
