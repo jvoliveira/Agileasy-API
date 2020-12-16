@@ -30,6 +30,8 @@ export class Cupom extends BaseModel<Cupom> implements CupomInterface {
   desconto!: number
   @Column('double precision', { nullable: false, name: 'valor_minimo' })
   valorMinimo!: number
+  @Column('double precision', { nullable: false, name: 'valor_maximo' })
+  valorMaximo!: number
   @Column('int', { nullable: false, default: 0 })
   voucher!: number
   @Column('timestamptz', { nullable: false, name: 'validade' })

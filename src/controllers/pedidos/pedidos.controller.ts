@@ -129,6 +129,12 @@ export class PedidosController {
           'O valor do pedido muito baixo para o cupom.',
         )
       }
+      if (newCupom.valorMaximo < newPedido.subtotal) {
+        throw new AllException(
+          TipoErro.DADOS_INVALIDOS,
+          'O valor do pedido muito alto para o cupom.',
+        )
+      }
       newCupom.restantes -= 1
       newPedido.cupom = newCupom
       newPedido.total -=
