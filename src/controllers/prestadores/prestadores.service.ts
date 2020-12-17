@@ -20,7 +20,7 @@ export class PrestadoresService extends BaseService<Prestador> {
       .createQueryBuilder('prestador')
       .leftJoinAndSelect('prestador.usuario', 'u')
       .leftJoinAndSelect('prestador.categorias', 'c')
-      .where('u.status = ' + TipoStatus.ativo)
+      .where('prestador.ativo = TRUE and u.status = ' + TipoStatus.ativo)
       .getMany()
 
     if (!values) {
@@ -41,7 +41,7 @@ export class PrestadoresService extends BaseService<Prestador> {
       .leftJoinAndSelect('prestador.servicos', 's')
       .leftJoinAndSelect('prestador.usuario', 'u')
       .where(
-        'c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
+        'prestador.ativo = TRUE and c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
           TipoStatus.ativo,
         { idCategoria },
       )
