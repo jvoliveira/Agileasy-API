@@ -65,7 +65,7 @@ describe('Prestadores Service', () => {
     expect(
       mockSelect3.where,
     ).toHaveBeenCalledWith(
-      'c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
+      'prestador.ativo = TRUE and c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
         TipoStatus.ativo,
       { idCategoria: 1 },
     )
