@@ -19,7 +19,7 @@ export class UserService extends BaseService<Usuario> {
   async getPrestadorByToken(uid: string): Promise<Prestador> {
     const status = await this.repoUsuario.findOne({
       relations: ['prestador'],
-      where: { uid, ativo: true },
+      where: { uid },
     })
 
     if (!status.prestador) {
@@ -32,7 +32,7 @@ export class UserService extends BaseService<Usuario> {
   async getClienteByToken(uid: string): Promise<Cliente> {
     const status = await this.repoUsuario.findOne({
       relations: ['cliente'],
-      where: { uid, ativo: true },
+      where: { uid },
     })
 
     if (!status.cliente) {
