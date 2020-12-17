@@ -14,6 +14,7 @@ import { FirebaseAuthenticationService } from '@aginix/nestjs-firebase-admin'
 import { Claims } from '../../common/guards/interfaces/claims.interface'
 import { AllException } from '../../common/exceptions/all.exception'
 import { UtilsHelper } from '../../common/helpers/utils.helper'
+import { Prestador } from '../../models/prestadores/prestador.entity'
 
 @Controller('prestadores')
 export class PrestadoresController {
@@ -22,6 +23,14 @@ export class PrestadoresController {
     private auth: FirebaseAuthenticationService,
     private userService: UserService,
   ) {}
+
+  private removeDataPrestador(prestador: Prestador) {
+    if (prestador.usuario) {
+      delete prestador.usuario.dataNascimento
+      delete prestador.usuario.tokenNotificacao
+      delete prestador.usuario.cpf
+    }
+  }
 
   @Get()
   @Roles(TipoUsuario.ADMIN)
@@ -39,10 +48,13 @@ export class PrestadoresController {
 
   /** Rotas para nível cliente */
   @Get('ativos')
-  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
+  @Roles(-1)
   public async getAllAtivos(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getAllPrestadorAtivos()
     UtilsHelper.shuffle(prestadores)
+    for (const prestador of prestadores) {
+      this.removeDataPrestador(prestador)
+    }
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -54,10 +66,13 @@ export class PrestadoresController {
   }
 
   @Get('categorias')
-  @Roles(0, 200)
+  @Roles(-1)
   public async getPrestadoresWithCategorias(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getPrestadoresWithCategoria()
     UtilsHelper.shuffle(prestadores)
+    for (const prestador of prestadores) {
+      this.removeDataPrestador(prestador)
+    }
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -83,12 +98,15 @@ export class PrestadoresController {
   }
 
   @Get(':id/categoria')
-  @Roles(TipoUsuario.ADMIN, TipoUsuario.CLIENTE)
+  @Roles(-1)
   public async getPrestadorByCategoria(
     @Param('id') id: number,
   ): Promise<ResponseDefault> {
     const prestadores = await this.serv.getPrestadorByCategoria(id)
     UtilsHelper.shuffle(prestadores)
+    for (const prestador of prestadores) {
+      this.removeDataPrestador(prestador)
+    }
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
@@ -124,10 +142,11 @@ export class PrestadoresController {
     }
   }
 
-  @Roles(TipoUsuario.CLIENTE)
+  @Roles(-1)
   @Get(':id/servicos')
   public async getServicos(@Param('id') id: number): Promise<ResponseDefault> {
     const prestador = await this.serv.getServicosByPrestador(id)
+    this.removeDataPrestador(prestador)
 
     return {
       error_id: TipoErro.SEM_ERROS,

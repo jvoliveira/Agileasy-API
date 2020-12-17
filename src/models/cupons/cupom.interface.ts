@@ -14,6 +14,7 @@ export interface CupomInterface {
   codigo: string
   desconto: number
   valorMinimo: number
+  valorMaximo: number
   voucher: number
   validade: Date
   tipoCupom: number

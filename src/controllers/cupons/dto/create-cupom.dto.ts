@@ -13,6 +13,8 @@ export class CreateCupomDto {
   @IsNumber()
   valorMinimo: number
   @IsNumber()
+  valorMaximo: number
+  @IsNumber()
   voucher: number
   @IsDateString()
   validade: string
