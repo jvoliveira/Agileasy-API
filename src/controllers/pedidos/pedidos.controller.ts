@@ -143,6 +143,10 @@ export class PedidosController {
           : newCupom.desconto
     }
 
+    if (newPedido.total < 0) {
+      newPedido.total = 0
+    }
+
     const pedido = await this.serv.create(newPedido)
     const prestador = await this.prestadorService.getByID(pedido.prestador.id)
 
