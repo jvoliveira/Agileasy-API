@@ -1,4 +1,4 @@
-import { IsNumberString, IsString } from 'class-validator'
+import { IsString } from 'class-validator'
 
 export class UpdateEnderecoDto {
   @IsString()
@@ -6,7 +6,7 @@ export class UpdateEnderecoDto {
   @IsString()
   endereco: string
   complemento: string | null
-  @IsNumberString()
+  @IsString()
   numero: string
   @IsString()
   cidade: string
