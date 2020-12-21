@@ -15,8 +15,14 @@ export class Alternativa extends BaseModel<Alternativa>
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: true })
   descricao: string
+
+  @Column('text', { nullable: true })
+  titulo: string
+
+  @Column('double precision', { nullable: false, default: 0 })
+  valor: number
 
   @ManyToOne(
     type => VariacaoServico,
