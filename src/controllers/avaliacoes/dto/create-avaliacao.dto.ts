@@ -15,6 +15,7 @@ export class CreateAvaliacaoDto {
   @IsUrl()
   urlFoto: string
   @IsNumber()
+  @IsOptional()
   quemAvaliou: number
 
   pedido: PedidoDto

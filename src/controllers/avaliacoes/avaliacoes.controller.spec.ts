@@ -47,7 +47,7 @@ describe('AvaliacoesController', () => {
       comentario: 'comenario teste',
       nota: 5,
       urlFoto: null,
-      quemAvaliou: 1,
+      quemAvaliou: 0,
     }
 
     userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
@@ -58,7 +58,7 @@ describe('AvaliacoesController', () => {
       comentario: 'comenario teste',
       nota: 5,
       urlFoto: null,
-      quemAvaliou: 1,
+      quemAvaliou: 0,
       pedido: { id: 1 },
     } as any)
 
@@ -72,7 +72,7 @@ describe('AvaliacoesController', () => {
           comentario: 'comenario teste',
           nota: 5,
           urlFoto: null,
-          quemAvaliou: 1,
+          quemAvaliou: 0,
           pedido: {
             id: 1,
           },

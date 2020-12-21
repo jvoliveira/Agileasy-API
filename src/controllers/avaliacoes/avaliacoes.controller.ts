@@ -35,6 +35,8 @@ export class AvaliacoesController {
       id: pedidoExiste.id,
     }
 
+    createAvaliacaoDto.quemAvaliou = 0
+
     const avaliacao = await this.service.create(createAvaliacaoDto)
     return {
       error_id: TipoErro.SEM_ERROS,
