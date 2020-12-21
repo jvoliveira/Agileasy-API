@@ -3,9 +3,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
+import { FolhaResposta } from '../folha-resposta/folha-resposta.entity'
 import { VariacaoServico } from '../servico-variacao/variacao-servico.entity'
 import { AlternativaInterface } from './alternativa.interface'
 
@@ -31,6 +33,13 @@ export class Alternativa extends BaseModel<Alternativa>
   )
   @JoinColumn({ name: 'id_variacao' })
   variacaoServico: VariacaoServico
+
+  @OneToMany(
+    type => FolhaResposta,
+    folhasRespostas => folhasRespostas.alternativa,
+    { cascade: false },
+  )
+  folhasRespostas?: FolhaResposta[]
 
   constructor(id: number, descricao: string) {
     super(id, true)

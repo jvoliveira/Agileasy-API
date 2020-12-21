@@ -24,6 +24,7 @@ import { Prestador } from '../prestadores/prestador.entity'
 import { Avaliacao } from '../avaliacao/avaliacao.entity'
 import { Cupom } from '../cupons/cupom.entity'
 import { Cancelamento } from '../cancelamentos/cancelamento.entity'
+import { FolhaResposta } from '../folha-resposta/folha-resposta.entity'
 
 @Entity('pedido')
 export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
@@ -135,6 +136,13 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     { cascade: true },
   )
   avaliacao: Avaliacao
+
+  @OneToMany(
+    type => FolhaResposta,
+    folhasRespostas => folhasRespostas.pedido,
+    { cascade: true },
+  )
+  folhasRespostas?: FolhaResposta[]
 
   constructor(
     id: number,
