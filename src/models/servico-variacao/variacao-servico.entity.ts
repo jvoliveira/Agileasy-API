@@ -24,6 +24,9 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
   @Column('text', { nullable: false })
   titulo: string
 
+  @Column({ type: 'boolean', nullable: false, default: true })
+  ativo!: boolean
+
   @Column('boolean', { nullable: false })
   obrigatorio: boolean
 
