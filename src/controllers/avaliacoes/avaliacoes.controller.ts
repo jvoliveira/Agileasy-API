@@ -9,6 +9,7 @@ import { ResponseDefault } from '../../common/interfaces/response-default.interf
 import { PedidosService } from '../pedidos/pedidos.service'
 import { UserService } from '../../common/services/user.service'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
+import { AllException } from '../../common/exceptions/all.exception'
 
 @Controller('avaliacoes')
 export class AvaliacoesController {
@@ -19,20 +20,19 @@ export class AvaliacoesController {
   ) {}
 
   @Roles(TipoUsuario.CLIENTE)
-  @Post('novo/:id')
+  @Post('novo/cliente/eu')
   public async novaAvaliacao(
     @User() user: admin.auth.UserRecord,
     @Body() createAvaliacaoDto: CreateAvaliacaoDto,
-    @Param('id') idPedido: number,
   ): Promise<ResponseDefault> {
     const cliente = await this.userService.getClienteByToken(user.uid)
     const pedidoExiste = await this.pedidoService.getByIdAsCliente(
-      idPedido,
+      createAvaliacaoDto.pedido.id,
       cliente.id,
     )
 
-    createAvaliacaoDto.pedido = {
-      id: pedidoExiste.id,
+    if (!pedidoExiste) {
+      throw new AllException(TipoErro.DADOS_INVALIDOS, 'Pedido inexistente')
     }
 
     createAvaliacaoDto.quemAvaliou = 0

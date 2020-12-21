@@ -1,4 +1,10 @@
-import { IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
+import {
+  IsDefined,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+} from 'class-validator'
 
 class PedidoDto {
   @IsNumber()
@@ -7,6 +13,7 @@ class PedidoDto {
 
 export class CreateAvaliacaoDto {
   @IsString()
+  @IsOptional()
   comentario: string
   @IsNumber()
   nota: number
@@ -18,5 +25,6 @@ export class CreateAvaliacaoDto {
   @IsOptional()
   quemAvaliou: number
 
+  @IsDefined()
   pedido: PedidoDto
 }

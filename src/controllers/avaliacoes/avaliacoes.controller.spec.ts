@@ -48,6 +48,9 @@ describe('AvaliacoesController', () => {
       nota: 5,
       urlFoto: null,
       quemAvaliou: 0,
+      pedido: {
+        id: 1,
+      },
     }
 
     userService.getClienteByToken.mockResolvedValue({ id: 1 } as any)
@@ -82,7 +85,7 @@ describe('AvaliacoesController', () => {
     }
 
     await expect(
-      controller.novaAvaliacao(mockUser as any, mockDto as any, 1),
+      controller.novaAvaliacao(mockUser as any, mockDto as any),
     ).resolves.toStrictEqual(shouldReturn)
   })
 })
