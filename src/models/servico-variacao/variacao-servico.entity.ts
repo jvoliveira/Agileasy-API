@@ -27,7 +27,7 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
   @Column({ type: 'boolean', nullable: false, default: true })
   ativo!: boolean
 
-  @Column('boolean', { nullable: false })
+  @Column('boolean', { nullable: false, default: true })
   obrigatorio: boolean
 
   @Column('int', { nullable: false, name: 'quantidade_maxima' })
