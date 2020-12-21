@@ -41,6 +41,13 @@ export class FolhaResposta extends BaseModel<FolhaResposta>
 
   fillFromJson(json: any, recursive?: string[] | undefined): FolhaResposta {
     this.id = json.id
+    if (json.alternativa) {
+      this.alternativa = Alternativa.fromJson(json.alternativa)
+    }
+    if (json.pedido) {
+      this.pedido = Pedido.fromJson(json.pedido)
+    }
+    this.ativo = json.ativo
     return this
   }
 
