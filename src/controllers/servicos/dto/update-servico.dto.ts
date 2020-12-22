@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsDefined,
   IsNumber,
   IsOptional,
   IsString,
@@ -27,9 +28,9 @@ export class UpdateServicoDto {
   delivery: boolean
   prestador?: UpdatePrestadorDto
   @IsOptional()
-  variacoesServico: []
-  @IsOptional()
   categorias: UpdateCategoriaDto[]
+  @IsOptional()
+  variacoesServico: AddVariacaoServicoDto[]
 }
 
 class UpdateCategoriaDto {
@@ -38,4 +39,30 @@ class UpdateCategoriaDto {
 
 class UpdatePrestadorDto {
   id: number
+}
+
+class AddVariacaoServicoDto {
+  @IsNumber()
+  tipo: number
+  @IsString()
+  titulo: string
+  @IsBoolean()
+  obrigatorio: boolean
+  @IsBoolean()
+  ativo: boolean
+  @IsNumber()
+  qtsMaxima: number
+  @IsDefined()
+  alternativas: Array<AddAlternativaDto>
+}
+
+class AddAlternativaDto {
+  @IsString()
+  @IsOptional()
+  descricao: string
+  @IsString()
+  @IsOptional()
+  titulo: string
+  @IsNumber()
+  valor: number
 }

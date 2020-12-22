@@ -38,6 +38,7 @@ export class VariacaoServico extends BaseModel<VariacaoServico>
     alternativas => alternativas.variacaoServico,
     {
       cascade: true,
+      eager: true,
     },
   )
   alternativas: Alternativa[]

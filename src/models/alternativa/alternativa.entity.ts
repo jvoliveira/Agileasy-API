@@ -31,7 +31,7 @@ export class Alternativa extends BaseModel<Alternativa>
     variacaoServico => variacaoServico.alternativas,
     { cascade: false },
   )
-  @JoinColumn({ name: 'id_variacao' })
+  @JoinColumn({ name: 'id_variacao_servico' })
   variacaoServico: VariacaoServico
 
   @OneToMany(
