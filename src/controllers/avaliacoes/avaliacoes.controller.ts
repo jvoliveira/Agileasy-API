@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common'
+import { Body, Controller, Post } from '@nestjs/common'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { User } from '../../common/decorators/user.decorator'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
