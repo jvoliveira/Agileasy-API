@@ -34,13 +34,28 @@ describe('Prestadores Service', () => {
     const shouldReturn = { nome: 'Vinicius', servicos: [] } as any
     repo.findOne.mockResolvedValue({ nome: 'Vinicius', servicos: [] } as any)
 
+    const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect1 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect2 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect3 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect4 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect5 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect6 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockMany = createMock<SelectQueryBuilder<Prestador>>()
+    mockQuery.leftJoinAndSelect.mockReturnValue(mockSelect1)
+    mockSelect1.leftJoinAndSelect.mockReturnValue(mockSelect2)
+    mockSelect2.leftJoinAndSelect.mockReturnValue(mockSelect3)
+    mockSelect3.leftJoinAndSelect.mockReturnValue(mockSelect4)
+    mockSelect4.leftJoinAndSelect.mockReturnValue(mockSelect5)
+    mockSelect5.leftJoinAndSelect.mockReturnValue(mockSelect6)
+    mockSelect6.where.mockReturnValue(mockMany)
+    mockMany.getOne.mockResolvedValue(shouldReturn)
+
+    repo.createQueryBuilder.mockReturnValue(mockQuery)
+
     await expect(service.getServicosByPrestador(1)).resolves.toStrictEqual(
       shouldReturn,
     )
-    expect(repo.findOne).toBeCalledWith({
-      where: { id: 1 },
-      relations: ['servicos', 'endereco', 'disponibilidades'],
-    })
   })
 
   it('should get prestador by categoria id', async () => {
@@ -49,11 +64,15 @@ describe('Prestadores Service', () => {
     const mockSelect1 = createMock<SelectQueryBuilder<Prestador>>()
     const mockSelect2 = createMock<SelectQueryBuilder<Prestador>>()
     const mockSelect3 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect4 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect5 = createMock<SelectQueryBuilder<Prestador>>()
     const mockMany = createMock<SelectQueryBuilder<Prestador>>()
     mockQuery.leftJoinAndSelect.mockReturnValue(mockSelect1)
     mockSelect1.leftJoinAndSelect.mockReturnValue(mockSelect2)
     mockSelect2.leftJoinAndSelect.mockReturnValue(mockSelect3)
-    mockSelect3.where.mockReturnValue(mockMany)
+    mockSelect3.leftJoinAndSelect.mockReturnValue(mockSelect4)
+    mockSelect4.leftJoinAndSelect.mockReturnValue(mockSelect5)
+    mockSelect5.where.mockReturnValue(mockMany)
     mockMany.getMany.mockResolvedValue(shouldReturn)
 
     repo.createQueryBuilder.mockReturnValue(mockQuery)
@@ -63,7 +82,7 @@ describe('Prestadores Service', () => {
     )
 
     expect(
-      mockSelect3.where,
+      mockSelect5.where,
     ).toHaveBeenCalledWith(
       'prestador.ativo = TRUE and c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
         TipoStatus.ativo,

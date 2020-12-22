@@ -16,9 +16,13 @@ export class ServicosService extends BaseService<Servico> {
   }
 
   async getServicoByPrestador(idPrestador: number): Promise<Servico[]> {
-    const servico = await this.repo.find({
-      where: { ativo: true, prestador: { id: idPrestador } },
-    })
+    const servico = await this.repo
+      .createQueryBuilder('servico')
+      .leftJoin('servico.prestador', 'p')
+      .leftJoinAndSelect('servico.variacoesServico', 'vs', 'vs.ativo = true')
+      .leftJoinAndSelect('vs.alternativas', 'a')
+      .where('p.id = :id and servico.ativo = true', { id: idPrestador })
+      .getMany()
     return servico
   }
 }

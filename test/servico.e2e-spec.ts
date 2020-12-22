@@ -61,7 +61,18 @@ describe('ServicoController (e2e)', () => {
         ],
       },
     }
-    mockService.find.mockResolvedValue(shouldReturn.data.servicos as any)
+    const mockQuery = createMock<SelectQueryBuilder<Servico>>()
+    const mockSelect1 = createMock<SelectQueryBuilder<Servico>>()
+    const mockSelect2 = createMock<SelectQueryBuilder<Servico>>()
+    const mockSelect3 = createMock<SelectQueryBuilder<Servico>>()
+    const mockMany = createMock<SelectQueryBuilder<Servico>>()
+    mockQuery.leftJoin.mockReturnValue(mockSelect1)
+    mockSelect1.leftJoinAndSelect.mockReturnValue(mockSelect2)
+    mockSelect2.leftJoinAndSelect.mockReturnValue(mockSelect3)
+    mockSelect3.where.mockReturnValue(mockMany)
+    mockMany.getMany.mockResolvedValue(shouldReturn.data.servicos as any)
+
+    mockService.createQueryBuilder.mockReturnValue(mockQuery)
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
       uid: 'uid-valido',
     } as any)
