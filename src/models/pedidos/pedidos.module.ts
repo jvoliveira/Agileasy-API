@@ -10,6 +10,7 @@ import { PrestadoresEntityModule } from '../prestadores/prestadores.module'
 import { AvaliacaoEntityModule } from '../avaliacao/avaliacao.module'
 import { DisponibilidadesEntityModule } from '../disponibilidades/disponibilidade.module'
 import { CancelamentosEntityModule } from '../cancelamentos/cancelamento.module'
+import { FolhaRespostaEntityModule } from '../folha-resposta/folha-reposta.module'
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CancelamentosEntityModule } from '../cancelamentos/cancelamento.module'
     forwardRef(() => CancelamentosEntityModule),
     forwardRef(() => PrestadoresEntityModule),
     forwardRef(() => AvaliacaoEntityModule),
+    forwardRef(() => FolhaRespostaEntityModule),
     forwardRef(() => DisponibilidadesEntityModule),
   ],
   exports: [TypeOrmModule],

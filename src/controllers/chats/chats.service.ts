@@ -1,5 +1,7 @@
 import { FirebaseFirestoreService } from '@aginix/nestjs-firebase-admin'
 import { Injectable } from '@nestjs/common'
+import { TipoErro } from '../../common/enums/tipo-erro.enum'
+import { AllException } from '../../common/exceptions/all.exception'
 import * as moment from 'moment-timezone'
 
 @Injectable()
@@ -48,5 +50,76 @@ export class ChatsService {
     await batch.commit()
 
     return chatRef.id
+  }
+
+  public async canSendNotification(
+    fidChat: string,
+    who: 'prestador' | 'cliente',
+  ): Promise<void> {
+    if (!fidChat) {
+      throw new AllException(
+        TipoErro.DADOS_INVALIDOS,
+        'O chat não foi iniciado para essa conversa',
+      )
+    }
+    const chatRef = await this.firebaseService
+      .collection('chats')
+      .doc(fidChat)
+      .get()
+    if (!chatRef.exists) {
+      throw new AllException(
+        TipoErro.DADOS_INVALIDOS,
+        'Para enviar notificação precisa ter um chat iniciado',
+      )
+    }
+
+    const chatDados = chatRef.data()
+    if (
+      who === 'cliente' &&
+      chatDados.ultimaNotificacaoCliente &&
+      moment()
+        .utc()
+        .isBefore(
+          moment(chatDados.ultimaNotificacaoCliente)
+            .utc()
+            .add(30, 'seconds'),
+        )
+    ) {
+      throw new AllException(
+        TipoErro.DADOS_INVALIDOS,
+        'Você não pode notificar o cliente agora',
+      )
+    }
+
+    if (
+      who === 'prestador' &&
+      chatDados.ultimaNotificacaoPrestador &&
+      moment()
+        .utc()
+        .isBefore(
+          moment(chatDados.ultimaNotificacaoPrestador)
+            .utc()
+            .add(30, 'seconds'),
+        )
+    ) {
+      throw new AllException(
+        TipoErro.DADOS_INVALIDOS,
+        'Você não pode notificar o profissional agora',
+      )
+    }
+
+    if (who === 'cliente') {
+      await chatRef.ref.update({
+        ultimaNotificacaoCliente: moment()
+          .utc()
+          .format(),
+      })
+    } else {
+      await chatRef.ref.update({
+        ultimaNotificacaoPrestador: moment()
+          .utc()
+          .format(),
+      })
+    }
   }
 }

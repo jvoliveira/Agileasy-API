@@ -102,11 +102,15 @@ describe('PrestadorController (e2e)', () => {
     const mockSelect1 = createMock<SelectQueryBuilder<Prestador>>()
     const mockSelect2 = createMock<SelectQueryBuilder<Prestador>>()
     const mockSelect3 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect4 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect5 = createMock<SelectQueryBuilder<Prestador>>()
     const mockMany = createMock<SelectQueryBuilder<Prestador>>()
     mockQuery.leftJoinAndSelect.mockReturnValue(mockSelect1)
     mockSelect1.leftJoinAndSelect.mockReturnValue(mockSelect2)
     mockSelect2.leftJoinAndSelect.mockReturnValue(mockSelect3)
-    mockSelect3.where.mockReturnValue(mockMany)
+    mockSelect3.leftJoinAndSelect.mockReturnValue(mockSelect4)
+    mockSelect4.leftJoinAndSelect.mockReturnValue(mockSelect5)
+    mockSelect5.where.mockReturnValue(mockMany)
     mockMany.getMany.mockResolvedValue(shouldReturn.data.prestadores)
 
     mockService.createQueryBuilder.mockReturnValue(mockQuery)
@@ -368,7 +372,24 @@ describe('PrestadorController (e2e)', () => {
       },
     }
 
-    mockService.findOne.mockResolvedValue(shouldReturn.data.prestador as any)
+    const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect1 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect2 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect3 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect4 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect5 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockSelect6 = createMock<SelectQueryBuilder<Prestador>>()
+    const mockMany = createMock<SelectQueryBuilder<Prestador>>()
+    mockQuery.leftJoinAndSelect.mockReturnValue(mockSelect1)
+    mockSelect1.leftJoinAndSelect.mockReturnValue(mockSelect2)
+    mockSelect2.leftJoinAndSelect.mockReturnValue(mockSelect3)
+    mockSelect3.leftJoinAndSelect.mockReturnValue(mockSelect4)
+    mockSelect4.leftJoinAndSelect.mockReturnValue(mockSelect5)
+    mockSelect5.leftJoinAndSelect.mockReturnValue(mockSelect6)
+    mockSelect6.where.mockReturnValue(mockMany)
+    mockMany.getOne.mockResolvedValue(shouldReturn.data.prestador as any)
+
+    mockService.createQueryBuilder.mockReturnValue(mockQuery)
     mockFirebaseAuth.verifyIdToken.mockResolvedValue({
       uid: 'uid-valido',
     } as any)

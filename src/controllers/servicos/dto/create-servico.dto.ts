@@ -26,7 +26,7 @@ export class CreateServicoDto {
   delivery: boolean
   prestador?: UpdatePrestadorDto
   @IsOptional()
-  variacoesServico: []
+  variacoesServico: AddVariacaoServicoDto[]
   @IsOptional()
   categorias: AddCategoriaDto[]
 }
@@ -37,4 +37,30 @@ class AddCategoriaDto {
 
 class UpdatePrestadorDto {
   id: number
+}
+
+class AddVariacaoServicoDto {
+  @IsNumber()
+  tipo: number
+  @IsString()
+  titulo: string
+  @IsBoolean()
+  obrigatorio: boolean
+  @IsBoolean()
+  ativo: boolean
+  @IsNumber()
+  qtsMaxima: number
+  @IsDefined()
+  alternativas: Array<AddAlternativaDto>
+}
+
+class AddAlternativaDto {
+  @IsString()
+  @IsOptional()
+  descricao: string
+  @IsString()
+  @IsOptional()
+  titulo: string
+  @IsNumber()
+  valor: number
 }

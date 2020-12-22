@@ -10,7 +10,6 @@ import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { CreateServicoDto } from './dto/create-servico.dto'
 import { UpdateServicoDto } from './dto/update-servico.dto'
 import { AllException } from '../../common/exceptions/all.exception'
-import { Servico } from '../../models/servicos/servico.entity'
 
 @Controller('servicos')
 export class ServicosController {

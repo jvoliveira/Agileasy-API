@@ -40,6 +40,8 @@ export class PrestadoresService extends BaseService<Prestador> {
       .leftJoinAndSelect('prestador.categorias', 'c')
       .leftJoinAndSelect('prestador.servicos', 's')
       .leftJoinAndSelect('prestador.usuario', 'u')
+      .leftJoinAndSelect('s.variacoesServico', 'vs', 'vs.ativo = true')
+      .leftJoinAndSelect('vs.alternativas', 'a')
       .where(
         'prestador.ativo = TRUE and c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
           TipoStatus.ativo,
@@ -125,10 +127,16 @@ export class PrestadoresService extends BaseService<Prestador> {
   }
 
   async getServicosByPrestador(id: number): Promise<Prestador> {
-    const prestador = await this.repo.findOne({
-      where: { id: id },
-      relations: ['servicos', 'endereco', 'disponibilidades'],
-    })
+    const prestador = await this.repo
+      .createQueryBuilder('prestador')
+      .leftJoinAndSelect('prestador.disponibilidades', 'd')
+      .leftJoinAndSelect('prestador.servicos', 's')
+      .leftJoinAndSelect('prestador.usuario', 'u')
+      .leftJoinAndSelect('prestador.endereco', 'e')
+      .leftJoinAndSelect('s.variacoesServico', 'vs', 'vs.ativo = true')
+      .leftJoinAndSelect('vs.alternativas', 'a')
+      .where('prestador.id = :id', { id })
+      .getOne()
 
     if (!prestador) {
       throw new AllException(TipoErro.ID_NAO_ENCONTRADO)

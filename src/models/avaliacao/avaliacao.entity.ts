@@ -2,7 +2,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
@@ -16,7 +15,7 @@ export class Avaliacao extends BaseModel<Avaliacao>
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: true })
   comentario: string
 
   @Column('double precision', { nullable: false })

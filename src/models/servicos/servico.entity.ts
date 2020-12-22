@@ -58,7 +58,7 @@ export class Servico extends BaseModel<Servico> implements ServicoInterface {
   @OneToMany(
     type => VariacaoServico,
     variacoesServico => variacoesServico.servico,
-    { cascade: true },
+    { cascade: true, eager: true },
   )
   variacoesServico?: VariacaoServico[]
 

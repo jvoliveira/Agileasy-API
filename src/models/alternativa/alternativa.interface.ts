@@ -3,4 +3,6 @@ import { VariacaoServicoInterface } from '../servico-variacao/variacao-servico.i
 export interface AlternativaInterface {
   descricao: string
   variacaoServico: VariacaoServicoInterface
+  titulo: string
+  valor: number
 }
