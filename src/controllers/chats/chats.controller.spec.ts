@@ -1,4 +1,4 @@
-import { FirebaseFirestoreService } from '@aginix/nestjs-firebase-admin'
+import { FirebaseMessagingService } from '@aginix/nestjs-firebase-admin'
 import { createMock } from '@golevelup/nestjs-testing'
 import { Test, TestingModule } from '@nestjs/testing'
 import { UserService } from '../../common/services/user.service'
@@ -11,6 +11,7 @@ describe('ChatsController', () => {
   const service = createMock<ChatsService>()
   const mockUser = createMock<UserService>()
   const mockPedido = createMock<PedidosService>()
+  const mockFirebaseMessaging = createMock<FirebaseMessagingService>()
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,6 +28,10 @@ describe('ChatsController', () => {
         {
           provide: PedidosService,
           useValue: mockPedido,
+        },
+        {
+          provide: FirebaseMessagingService,
+          useValue: mockFirebaseMessaging,
         },
       ],
     }).compile()

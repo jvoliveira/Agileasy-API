@@ -117,8 +117,9 @@ export class ChatsController {
       false,
     )
     const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
-    newNotification.notification.title =
-      'Você tem uma nova mensagem do seu pedido!! 😁'
+    newNotification.notification.title = 'Nova mensagem do seu pedido!! 😁'
+
+    await this.chatService.canSendNotification(pedido.fidChat, 'cliente')
 
     if (pedido.cliente.tokenNotificacao) {
       newNotification.token = pedido.cliente.tokenNotificacao
@@ -150,9 +151,9 @@ export class ChatsController {
       cliente.id,
       false,
     )
+    await this.chatService.canSendNotification(pedido.fidChat, 'prestador')
     const newNotification = Object.assign({}, DEFAULT_NOTIFICATION)
-    newNotification.notification.title =
-      'Você tem uma nova mensagem do seu pedido!! 😁'
+    newNotification.notification.title = 'Nova mensagem do seu pedido!! 😁'
     if (pedido.prestador.tokenNotificacao) {
       newNotification.token = pedido.prestador.tokenNotificacao
     } else {
