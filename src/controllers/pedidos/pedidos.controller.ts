@@ -20,6 +20,7 @@ import { ClientesService } from '../clientes/clientes.service'
 import { MailManager } from '../../common/mails/mail.manager'
 import { CuponsService } from '../cupons/cupons.service'
 import { TipoDesconto } from '../../models/cupons/cupom.interface'
+import { Situacao } from '../../models/situacoes/situacao.entity'
 
 @Controller('pedidos')
 export class PedidosController {
@@ -34,6 +35,17 @@ export class PedidosController {
     private cupomService: CuponsService,
     private mailManager: MailManager,
   ) {}
+
+  private getLastSituacao(situacoes: Situacao[]): Situacao {
+    let situacao = situacoes[0]
+    for (const temp of situacoes) {
+      if (temp.id > situacao.id) {
+        situacao = temp
+      }
+    }
+
+    return situacao
+  }
 
   @Roles(TipoUsuario.CLIENTE)
   @Post('novo')
@@ -266,10 +278,7 @@ export class PedidosController {
 
     // Só pode ser feito se a última situação for solicitado
     if (pedido.situacoes.length > 0) {
-      if (
-        pedido.situacoes[pedido.situacoes.length - 1].estado !==
-        Estado.solicitado
-      ) {
+      if (this.getLastSituacao(pedido.situacoes).estado !== Estado.solicitado) {
         throw new AllException(TipoErro.SITUACAO_INVALIDA)
       }
     } else {
@@ -325,9 +334,7 @@ export class PedidosController {
 
     // Só pode ser feito se a última situação for aceito
     if (pedido.situacoes.length > 0) {
-      if (
-        pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.aceito
-      ) {
+      if (this.getLastSituacao(pedido.situacoes).estado !== Estado.aceito) {
         throw new AllException(TipoErro.SITUACAO_INVALIDA)
       }
     } else {
@@ -382,10 +389,7 @@ export class PedidosController {
 
     // Só pode ser feito se a última situação for em andamento
     if (pedido.situacoes.length > 0) {
-      if (
-        pedido.situacoes[pedido.situacoes.length - 1].estado !==
-        Estado.andamento
-      ) {
+      if (this.getLastSituacao(pedido.situacoes).estado !== Estado.andamento) {
         throw new AllException(TipoErro.SITUACAO_INVALIDA)
       }
     } else {
@@ -454,10 +458,7 @@ export class PedidosController {
 
     // Só pode ser feito se Não for andamento ou posterior
     if (pedido.situacoes.length > 0) {
-      if (
-        pedido.situacoes[pedido.situacoes.length - 1].estado !==
-        Estado.solicitado
-      ) {
+      if (this.getLastSituacao(pedido.situacoes).estado !== Estado.solicitado) {
         throw new AllException(TipoErro.SITUACAO_INVALIDA)
       }
     } else {
@@ -514,9 +515,7 @@ export class PedidosController {
 
     // Só pode ser feito se Não for andamento ou posterior
     if (pedido.situacoes.length > 0) {
-      if (
-        pedido.situacoes[pedido.situacoes.length - 1].estado !== Estado.aceito
-      ) {
+      if (this.getLastSituacao(pedido.situacoes).estado !== Estado.aceito) {
         throw new AllException(TipoErro.SITUACAO_INVALIDA)
       }
     } else {
@@ -574,10 +573,8 @@ export class PedidosController {
     // Só pode ser feito se Não for andamento ou posterior
     if (pedido.situacoes.length > 0) {
       if (
-        pedido.situacoes[pedido.situacoes.length - 1].estado !==
-          Estado.aceito &&
-        pedido.situacoes[pedido.situacoes.length - 1].estado !==
-          Estado.solicitado
+        this.getLastSituacao(pedido.situacoes).estado !== Estado.aceito &&
+        this.getLastSituacao(pedido.situacoes).estado !== Estado.solicitado
       ) {
         throw new AllException(TipoErro.SITUACAO_INVALIDA)
       }
