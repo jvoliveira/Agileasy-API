@@ -4,6 +4,7 @@ import { Repository } from 'typeorm'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { AllException } from '../../common/exceptions/all.exception'
 import { BaseService } from '../../common/services/base.service'
+import { FolhaResposta } from '../../models/folha-resposta/folha-resposta.entity'
 import { Pedido } from '../../models/pedidos/pedido.entity'
 import { Situacao } from '../../models/situacoes/situacao.entity'
 import { SituacaoInterface } from '../../models/situacoes/situacao.interface'
@@ -90,6 +91,7 @@ export class PedidosService extends BaseService<Pedido> {
             'endereco',
             'servicos',
             'avaliacao',
+            'folhasRespostas',
           ],
           where: { id: idPedido, prestador: { id: idPrestador } },
         })
@@ -116,6 +118,7 @@ export class PedidosService extends BaseService<Pedido> {
             'endereco',
             'servicos',
             'avaliacao',
+            'folhasRespostas',
           ],
           where: { id: idPedido, cliente: { id: idCliente } },
         })
@@ -123,5 +126,38 @@ export class PedidosService extends BaseService<Pedido> {
           where: { id: idPedido, cliente: { id: idCliente } },
           relations: ['prestador'],
         })
+  }
+
+  public async novoPedido(pedido: any): Promise<Pedido> {
+    const queryRunner = this.repo.manager.connection.createQueryRunner()
+
+    await queryRunner.connect()
+    await queryRunner.startTransaction()
+
+    try {
+      const folhasRespostas: FolhaResposta[] = []
+      if (pedido.folhasRespostas) {
+        folhasRespostas.push(...pedido.folhasRespostas)
+        delete pedido.folhasRespostas
+      }
+      const newPedido = await queryRunner.manager.save(Pedido, pedido)
+      if (folhasRespostas) {
+        const newFolhasResposta = []
+        for (const folha of folhasRespostas) {
+          folha.pedido = newPedido
+          newFolhasResposta.push(folha)
+        }
+        await queryRunner.manager.save(FolhaResposta, newFolhasResposta)
+      }
+
+      await queryRunner.commitTransaction()
+      await queryRunner.release()
+      return newPedido
+    } catch (err) {
+      // since we have errors lets rollback the changes we made
+      await queryRunner.rollbackTransaction()
+      await queryRunner.release()
+      throw new AllException(TipoErro.ERROR_AO_SALVAR)
+    }
   }
 }
