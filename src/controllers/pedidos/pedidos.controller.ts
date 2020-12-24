@@ -129,6 +129,15 @@ export class PedidosController {
       }
     }
 
+    if (newPedido.folhasRespostas) {
+      for (const folhaResposta of newPedido.folhasRespostas) {
+        if (folhaResposta.alternativa) {
+          newPedido.subtotal +=
+            folhaResposta.alternativa.valor * folhaResposta.quantidade
+        }
+      }
+    }
+
     const cupom = newPedido.cupom
     newPedido.total = newPedido.subtotal
 
@@ -159,7 +168,7 @@ export class PedidosController {
       newPedido.total = 0
     }
 
-    const pedido = await this.serv.create(newPedido)
+    const pedido = await this.serv.novoPedido(newPedido)
     const prestador = await this.prestadorService.getByID(pedido.prestador.id)
 
     if (prestador.tokenNotificacao) {
