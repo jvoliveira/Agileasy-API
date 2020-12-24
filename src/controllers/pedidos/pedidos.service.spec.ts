@@ -1,6 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { Repository, SelectQueryBuilder } from 'typeorm'
+import {
+  Connection,
+  EntityManager,
+  QueryRunner,
+  Repository,
+  SelectQueryBuilder,
+} from 'typeorm'
 import { Pedido } from '../../models/pedidos/pedido.entity'
 import { PedidosService } from './pedidos.service'
 import { createMock } from '@golevelup/nestjs-testing'
@@ -164,6 +170,38 @@ describe('PedidosService', () => {
     await expect(
       service.changeSituacao({ situacoes: [] } as any, situacao),
     ).resolves.toStrictEqual(shouldReturn)
+  })
+
+  it('should create pedido', async () => {
+    const shouldReturn = { observacao: 'esse pedido é legal', situacoes: [] }
+
+    const masterEntityManager = createMock<EntityManager>()
+    const masterConnection = createMock<Connection>()
+    const mockQueryRunner = createMock<QueryRunner>()
+    const mockEntityManager = createMock<EntityManager>()
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    repo.manager = masterEntityManager
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    masterEntityManager.connection = masterConnection
+    masterConnection.createQueryRunner.mockReturnValue(mockQueryRunner)
+
+    mockQueryRunner.connect.mockReturnThis()
+    mockQueryRunner.startTransaction.mockReturnThis()
+    mockQueryRunner.release.mockReturnThis()
+    mockQueryRunner.commitTransaction.mockReturnThis()
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    mockQueryRunner.manager = mockEntityManager
+
+    mockEntityManager.save.mockResolvedValue(shouldReturn as any)
+
+    await expect(service.novoPedido(shouldReturn)).resolves.toStrictEqual(
+      shouldReturn,
+    )
   })
 
   it('should check pedido and cliente', async () => {

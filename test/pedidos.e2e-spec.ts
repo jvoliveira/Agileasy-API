@@ -8,7 +8,13 @@ import {
 import { createMock } from '@golevelup/nestjs-testing'
 import { AppModule } from '../src/app.module'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { Repository, SelectQueryBuilder } from 'typeorm'
+import {
+  Connection,
+  EntityManager,
+  QueryRunner,
+  Repository,
+  SelectQueryBuilder,
+} from 'typeorm'
 import { Usuario } from '../src/models/usuarios/usuario.entity'
 import { Pedido } from '../src/models/pedidos/pedido.entity'
 import { Servico } from '../src/models/servicos/servico.entity'
@@ -116,7 +122,30 @@ describe('PedidoController (e2e)', () => {
     mockPrestadorRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
     mockMailerService.sendMail.mockReturnThis()
 
-    mockService.save.mockResolvedValue(shouldReturn.data.pedido as any)
+    const masterEntityManager = createMock<EntityManager>()
+    const masterConnection = createMock<Connection>()
+    const mockQueryRunner = createMock<QueryRunner>()
+    const mockEntityManager = createMock<EntityManager>()
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    mockService.manager = masterEntityManager
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    masterEntityManager.connection = masterConnection
+    masterConnection.createQueryRunner.mockReturnValue(mockQueryRunner)
+
+    mockQueryRunner.connect.mockReturnThis()
+    mockQueryRunner.startTransaction.mockReturnThis()
+    mockQueryRunner.release.mockReturnThis()
+    mockQueryRunner.commitTransaction.mockReturnThis()
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    mockQueryRunner.manager = mockEntityManager
+
+    mockEntityManager.save.mockResolvedValue(shouldReturn.data.pedido as any)
+
     mockFirebaseAuth.setCustomUserClaims.mockResolvedValue()
     mockServicosRepo.findOneOrFail.mockResolvedValue({
       valor: 25,
