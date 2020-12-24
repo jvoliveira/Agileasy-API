@@ -120,6 +120,7 @@ describe('PedidosService', () => {
         'endereco',
         'servicos',
         'avaliacao',
+        'folhasRespostas',
       ],
       where: { id: 1, prestador: { id: 1 } },
     })
@@ -142,6 +143,7 @@ describe('PedidosService', () => {
         'endereco',
         'servicos',
         'avaliacao',
+        'folhasRespostas',
       ],
       where: { id: 1, cliente: { id: 1 } },
     })
