@@ -30,7 +30,7 @@ export class FolhaResposta extends BaseModel<FolhaResposta>
   @ManyToOne(
     type => Alternativa,
     alternativa => alternativa.folhasRespostas,
-    { cascade: false },
+    { cascade: false, eager: true },
   )
   @JoinColumn({ name: 'id_alternativa' })
   alternativa?: Alternativa
