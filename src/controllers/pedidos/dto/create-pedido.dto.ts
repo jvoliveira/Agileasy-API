@@ -35,6 +35,21 @@ class CupomDto {
   id: number
 }
 
+class AlternativaDto {
+  @IsDefined()
+  id: number
+  descricao: string
+  titulo: string
+  valor: number
+}
+
+class FolhaRespostaDto {
+  @IsDefined()
+  alternativa: AlternativaDto
+  @IsNumber()
+  quantidade: number
+}
+
 export class CreatePedidoDto {
   total?: number
   subtotal?: number
@@ -56,4 +71,6 @@ export class CreatePedidoDto {
   emDomicilio: boolean
   @IsOptional()
   cupom?: CupomDto
+  @IsOptional()
+  folhasRespostas: FolhaRespostaDto[]
 }
