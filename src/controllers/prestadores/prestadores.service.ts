@@ -41,7 +41,7 @@ export class PrestadoresService extends BaseService<Prestador> {
       .leftJoinAndSelect('prestador.servicos', 's')
       .leftJoinAndSelect('prestador.usuario', 'u')
       .leftJoinAndSelect('s.variacoesServico', 'vs', 'vs.ativo = true')
-      .leftJoinAndSelect('vs.alternativas', 'a')
+      .leftJoinAndSelect('vs.alternativas', 'a', 'a.ativo = true')
       .where(
         'prestador.ativo = TRUE and c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
           TipoStatus.ativo,
@@ -134,7 +134,7 @@ export class PrestadoresService extends BaseService<Prestador> {
       .leftJoinAndSelect('prestador.usuario', 'u')
       .leftJoinAndSelect('prestador.endereco', 'e')
       .leftJoinAndSelect('s.variacoesServico', 'vs', 'vs.ativo = true')
-      .leftJoinAndSelect('vs.alternativas', 'a')
+      .leftJoinAndSelect('vs.alternativas', 'a', 'a.ativo = true')
       .where('prestador.id = :id', { id })
       .getOne()
 
