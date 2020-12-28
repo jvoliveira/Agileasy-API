@@ -125,7 +125,7 @@ describe('PedidosController', () => {
       usuario: { tokenNotificacao: 'TESTE' },
     } as any)
     mockFirebaseNotification.send.mockReturnThis()
-    service.create.mockResolvedValue(shouldReturn.data.pedido as any)
+    service.novoPedido.mockResolvedValue(shouldReturn.data.pedido as any)
     serviceSevicos.getByIdWithPrestador.mockResolvedValue({
       valor: 25,
       id: 1,

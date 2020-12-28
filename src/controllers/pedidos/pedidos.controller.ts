@@ -168,6 +168,8 @@ export class PedidosController {
       newPedido.total = 0
     }
 
+    newPedido.servicos = servicosCompletos
+
     const pedido = await this.serv.novoPedido(newPedido)
     const prestador = await this.prestadorService.getByID(pedido.prestador.id)
 

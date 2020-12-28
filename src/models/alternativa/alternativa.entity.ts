@@ -17,6 +17,9 @@ export class Alternativa extends BaseModel<Alternativa>
   @PrimaryGeneratedColumn()
   id!: number
 
+  @Column({ type: 'boolean', nullable: false, default: true })
+  ativo!: boolean
+
   @Column('text', { nullable: true })
   descricao: string
 
@@ -41,8 +44,8 @@ export class Alternativa extends BaseModel<Alternativa>
   )
   folhasRespostas?: FolhaResposta[]
 
-  constructor(id: number, descricao: string) {
-    super(id, true)
+  constructor(id: number, descricao: string, ativo = true) {
+    super(id, ativo)
     this.descricao = descricao
   }
 

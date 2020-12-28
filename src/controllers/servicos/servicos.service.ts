@@ -20,7 +20,7 @@ export class ServicosService extends BaseService<Servico> {
       .createQueryBuilder('servico')
       .leftJoin('servico.prestador', 'p')
       .leftJoinAndSelect('servico.variacoesServico', 'vs', 'vs.ativo = true')
-      .leftJoinAndSelect('vs.alternativas', 'a')
+      .leftJoinAndSelect('vs.alternativas', 'a', 'a.ativo = true')
       .where('p.id = :id and servico.ativo = true', { id: idPrestador })
       .getMany()
     return servico
