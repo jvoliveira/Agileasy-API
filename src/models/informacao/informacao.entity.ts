@@ -1,6 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 import { BaseModel } from '../basis/base.entity'
 import { Portfolio } from '../portfolio/portfolio.entity'
+import { Prestador } from '../prestadores/prestador.entity'
 import { InformacaoInterface } from './informacao.interface'
 
 @Entity('portfolio')
@@ -23,6 +30,13 @@ export class Informacao extends BaseModel<Informacao>
 
   @Column('text', { nullable: true })
   facebook!: string
+
+  @OneToOne(
+    type => Prestador,
+    prestador => prestador.informacao,
+    { cascade: false, eager: false },
+  )
+  prestador!: Prestador
 
   @OneToMany(
     type => Portfolio,

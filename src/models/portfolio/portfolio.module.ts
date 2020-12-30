@@ -1,12 +1,12 @@
 import { forwardRef, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { Informacao } from '../informacao/informacao.entity'
+import { InformacaoEntityModule } from '../informacao/informacao.module'
 import { Portfolio } from './portfolio.entity'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Portfolio]),
-    forwardRef(() => Informacao),
+    forwardRef(() => InformacaoEntityModule),
   ],
   exports: [TypeOrmModule],
 })

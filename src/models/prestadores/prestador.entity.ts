@@ -20,6 +20,7 @@ import { TipoStatus } from '../usuarios/usuario.interface'
 import { Pedido } from '../pedidos/pedido.entity'
 import { Disponibilidade } from '../disponibilidades/disponibilidade.entity'
 import { Cupom } from '../cupons/cupom.entity'
+import { Informacao } from '../informacao/informacao.entity'
 
 @Entity('prestador')
 export class Prestador extends BaseModel<Prestador>
@@ -86,6 +87,14 @@ export class Prestador extends BaseModel<Prestador>
   )
   @JoinColumn({ name: 'id_usuario' })
   usuario!: Usuario
+
+  @OneToOne(
+    type => Informacao,
+    informacao => informacao.prestador,
+    { cascade: false, eager: false, nullable: true },
+  )
+  @JoinColumn({ name: 'id_informacao' })
+  informacao!: Informacao
 
   @OneToOne(
     type => Endereco,
