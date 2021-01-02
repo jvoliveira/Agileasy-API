@@ -93,7 +93,6 @@ export class Prestador extends BaseModel<Prestador>
     informacao => informacao.prestador,
     { cascade: false, eager: false, nullable: true },
   )
-  @JoinColumn({ name: 'id_informacao' })
   informacao!: Informacao
 
   @OneToOne(

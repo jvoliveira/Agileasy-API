@@ -30,6 +30,7 @@ import { ChatsModule } from './controllers/chats/chats.module'
 import { MailerModule } from '@nestjs-modules/mailer'
 import { CuponsModule } from './controllers/cupons/cupons.module';
 import { AvaliacoesModule } from './controllers/avaliacoes/avaliacoes.module';
+import { InformacoesModule } from './controllers/informacoes/informacoes.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { AvaliacoesModule } from './controllers/avaliacoes/avaliacoes.module';
     ChatsModule,
     CuponsModule,
     AvaliacoesModule,
+    InformacoesModule,
   ],
   controllers: [AppController],
   providers: [

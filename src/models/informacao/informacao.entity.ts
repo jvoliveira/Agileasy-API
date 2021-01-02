@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -10,7 +11,7 @@ import { Portfolio } from '../portfolio/portfolio.entity'
 import { Prestador } from '../prestadores/prestador.entity'
 import { InformacaoInterface } from './informacao.interface'
 
-@Entity('portfolio')
+@Entity('informacao')
 export class Informacao extends BaseModel<Informacao>
   implements InformacaoInterface {
   @PrimaryGeneratedColumn()
@@ -36,12 +37,13 @@ export class Informacao extends BaseModel<Informacao>
     prestador => prestador.informacao,
     { cascade: false, eager: false },
   )
+  @JoinColumn({ name: 'id_prestador' })
   prestador!: Prestador
 
   @OneToMany(
     type => Portfolio,
     portfolio => portfolio.informacao,
-    { cascade: true },
+    { cascade: true, eager: true },
   )
   portfolios: Portfolio[]
 
