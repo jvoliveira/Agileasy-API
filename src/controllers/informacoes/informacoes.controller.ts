@@ -15,7 +15,7 @@ export class InformacoesController {
     private serv: InformacoesService,
     private userService: UserService,
   ) {}
-  @Post('update')
+  @Post('atualizar/prestador/eu')
   @Roles(TipoUsuario.PRESTADOR)
   public async updateProfile(
     @User() user: admin.auth.UserRecord,
