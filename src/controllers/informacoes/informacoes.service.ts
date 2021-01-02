@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { AllException } from '../../common/exceptions/all.exception'
 import { BaseService } from '../../common/services/base.service'
 import { Informacao } from '../../models/informacao/informacao.entity'
 import { Portfolio } from '../../models/portfolio/portfolio.entity'
-import { CreateInformacaoDto } from './dto/create-informacao.dto'
 
 @Injectable()
 export class InformacoesService extends BaseService<Informacao> {
