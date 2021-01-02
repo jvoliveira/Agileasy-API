@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 import { admin } from 'firebase-admin/lib/auth'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { User } from '../../common/decorators/user.decorator'
@@ -47,6 +47,22 @@ export class InformacoesController {
     const prestadorFull = await this.userService.getPrestadorByToken(user.uid)
 
     const informacao = await this.serv.getByIdPrestador(prestadorFull.id)
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        informacao: informacao,
+      },
+    }
+  }
+
+  @Get('prestador/:id')
+  @Roles(TipoUsuario.CLIENTE)
+  public async getProfileAsCliente(
+    @Param('id') idPrestador,
+  ): Promise<ResponseDefault> {
+    const informacao = await this.serv.getByIdPrestador(idPrestador)
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
