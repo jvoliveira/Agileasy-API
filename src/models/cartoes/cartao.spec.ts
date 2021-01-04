@@ -7,8 +7,11 @@ describe('CartaoEntity', () => {
       '123456789',
       '08',
       '2020',
+      '123',
+      'visa',
       'TOKENTOP',
       '03914582422',
+      'Vinicius S Picanco',
     )
     expect(JSON.parse(JSON.stringify(mockCartao))).toStrictEqual(
       JSON.parse(JSON.stringify(expectedJSON())),
@@ -26,5 +29,8 @@ function expectedJSON() {
     token: 'TOKENTOP',
     cpf: '03914582422',
     numero: '123456789',
+    cvv: '123',
+    bandeira: 'visa',
+    nome: 'Vinicius S Picanco',
   }
 }
