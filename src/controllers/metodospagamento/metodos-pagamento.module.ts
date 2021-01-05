@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { HttpModule, Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { UserService } from '../../common/services/user.service'
 import { CieloConfigModule } from '../../config/cielo/config.module'
@@ -13,6 +13,7 @@ import { MetodosPagamentoService } from './metodos-pagamento.service'
     MetodosPagamentoEntityModule,
     UsuariosEntityModule,
     CieloConfigModule,
+    HttpModule,
   ],
   controllers: [MetodosPagamentoController],
   providers: [MetodosPagamentoService, UserService, CieloConfigService],

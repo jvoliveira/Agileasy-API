@@ -1,4 +1,5 @@
 import { createMock } from '@golevelup/nestjs-testing'
+import { HttpService } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { UserService } from '../../common/services/user.service'
 import { CieloConfigService } from '../../config/cielo/config.service'
@@ -10,6 +11,7 @@ describe('MetodospagamentoController', () => {
   const service = createMock<MetodosPagamentoService>()
   const userService = createMock<UserService>()
   const cieloConfig = createMock<CieloConfigService>()
+  const httpService = createMock<HttpService>()
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -26,6 +28,10 @@ describe('MetodospagamentoController', () => {
         {
           provide: CieloConfigService,
           useValue: cieloConfig,
+        },
+        {
+          provide: HttpService,
+          useValue: httpService,
         },
       ],
     }).compile()
