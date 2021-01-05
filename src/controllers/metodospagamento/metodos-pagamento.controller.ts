@@ -45,8 +45,8 @@ export class MetodosPagamentoController {
     const numberCartao = newMetodoPagamento.cartao.numero
     // Cadastrar na cielo
     const cartao = newMetodoPagamento.cartao
-    const cielo = new Cielo(this.cieloService)
-    const tokenize = await cielo.cartao.createTokenizedCard({
+    const cielo = new Cielo(this.cieloService.cieloParams)
+    const tokenize = await cielo.card.createTokenizedCard({
       brand: EnumBrands[cartao.bandeira.toUpperCase()],
       cardNumber: cartao.numero,
       customerName: cartao.nome,
@@ -59,13 +59,13 @@ export class MetodosPagamentoController {
     newMetodoPagamento.cartao.numero =
       'XXXX-XXXX-XXXX-' +
       numberCartao.substring(numberCartao.length - 4, numberCartao.length)
-    const metodosPagamento = this.serv.create(newMetodoPagamento)
+    const metodoPagamento = await this.serv.create(newMetodoPagamento)
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
       error: false,
       data: {
-        metodosPagamento,
+        metodoPagamento,
       },
     }
   }
