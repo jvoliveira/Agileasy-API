@@ -18,6 +18,12 @@ export class CieloConfigService {
     return this.configService.get<string>('cielo.merchantKey')
   }
 
+  get zeroAuthUrl(): string {
+    return this.sandbox
+      ? 'https://apisandbox.cieloecommerce.cielo.com.br/1/zeroauth'
+      : 'https://api.cieloecommerce.cielo.com.br/1/zeroauth'
+  }
+
   get sandbox(): boolean {
     return this.configService.get<boolean>('cielo.sandbox')
   }
