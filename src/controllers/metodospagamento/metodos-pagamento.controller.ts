@@ -106,18 +106,18 @@ export class MetodosPagamentoController {
 
     let cardToken = ''
 
-    if (
-      cardBody.brand === EnumBrands.VISA ||
-      cardBody.brand === EnumBrands.MASTER ||
-      cardBody.brand === EnumBrands.ELO
-    ) {
-      try {
+    try {
+      if (
+        cardBody.brand === EnumBrands.VISA ||
+        cardBody.brand === EnumBrands.MASTER ||
+        cardBody.brand === EnumBrands.ELO
+      ) {
         const response = await this.httpService
           .post(
             this.cieloService.zeroAuthUrl,
             {
               ...cardBody,
-              SaveCard: true,
+              SaveCard: false,
             },
             {
               headers: {
@@ -128,26 +128,28 @@ export class MetodosPagamentoController {
             },
           )
           .toPromise()
+        console.log(response.data)
         if (response.data.Valid) {
-          cardToken = response.data.CardToken
+          const tokenize = await cielo.card.createTokenizedCard(cardBody)
+          cardToken = tokenize.cardToken
         } else {
           throw new AllException(
             TipoErro.DADOS_INVALIDOS,
             response.data.ReturnMessage,
           )
         }
-      } catch (error) {
-        if (error instanceof AllException) {
-          throw error
-        }
-        throw new AllException(
-          TipoErro.DADOS_INVALIDOS,
-          'Não foi possível verificar o cartão. Confira os dados e tente novamente.',
-        )
+      } else {
+        const tokenize = await cielo.card.createTokenizedCard(cardBody)
+        cardToken = tokenize.cardToken
       }
-    } else {
-      const tokenize = await cielo.card.createTokenizedCard(cardBody)
-      cardToken = tokenize.cardToken
+    } catch (error) {
+      if (error instanceof AllException) {
+        throw error
+      }
+      throw new AllException(
+        TipoErro.DADOS_INVALIDOS,
+        'Não foi possível verificar o cartão. Confira os dados e tente novamente.',
+      )
     }
     newMetodoPagamento.cartao.token = cardToken
     newMetodoPagamento.cartao.numero =
