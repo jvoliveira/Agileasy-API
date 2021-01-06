@@ -16,7 +16,7 @@ export class MetodosPagamentoService extends BaseService<MetodoPagamento> {
 
   async commons(): Promise<MetodoPagamento[]> {
     const values: Array<MetodoPagamento> = await this.repo.find({
-      where: { ativo: true },
+      where: { ativo: true, cartao: null },
       relations: ['cartao'],
     })
 
@@ -25,6 +25,30 @@ export class MetodosPagamentoService extends BaseService<MetodoPagamento> {
     }
 
     return values
+  }
+
+  async getByIDWithCliente(
+    idMetodoPagamento: number,
+    idCliente: number,
+  ): Promise<MetodoPagamento> {
+    const value: MetodoPagamento = await this.repo
+      .createQueryBuilder('metodo_pagamento')
+      .leftJoinAndSelect('metodo_pagamento.cartao', 'c')
+      .leftJoin('c.cliente', 'cli')
+      .where(
+        'cli.id = :idCliente and metodo_pagamento.id = :idMetodoPagamento and metodo_pagamento.ativo = true',
+        {
+          idCliente,
+          idMetodoPagamento,
+        },
+      )
+      .getOne()
+
+    if (!value) {
+      throw new AllException(TipoErro.DOCUMENTO_NAO_ENCONTRADO)
+    }
+
+    return value
   }
 
   async getCartoes(idCliente: number): Promise<MetodoPagamento[]> {

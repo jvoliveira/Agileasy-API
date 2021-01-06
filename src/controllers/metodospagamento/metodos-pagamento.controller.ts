@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpService, Post } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpService,
+  Param,
+  Post,
+} from '@nestjs/common'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
@@ -48,6 +56,29 @@ export class MetodosPagamentoController {
       error: false,
       data: {
         metodosPagamento,
+      },
+    }
+  }
+
+  @Roles(TipoUsuario.CLIENTE)
+  @Delete('cartao/:id')
+  public async deleteCartao(
+    @User() user: admin.auth.UserRecord,
+    @Param('id') id: number,
+  ): Promise<ResponseDefault> {
+    const cliente = await this.userService.getClienteByToken(user.uid)
+    const metodoPagamento = await this.serv.getByIDWithCliente(id, cliente.id)
+    metodoPagamento.cartao.cvv = ''
+    metodoPagamento.cartao.mes = ''
+    metodoPagamento.cartao.ano = ''
+    metodoPagamento.ativo = false
+    await this.serv.update(id, metodoPagamento)
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        sucesso: true,
       },
     }
   }

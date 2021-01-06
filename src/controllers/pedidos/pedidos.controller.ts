@@ -175,8 +175,9 @@ export class PedidosController {
     }
 
     newPedido.servicos = servicosCompletos
-    const metodoPagamento = await this.metodoPagamentoService.getByID(
+    const metodoPagamento = await this.metodoPagamentoService.getByIDWithCliente(
       newPedido.metodoPagamento.id,
+      cliente.id,
     )
 
     if (metodoPagamento.tipoPagamento === TipoPagamento.cartaoCreditoOnline) {
@@ -210,8 +211,6 @@ export class PedidosController {
           'Erro ao processar o pagamento do cartão. Tente novamente.',
         )
       }
-
-      console.log(transaction)
 
       newPedido.onlinePaymentId = transaction.payment.paymentId
     }
