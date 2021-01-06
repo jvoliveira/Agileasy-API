@@ -17,6 +17,9 @@ describe('Pedido', () => {
       '2025',
       'TOKENTOP',
       '123455111111',
+      'visa',
+      '123',
+      'Vinicius',
     )
     const p = new MetodoPagamento(1, TipoPagamento.cartaoCreditoOnline, c)
     const s = new Situacao(
@@ -61,6 +64,7 @@ describe('Pedido', () => {
       moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),
       true,
       'ASD2134FDSF',
+      null,
     )
 
     expect(JSON.parse(JSON.stringify(mockPedido))).toStrictEqual(
@@ -79,6 +83,7 @@ function expectedJSON() {
     dataHora: moment('2020-06-29T00:00:00-03:00').tz(moment.tz.guess()),
     observacao: 'Na casa verde',
     fidChat: 'ASD2134FDSF',
+    onlinePaymentId: null,
     metodoPagamento: {
       ativo: true,
       id: 1,
@@ -91,6 +96,9 @@ function expectedJSON() {
         ano: '2025',
         token: 'TOKENTOP',
         cpf: '123455111111',
+        bandeira: 'visa',
+        cvv: '123',
+        nome: 'vinicius',
       },
     },
     situacoes: [
