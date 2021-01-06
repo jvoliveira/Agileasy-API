@@ -92,7 +92,6 @@ export class MetodosPagamentoController {
         if (error instanceof AllException) {
           throw error
         }
-        console.log(error.response)
         throw new AllException(
           TipoErro.DADOS_INVALIDOS,
           'Não foi possível verificar o cartão. Confira os dados e tente novamente.',
