@@ -24,7 +24,24 @@ export class MetodosPagamentoController {
   @Roles(TipoUsuario.CLIENTE)
   @Get('comuns')
   public async getCommonsMetodosPagamento(): Promise<ResponseDefault> {
-    const metodosPagamento = await this.serv.getAll()
+    const metodosPagamento = await this.serv.commons()
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        metodosPagamento,
+      },
+    }
+  }
+
+  @Roles(TipoUsuario.CLIENTE)
+  @Get('cartoes/cliente/eu')
+  public async getCartoes(
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    const cliente = await this.userService.getClienteByToken(user.uid)
+    const metodosPagamento = await this.serv.getCartoes(cliente.id)
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
