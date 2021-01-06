@@ -67,7 +67,7 @@ export class MetodosPagamentoController {
     @Param('id') id: number,
   ): Promise<ResponseDefault> {
     const cliente = await this.userService.getClienteByToken(user.uid)
-    const metodoPagamento = await this.serv.getByIDWithCliente(id, cliente.id)
+    const metodoPagamento = await this.serv.getByIDAndCliente(id, cliente.id)
     metodoPagamento.cartao.cvv = ''
     metodoPagamento.cartao.mes = ''
     metodoPagamento.cartao.ano = ''

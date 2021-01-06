@@ -29,6 +29,28 @@ export class MetodosPagamentoService extends BaseService<MetodoPagamento> {
 
   async getByIDWithCliente(
     idMetodoPagamento: number,
+  ): Promise<MetodoPagamento> {
+    const value: MetodoPagamento = await this.repo
+      .createQueryBuilder('metodo_pagamento')
+      .leftJoinAndSelect('metodo_pagamento.cartao', 'c')
+      .leftJoinAndSelect('c.cliente', 'cli')
+      .where(
+        'metodo_pagamento.id = :idMetodoPagamento and metodo_pagamento.ativo = true',
+        {
+          idMetodoPagamento,
+        },
+      )
+      .getOne()
+
+    if (!value) {
+      throw new AllException(TipoErro.DOCUMENTO_NAO_ENCONTRADO)
+    }
+
+    return value
+  }
+
+  async getByIDAndCliente(
+    idMetodoPagamento: number,
     idCliente: number,
   ): Promise<MetodoPagamento> {
     const value: MetodoPagamento = await this.repo

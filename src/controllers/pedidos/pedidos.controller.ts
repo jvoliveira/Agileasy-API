@@ -177,8 +177,19 @@ export class PedidosController {
     newPedido.servicos = servicosCompletos
     const metodoPagamento = await this.metodoPagamentoService.getByIDWithCliente(
       newPedido.metodoPagamento.id,
-      cliente.id,
     )
+
+    if (
+      metodoPagamento.tipoPagamento === TipoPagamento.cartaoCreditoOnline ||
+      metodoPagamento.tipoPagamento === TipoPagamento.cartaoDebitoOnline
+    ) {
+      if (metodoPagamento.cartao.cliente.id !== cliente.id) {
+        throw new AllException(
+          TipoErro.DADOS_INVALIDOS,
+          'Cartão de crédito inválido para esse usuário.',
+        )
+      }
+    }
 
     if (metodoPagamento.tipoPagamento === TipoPagamento.cartaoCreditoOnline) {
       const cielo = new Cielo(this.cieloConfigService.cieloParams)
