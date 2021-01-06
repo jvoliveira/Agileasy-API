@@ -15,6 +15,10 @@ import { ClientesEntityModule } from '../../models/clientes/clientes.module'
 import { MailManager } from '../../common/mails/mail.manager'
 import { CuponsService } from '../cupons/cupons.service'
 import { CuponsEntityModule } from '../../models/cupons/cupom.module'
+import { MetodosPagamentoService } from '../metodospagamento/metodos-pagamento.service'
+import { MetodosPagamentoEntityModule } from '../../models/metodos-pagamento/metodos-pagamento.module'
+import { CieloConfigModule } from '../../config/cielo/config.module'
+import { CieloConfigService } from '../../config/cielo/config.service'
 
 @Module({
   imports: [
@@ -23,8 +27,10 @@ import { CuponsEntityModule } from '../../models/cupons/cupom.module'
     UsuariosEntityModule,
     EnderecosEntityModule,
     PrestadoresEntityModule,
+    MetodosPagamentoEntityModule,
     ClientesEntityModule,
     CuponsEntityModule,
+    CieloConfigModule,
   ],
   providers: [
     PedidosService,
@@ -35,6 +41,8 @@ import { CuponsEntityModule } from '../../models/cupons/cupom.module'
     PrestadoresService,
     ClientesService,
     CuponsService,
+    MetodosPagamentoService,
+    CieloConfigService,
   ],
   controllers: [PedidosController],
 })
