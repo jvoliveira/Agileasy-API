@@ -13,6 +13,8 @@ import { ClientesService } from '../clientes/clientes.service'
 import { PrestadoresService } from '../prestadores/prestadores.service'
 import { MailManager } from '../../common/mails/mail.manager'
 import { CuponsService } from '../cupons/cupons.service'
+import { MetodosPagamentoService } from '../metodospagamento/metodos-pagamento.service'
+import { CieloConfigService } from '../../config/cielo/config.service'
 
 describe('PedidosController', () => {
   let controller: PedidosController
@@ -22,8 +24,10 @@ describe('PedidosController', () => {
   const enderecoService = createMock<EnderecosService>()
   const clienteService = createMock<ClientesService>()
   const prestadorService = createMock<PrestadoresService>()
+  const mockMetodosPagamentoService = createMock<MetodosPagamentoService>()
   const cupomService = createMock<CuponsService>()
   const mockFirebaseNotification = createMock<FirebaseMessagingService>()
+  const mockCieloConfigService = createMock<CieloConfigService>()
   const mockMailManager = createMock<MailManager>()
 
   beforeEach(async () => {
@@ -49,6 +53,14 @@ describe('PedidosController', () => {
         {
           provide: FirebaseMessagingService,
           useValue: mockFirebaseNotification,
+        },
+        {
+          provide: CieloConfigService,
+          useValue: mockCieloConfigService,
+        },
+        {
+          provide: MetodosPagamentoService,
+          useValue: mockMetodosPagamentoService,
         },
         {
           provide: PrestadoresService,
