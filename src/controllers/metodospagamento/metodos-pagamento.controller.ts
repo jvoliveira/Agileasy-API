@@ -44,6 +44,23 @@ export class MetodosPagamentoController {
   }
 
   @Roles(TipoUsuario.CLIENTE)
+  @Get(':bin/bin')
+  public async checkBin(@Param('bin') bin: string): Promise<ResponseDefault> {
+    const cielo = new Cielo(this.cieloService.cieloParams)
+    const consultBin = await cielo.consult.bin({
+      cardBin: bin,
+    })
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        ...consultBin,
+      },
+    }
+  }
+
+  @Roles(TipoUsuario.CLIENTE)
   @Get('cartoes/cliente/eu')
   public async getCartoes(
     @User() user: admin.auth.UserRecord,
@@ -128,7 +145,6 @@ export class MetodosPagamentoController {
             },
           )
           .toPromise()
-        console.log(response.data)
         if (response.data.Valid) {
           const tokenize = await cielo.card.createTokenizedCard(cardBody)
           cardToken = tokenize.cardToken
