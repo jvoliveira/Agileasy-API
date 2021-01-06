@@ -21,6 +21,10 @@ import { MailManager } from '../../common/mails/mail.manager'
 import { CuponsService } from '../cupons/cupons.service'
 import { TipoDesconto } from '../../models/cupons/cupom.interface'
 import { Situacao } from '../../models/situacoes/situacao.entity'
+import { MetodosPagamentoService } from '../metodospagamento/metodos-pagamento.service'
+import { TipoPagamento } from '../../models/metodos-pagamento/metodo-pagamento.interface'
+import { Cielo, EnumBrands, EnumCardType } from 'cielo'
+import { CieloConfigService } from '../../config/cielo/config.service'
 
 @Controller('pedidos')
 export class PedidosController {
@@ -33,7 +37,9 @@ export class PedidosController {
     private clienteService: ClientesService,
     private firebaseNotification: FirebaseMessagingService,
     private cupomService: CuponsService,
+    private metodoPagamentoService: MetodosPagamentoService,
     private mailManager: MailManager,
+    private cieloConfigService: CieloConfigService,
   ) {}
 
   private getLastSituacao(situacoes: Situacao[]): Situacao {
@@ -169,6 +175,46 @@ export class PedidosController {
     }
 
     newPedido.servicos = servicosCompletos
+    const metodoPagamento = await this.metodoPagamentoService.getByID(
+      newPedido.metodoPagamento.id,
+    )
+
+    if (metodoPagamento.tipoPagamento === TipoPagamento.cartaoCreditoOnline) {
+      const cielo = new Cielo(this.cieloConfigService.cieloParams)
+      const transaction = await cielo.creditCard.transaction({
+        merchantOrderId: moment()
+          .unix()
+          .toString(),
+        customer: {
+          name: cliente.usuario.nome,
+        },
+        payment: {
+          amount: newPedido.total * 100,
+          installments: 1,
+          type: EnumCardType.CREDIT,
+          softDescriptor: 'Agileasy',
+          creditCard: {
+            brand: EnumBrands[metodoPagamento.cartao.bandeira],
+            securityCode: metodoPagamento.cartao.cvv,
+            cardToken: metodoPagamento.cartao.token,
+          },
+        },
+      })
+
+      if (
+        transaction.payment.status !== 1 &&
+        transaction.payment.status !== 2
+      ) {
+        throw new AllException(
+          TipoErro.DADOS_INVALIDOS,
+          'Erro ao processar o pagamento do cartão. Tente novamente.',
+        )
+      }
+
+      console.log(transaction)
+
+      newPedido.onlinePaymentId = transaction.payment.paymentId
+    }
 
     const pedido = await this.serv.novoPedido(newPedido)
     const prestador = await this.prestadorService.getByID(pedido.prestador.id)
