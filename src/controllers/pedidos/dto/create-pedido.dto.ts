@@ -57,6 +57,8 @@ export class CreatePedidoDto {
   situacoes?: SituacaoDto[]
   @IsDateString()
   dataHora: Date
+  @IsOptional()
+  onlinePaymentId: string
   @IsDefined()
   metodoPagamento: MetodoPagamentoDto
   @IsDefined()
