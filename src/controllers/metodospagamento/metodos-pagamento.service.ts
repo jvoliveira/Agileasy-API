@@ -5,7 +5,6 @@ import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { AllException } from '../../common/exceptions/all.exception'
 import { BaseService } from '../../common/services/base.service'
 import { MetodoPagamento } from '../../models/metodos-pagamento/metodo-pagamento.entity'
-import { TipoPagamento } from '../../models/metodos-pagamento/metodo-pagamento.interface'
 
 @Injectable()
 export class MetodosPagamentoService extends BaseService<MetodoPagamento> {
@@ -17,7 +16,8 @@ export class MetodosPagamentoService extends BaseService<MetodoPagamento> {
 
   async commons(): Promise<MetodoPagamento[]> {
     const values: Array<MetodoPagamento> = await this.repo.find({
-      where: { ativo: true, cartao: null },
+      where: { ativo: true },
+      relations: ['cartao'],
     })
 
     if (!values) {
