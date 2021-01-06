@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { CieloConfigService } from './config.service'
-import { AppConfigModule } from './config.module'
+import { CieloConfigModule } from './config.module'
 
 jest.mock('dotenv')
 jest.mock('fs')
@@ -15,7 +15,7 @@ describe('CieloConfigService', () => {
       DEBUG: true as any,
     }
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [AppConfigModule],
+      imports: [CieloConfigModule],
     }).compile()
 
     service = moduleRef.get<CieloConfigService>(CieloConfigService)
