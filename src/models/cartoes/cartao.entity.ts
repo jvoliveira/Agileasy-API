@@ -92,6 +92,7 @@ export class Cartao extends BaseModel<Cartao> implements CartaoInterface {
     this.ano = json.ano
     this.nome = json.nome
     this.token = json.token
+    this.bandeira = json.bandeira
     this.cpf = json.cpf
     this.ativo = json.ativo
     return this
