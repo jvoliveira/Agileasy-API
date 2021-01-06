@@ -25,6 +25,7 @@ import { Cliente } from '../src/models/clientes/cliente.entity'
 import { Prestador } from '../src/models/prestadores/prestador.entity'
 import { MailerService } from '@nestjs-modules/mailer'
 import { MetodoPagamento } from '../src/models/metodos-pagamento/metodo-pagamento.entity'
+import { TipoPagamento } from '../src/models/metodos-pagamento/metodo-pagamento.interface'
 
 describe('PedidoController (e2e)', () => {
   let app: INestApplication
@@ -125,6 +126,9 @@ describe('PedidoController (e2e)', () => {
     mockFirebaseNotification.send.mockReturnThis()
     mockPrestadorRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
     mockMailerService.sendMail.mockReturnThis()
+    mockMetodoPagamentoRepo.findOne.mockResolvedValue({
+      tipoPagamento: TipoPagamento.dinheiro,
+    } as any)
 
     const masterEntityManager = createMock<EntityManager>()
     const masterConnection = createMock<Connection>()

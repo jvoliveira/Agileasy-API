@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
-import { admin } from 'firebase-admin/lib/auth'
+import * as admin from 'firebase-admin'
 import { Roles } from '../../common/decorators/roles.decorator'
 import { User } from '../../common/decorators/user.decorator'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'

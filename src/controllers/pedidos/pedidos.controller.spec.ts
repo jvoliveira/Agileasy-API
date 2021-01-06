@@ -15,6 +15,7 @@ import { MailManager } from '../../common/mails/mail.manager'
 import { CuponsService } from '../cupons/cupons.service'
 import { MetodosPagamentoService } from '../metodospagamento/metodos-pagamento.service'
 import { CieloConfigService } from '../../config/cielo/config.service'
+import { TipoPagamento } from '../../models/metodos-pagamento/metodo-pagamento.interface'
 
 describe('PedidosController', () => {
   let controller: PedidosController
@@ -138,6 +139,9 @@ describe('PedidosController', () => {
     } as any)
     mockFirebaseNotification.send.mockReturnThis()
     service.novoPedido.mockResolvedValue(shouldReturn.data.pedido as any)
+    mockMetodosPagamentoService.getByID.mockResolvedValue({
+      tipoPagamento: TipoPagamento.dinheiro,
+    } as any)
     serviceSevicos.getByIdWithPrestador.mockResolvedValue({
       valor: 25,
       id: 1,

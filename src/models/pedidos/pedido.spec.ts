@@ -98,7 +98,7 @@ function expectedJSON() {
         cpf: '123455111111',
         bandeira: 'visa',
         cvv: '123',
-        nome: 'vinicius',
+        nome: 'Vinicius',
       },
     },
     situacoes: [
