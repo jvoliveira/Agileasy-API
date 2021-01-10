@@ -58,7 +58,7 @@ export class InformacoesController {
   }
 
   @Get('prestador/:id')
-  @Roles(TipoUsuario.CLIENTE)
+  @Roles(-1)
   public async getProfileAsCliente(
     @Param('id') idPrestador,
   ): Promise<ResponseDefault> {
