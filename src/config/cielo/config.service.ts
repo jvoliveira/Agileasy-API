@@ -25,11 +25,11 @@ export class CieloConfigService {
   }
 
   get sandbox(): boolean {
-    return this.configService.get<boolean>('cielo.sandbox')
+    return this.configService.get<string>('cielo.sandbox') === 'true'
   }
 
   get debug(): boolean {
-    return this.configService.get<boolean>('cielo.debug')
+    return this.configService.get<string>('cielo.debug') === 'true'
   }
 
   get cieloParams(): CieloConstructor {
