@@ -126,9 +126,19 @@ describe('PedidoController (e2e)', () => {
     mockFirebaseNotification.send.mockReturnThis()
     mockPrestadorRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
     mockMailerService.sendMail.mockReturnThis()
-    mockMetodoPagamentoRepo.findOne.mockResolvedValue({
+
+    const mockQuery = createMock<SelectQueryBuilder<MetodoPagamento>>()
+    const mockSelect1 = createMock<SelectQueryBuilder<MetodoPagamento>>()
+    const mockSelect2 = createMock<SelectQueryBuilder<MetodoPagamento>>()
+    const mockOne = createMock<SelectQueryBuilder<MetodoPagamento>>()
+    mockQuery.leftJoinAndSelect.mockReturnValue(mockSelect1)
+    mockSelect1.leftJoinAndSelect.mockReturnValue(mockSelect2)
+    mockSelect2.where.mockReturnValue(mockOne)
+    mockOne.getOne.mockResolvedValue({
       tipoPagamento: TipoPagamento.dinheiro,
     } as any)
+
+    mockMetodoPagamentoRepo.createQueryBuilder.mockReturnValue(mockQuery)
 
     const masterEntityManager = createMock<EntityManager>()
     const masterConnection = createMock<Connection>()

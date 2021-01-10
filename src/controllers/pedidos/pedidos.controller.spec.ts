@@ -139,7 +139,7 @@ describe('PedidosController', () => {
     } as any)
     mockFirebaseNotification.send.mockReturnThis()
     service.novoPedido.mockResolvedValue(shouldReturn.data.pedido as any)
-    mockMetodosPagamentoService.getByID.mockResolvedValue({
+    mockMetodosPagamentoService.getByIDWithCliente.mockResolvedValue({
       tipoPagamento: TipoPagamento.dinheiro,
     } as any)
     serviceSevicos.getByIdWithPrestador.mockResolvedValue({
