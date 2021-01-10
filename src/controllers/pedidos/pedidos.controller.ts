@@ -531,6 +531,12 @@ export class PedidosController {
     } else {
       throw new AllException(TipoErro.SITUACAO_INVALIDA)
     }
+    if (pedido.onlinePaymentId) {
+      const cielo = new Cielo(this.cieloConfigService.cieloParams)
+      await cielo.creditCard.cancelTransaction({
+        paymentId: pedido.onlinePaymentId,
+      })
+    }
     // Muda a situação para em andamento
     const pedidoRejeitado = await this.serv.changeSituacao(pedido, {
       data: moment().toDate(),
@@ -587,6 +593,12 @@ export class PedidosController {
       }
     } else {
       throw new AllException(TipoErro.SITUACAO_INVALIDA)
+    }
+    if (pedido.onlinePaymentId) {
+      const cielo = new Cielo(this.cieloConfigService.cieloParams)
+      await cielo.creditCard.cancelTransaction({
+        paymentId: pedido.onlinePaymentId,
+      })
     }
     // Muda a situação para em andamento
     const pedidoCancelado = await this.serv.changeSituacao(pedido, {
@@ -647,6 +659,13 @@ export class PedidosController {
       }
     } else {
       throw new AllException(TipoErro.SITUACAO_INVALIDA)
+    }
+
+    if (pedido.onlinePaymentId) {
+      const cielo = new Cielo(this.cieloConfigService.cieloParams)
+      await cielo.creditCard.cancelTransaction({
+        paymentId: pedido.onlinePaymentId,
+      })
     }
 
     // Muda a situação para em andamento
