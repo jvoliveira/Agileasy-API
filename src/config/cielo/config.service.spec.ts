@@ -11,8 +11,8 @@ describe('CieloConfigService', () => {
     process.env = {
       MERCHANT_ID: 'merchant_id',
       MERCHANT_KEY: 'merchant_key',
-      SANDBOX: true as any,
-      DEBUG: true as any,
+      SANDBOX: 'true' as any,
+      DEBUG: 'true' as any,
     }
     const moduleRef: TestingModule = await Test.createTestingModule({
       imports: [CieloConfigModule],
