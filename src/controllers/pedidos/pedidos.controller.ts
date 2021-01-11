@@ -147,7 +147,20 @@ export class PedidosController {
     const cupom = newPedido.cupom
     newPedido.total = newPedido.subtotal
 
+    const metodoPagamento = await this.metodoPagamentoService.getByIDWithCliente(
+      newPedido.metodoPagamento.id,
+    )
+
     if (cupom) {
+      if (
+        metodoPagamento.tipoPagamento !== TipoPagamento.cartaoCreditoOnline &&
+        metodoPagamento.tipoPagamento !== TipoPagamento.cartaoDebitoOnline
+      ) {
+        throw new AllException(
+          TipoErro.DADOS_INVALIDOS,
+          'Você deve utilizar um pagamento online para usar cupom.',
+        )
+      }
       const newCupom = await this.cupomService.validateCupomNormalById(cupom.id)
       await this.serv.hasUsedCupomByCliente(newPedido.cliente.id, newCupom.id)
       if (newCupom.valorMinimo > newPedido.subtotal) {
@@ -175,9 +188,6 @@ export class PedidosController {
     }
 
     newPedido.servicos = servicosCompletos
-    const metodoPagamento = await this.metodoPagamentoService.getByIDWithCliente(
-      newPedido.metodoPagamento.id,
-    )
 
     if (
       metodoPagamento.tipoPagamento === TipoPagamento.cartaoCreditoOnline ||
