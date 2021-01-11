@@ -23,6 +23,15 @@ export class Cartao extends BaseModel<Cartao> implements CartaoInterface {
   numero!: string
 
   @Column({ type: 'text', nullable: false })
+  bandeira!: string
+
+  @Column({ type: 'text', nullable: false })
+  cvv!: string
+
+  @Column({ type: 'text', nullable: false })
+  nome!: string
+
+  @Column({ type: 'text', nullable: false })
   mes!: string
 
   @Column({ type: 'text', nullable: false })
@@ -55,13 +64,19 @@ export class Cartao extends BaseModel<Cartao> implements CartaoInterface {
     ano: string,
     token: string,
     cpf: string,
+    bandeira: string,
+    cvv: string,
+    nome: string,
     ativo = true,
   ) {
     super(id, ativo)
     this.numero = numero
     this.mes = mes
     this.ano = ano
+    this.bandeira = bandeira
+    this.cvv = cvv
     this.token = token
+    this.nome = nome
     this.cpf = cpf
   }
 
@@ -73,14 +88,20 @@ export class Cartao extends BaseModel<Cartao> implements CartaoInterface {
     this.numero = json.numero
     this.mes = json.mes
     this.ano = json.ano
+    this.cvv = json.cvv
+    this.ano = json.ano
+    this.nome = json.nome
     this.token = json.token
+    this.bandeira = json.bandeira
     this.cpf = json.cpf
     this.ativo = json.ativo
     return this
   }
 
   public static fromJson(json: any): Cartao {
-    return new Cartao(1, '2', 'd', 'd', 'd', 'df').fillFromJson(json)
+    return new Cartao(1, '2', 'd', 'd', 'd', 'df', 'd', 's', '').fillFromJson(
+      json,
+    )
   }
 
   copy(): Cartao {
@@ -90,8 +111,11 @@ export class Cartao extends BaseModel<Cartao> implements CartaoInterface {
       this.numero,
       this.mes,
       this.ano,
+      this.bandeira,
+      this.cvv,
       this.token,
       this.cpf,
+      this.nome,
       this.ativo,
     )
     mpagamento.dados = this.dados

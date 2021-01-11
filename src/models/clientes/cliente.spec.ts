@@ -27,6 +27,9 @@ describe('Cliente', () => {
       '2025',
       'TOKENTOP',
       '14582486722',
+      'visa',
+      '123',
+      'vinicius',
     )
     const mockUsuario = new Usuario(
       1,
@@ -100,6 +103,9 @@ function expectedJSON() {
         ano: '2025',
         token: 'TOKENTOP',
         cpf: '14582486722',
+        bandeira: 'visa',
+        cvv: '123',
+        nome: 'vinicius',
       },
     ],
   }

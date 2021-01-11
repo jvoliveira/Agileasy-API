@@ -29,7 +29,7 @@ export class MetodoPagamento extends BaseModel<MetodoPagamento>
   @ManyToOne(
     type => Cartao,
     cartao => cartao.metodosPagamentos,
-    { cascade: false },
+    { cascade: true, eager: true },
   )
   @JoinColumn({ name: 'id_cartao' })
   cartao!: Cartao | null

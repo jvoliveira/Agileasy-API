@@ -14,4 +14,5 @@ export interface PedidoInterface {
   emDomicilio: boolean
   fidChat: string
   total: number
+  onlinePaymentId: string
 }

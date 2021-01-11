@@ -4,6 +4,8 @@
 /documentation
 *.env
 
+._*
+
 *.sql
 
 # Logs

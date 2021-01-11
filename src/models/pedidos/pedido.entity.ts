@@ -57,6 +57,9 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
   @Column('text', { nullable: true, name: 'fid_chat' })
   fidChat!: string | null
 
+  @Column('text', { nullable: true, name: 'online_payment_id' })
+  onlinePaymentId!: string | null
+
   @ManyToOne(
     type => MetodoPagamento,
     metodoPagamento => metodoPagamento.pedidos,
@@ -155,6 +158,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     dataHora: Moment,
     emDomicilio: boolean,
     fidChat: string,
+    onlinePaymentId: string,
     ativo = true,
   ) {
     super(id, ativo)
@@ -164,6 +168,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     this.situacoes = situacoes
     this.endereco = endereco
     this.servicos = servicos
+    this.onlinePaymentId = onlinePaymentId
     this.emDomicilio = emDomicilio
     this.dataHora = moment(dataHora).toDate()
     this.fidChat = fidChat
@@ -177,6 +182,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
     this.subtotal = json.subtotal
     this.observacao = json.observacao
     this.fidChat = json.fidChat
+    this.onlinePaymentId = json.onlinePaymentId
     this.emDomicilio = json.emDomicilio
     this.dataHora = moment(json.dataHora).toDate()
     this.metodoPagamento = MetodoPagamento.fromJson(json.metodoPagamento)
@@ -206,6 +212,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
       moment(),
       true,
       'a',
+      'a',
     ).fillFromJson(json)
   }
 
@@ -221,6 +228,7 @@ export class Pedido extends BaseModel<Pedido> implements PedidoInterface {
       moment(this.dataHora),
       this.emDomicilio,
       this.fidChat,
+      this.onlinePaymentId,
       this.ativo,
     )
     pedido.dados = this.dados

@@ -13,6 +13,9 @@ import { ClientesService } from '../clientes/clientes.service'
 import { PrestadoresService } from '../prestadores/prestadores.service'
 import { MailManager } from '../../common/mails/mail.manager'
 import { CuponsService } from '../cupons/cupons.service'
+import { MetodosPagamentoService } from '../metodospagamento/metodos-pagamento.service'
+import { CieloConfigService } from '../../config/cielo/config.service'
+import { TipoPagamento } from '../../models/metodos-pagamento/metodo-pagamento.interface'
 
 describe('PedidosController', () => {
   let controller: PedidosController
@@ -22,8 +25,10 @@ describe('PedidosController', () => {
   const enderecoService = createMock<EnderecosService>()
   const clienteService = createMock<ClientesService>()
   const prestadorService = createMock<PrestadoresService>()
+  const mockMetodosPagamentoService = createMock<MetodosPagamentoService>()
   const cupomService = createMock<CuponsService>()
   const mockFirebaseNotification = createMock<FirebaseMessagingService>()
+  const mockCieloConfigService = createMock<CieloConfigService>()
   const mockMailManager = createMock<MailManager>()
 
   beforeEach(async () => {
@@ -49,6 +54,14 @@ describe('PedidosController', () => {
         {
           provide: FirebaseMessagingService,
           useValue: mockFirebaseNotification,
+        },
+        {
+          provide: CieloConfigService,
+          useValue: mockCieloConfigService,
+        },
+        {
+          provide: MetodosPagamentoService,
+          useValue: mockMetodosPagamentoService,
         },
         {
           provide: PrestadoresService,
@@ -126,6 +139,9 @@ describe('PedidosController', () => {
     } as any)
     mockFirebaseNotification.send.mockReturnThis()
     service.novoPedido.mockResolvedValue(shouldReturn.data.pedido as any)
+    mockMetodosPagamentoService.getByIDWithCliente.mockResolvedValue({
+      tipoPagamento: TipoPagamento.dinheiro,
+    } as any)
     serviceSevicos.getByIdWithPrestador.mockResolvedValue({
       valor: 25,
       id: 1,

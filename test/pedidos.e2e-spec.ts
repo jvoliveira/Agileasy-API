@@ -24,6 +24,8 @@ import { Estado } from '../src/models/situacoes/situacao.interface'
 import { Cliente } from '../src/models/clientes/cliente.entity'
 import { Prestador } from '../src/models/prestadores/prestador.entity'
 import { MailerService } from '@nestjs-modules/mailer'
+import { MetodoPagamento } from '../src/models/metodos-pagamento/metodo-pagamento.entity'
+import { TipoPagamento } from '../src/models/metodos-pagamento/metodo-pagamento.interface'
 
 describe('PedidoController (e2e)', () => {
   let app: INestApplication
@@ -33,6 +35,7 @@ describe('PedidoController (e2e)', () => {
   const mockClienteRepo = createMock<Repository<Cliente>>()
   const mockPrestadorRepo = createMock<Repository<Prestador>>()
   const mockEnderecoRepo = createMock<Repository<Endereco>>()
+  const mockMetodoPagamentoRepo = createMock<Repository<MetodoPagamento>>()
   const mockFirebaseAuth = createMock<FirebaseAuthenticationService>()
   const mockFirebaseNotification = createMock<FirebaseMessagingService>()
   const mockMailerService = createMock<MailerService>()
@@ -56,6 +59,8 @@ describe('PedidoController (e2e)', () => {
       .useValue(mockServicosRepo)
       .overrideProvider(getRepositoryToken(Endereco))
       .useValue(mockEnderecoRepo)
+      .overrideProvider(getRepositoryToken(MetodoPagamento))
+      .useValue(mockMetodoPagamentoRepo)
       .overrideProvider(FirebaseMessagingService)
       .useValue(mockFirebaseNotification)
       .overrideProvider(MailerService)
@@ -121,6 +126,19 @@ describe('PedidoController (e2e)', () => {
     mockFirebaseNotification.send.mockReturnThis()
     mockPrestadorRepo.findOne.mockResolvedValue({ usuario: { id: 1 } } as any)
     mockMailerService.sendMail.mockReturnThis()
+
+    const mockQuery = createMock<SelectQueryBuilder<MetodoPagamento>>()
+    const mockSelect1 = createMock<SelectQueryBuilder<MetodoPagamento>>()
+    const mockSelect2 = createMock<SelectQueryBuilder<MetodoPagamento>>()
+    const mockOne = createMock<SelectQueryBuilder<MetodoPagamento>>()
+    mockQuery.leftJoinAndSelect.mockReturnValue(mockSelect1)
+    mockSelect1.leftJoinAndSelect.mockReturnValue(mockSelect2)
+    mockSelect2.where.mockReturnValue(mockOne)
+    mockOne.getOne.mockResolvedValue({
+      tipoPagamento: TipoPagamento.dinheiro,
+    } as any)
+
+    mockMetodoPagamentoRepo.createQueryBuilder.mockReturnValue(mockQuery)
 
     const masterEntityManager = createMock<EntityManager>()
     const masterConnection = createMock<Connection>()

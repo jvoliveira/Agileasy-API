@@ -11,6 +11,9 @@ describe('MetodoPagamento', () => {
       '2025',
       'TOKENTOP',
       '123455111111',
+      'visa',
+      '123',
+      'vinicius',
     )
     const mockPagamento = new MetodoPagamento(
       1,
@@ -39,6 +42,9 @@ function expectedJSON() {
       ano: '2025',
       token: 'TOKENTOP',
       cpf: '123455111111',
+      bandeira: 'visa',
+      cvv: '123',
+      nome: 'vinicius',
     },
   }
 }

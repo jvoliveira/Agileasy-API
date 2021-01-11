@@ -5,6 +5,7 @@ import { UsuariosEntityModule } from '../usuarios/usuarios.module'
 import { PedidosEntityModule } from '../pedidos/pedidos.module'
 import { DisponibilidadesEntityModule } from '../disponibilidades/disponibilidade.module'
 import { CuponsEntityModule } from '../cupons/cupom.module'
+import { InformacaoEntityModule } from '../informacao/informacao.module'
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { CuponsEntityModule } from '../cupons/cupom.module'
     UsuariosEntityModule,
     forwardRef(() => PedidosEntityModule),
     forwardRef(() => CuponsEntityModule),
+    forwardRef(() => InformacaoEntityModule),
     forwardRef(() => DisponibilidadesEntityModule),
   ],
   exports: [TypeOrmModule],
