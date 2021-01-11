@@ -201,7 +201,10 @@ export class PedidosController {
       }
     }
 
-    if (metodoPagamento.tipoPagamento === TipoPagamento.cartaoCreditoOnline) {
+    if (
+      metodoPagamento.tipoPagamento === TipoPagamento.cartaoCreditoOnline &&
+      newPedido.total > 0
+    ) {
       const cielo = new Cielo(this.cieloConfigService.cieloParams)
       const transaction = await cielo.creditCard.transaction({
         merchantOrderId: moment()
