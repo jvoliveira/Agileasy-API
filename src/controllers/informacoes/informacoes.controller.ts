@@ -28,14 +28,17 @@ export class InformacoesController {
     }
 
     informacaoDto.prestador = { id: prestadorFull.id }
-    const capa = informacaoDto.capa ?? prestadorFull.capa
-    const logo = informacaoDto.logo ?? prestadorFull.logo
+    const capa = informacaoDto.capa || prestadorFull.capa
+    const logo = informacaoDto.logo || prestadorFull.logo
+    const nomePublico = informacaoDto.nomePublico || prestadorFull.nomePublico
     delete informacaoDto.capa
     delete informacaoDto.logo
+    delete informacaoDto.nomePublico
     const informacaoSave = await this.serv.newInformacao(
       informacaoDto as any,
       capa,
       logo,
+      nomePublico,
     )
     return {
       error_id: TipoErro.SEM_ERROS,

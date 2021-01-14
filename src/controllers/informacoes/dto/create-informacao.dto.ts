@@ -45,6 +45,9 @@ export class CreateInformacaoDto {
   @IsString()
   @IsOptional()
   capa: string
+  @IsString()
+  @IsOptional()
+  nomePublico: string
   @IsOptional()
   portfolios: CreatePortfolioDto[]
   @IsOptional()
