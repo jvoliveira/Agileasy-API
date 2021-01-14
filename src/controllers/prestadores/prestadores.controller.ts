@@ -46,11 +46,33 @@ export class PrestadoresController {
     }
   }
 
-  /** Rotas para nível cliente */
+  /** Rotas para nível cliente AQUI */
   @Get('ativos')
   @Roles(-1)
   public async getAllAtivos(): Promise<ResponseDefault> {
     const prestadores = await this.serv.getAllPrestadorAtivos()
+    UtilsHelper.shuffle(prestadores)
+    for (const prestador of prestadores) {
+      this.removeDataPrestador(prestador)
+    }
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestadores,
+      },
+    }
+  }
+
+  @Get('ativos/:endereco/endereco')
+  @Roles(-1)
+  public async getAllAtivosByEndereco(
+    @Param('endereco') endereco: string,
+  ): Promise<ResponseDefault> {
+    const prestadores = await this.serv.getAllPrestadorAtivosByEndereco(
+      endereco.toUpperCase(),
+    )
     UtilsHelper.shuffle(prestadores)
     for (const prestador of prestadores) {
       this.removeDataPrestador(prestador)
@@ -103,6 +125,30 @@ export class PrestadoresController {
     @Param('id') id: number,
   ): Promise<ResponseDefault> {
     const prestadores = await this.serv.getPrestadorByCategoria(id)
+    UtilsHelper.shuffle(prestadores)
+    for (const prestador of prestadores) {
+      this.removeDataPrestador(prestador)
+    }
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestadores,
+      },
+    }
+  }
+
+  @Get(':id/categoria/:endereco/endereco') // AQUI
+  @Roles(-1)
+  public async getPrestadorByCategoriaAndEndereco(
+    @Param('id') id: number,
+    @Param('endereco') endereco: string,
+  ): Promise<ResponseDefault> {
+    const prestadores = await this.serv.getPrestadorByCategoriaAndEndereco(
+      id,
+      endereco.toUpperCase(),
+    )
     UtilsHelper.shuffle(prestadores)
     for (const prestador of prestadores) {
       this.removeDataPrestador(prestador)

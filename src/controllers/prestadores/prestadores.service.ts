@@ -30,6 +30,27 @@ export class PrestadoresService extends BaseService<Prestador> {
     return values
   }
 
+  async getAllPrestadorAtivosByEndereco(
+    endereco: string,
+  ): Promise<Prestador[]> {
+    const values: Array<Prestador> = await this.repo
+      .createQueryBuilder('prestador')
+      .leftJoinAndSelect('prestador.usuario', 'u')
+      .leftJoinAndSelect('prestador.categorias', 'c')
+      .where(
+        ':endereco = ANY (prestador.cidadesAtua) and prestador.ativo = TRUE and u.status = ' +
+          TipoStatus.ativo,
+        { endereco },
+      )
+      .getMany()
+
+    if (!values) {
+      throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
+    }
+
+    return values
+  }
+
   async getPrestadorWithEndereco(id: number): Promise<Prestador> {
     return this.repo.findOne(id, { relations: ['endereco'] })
   }
@@ -46,6 +67,31 @@ export class PrestadoresService extends BaseService<Prestador> {
         'prestador.ativo = TRUE and c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
           TipoStatus.ativo,
         { idCategoria },
+      )
+      .getMany()
+
+    if (!values) {
+      throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
+    }
+
+    return values
+  }
+
+  async getPrestadorByCategoriaAndEndereco(
+    idCategoria: number,
+    endereco: string,
+  ): Promise<Prestador[]> {
+    const values: Array<Prestador> = await this.repo
+      .createQueryBuilder('prestador')
+      .leftJoinAndSelect('prestador.categorias', 'c')
+      .leftJoinAndSelect('prestador.servicos', 's')
+      .leftJoinAndSelect('prestador.usuario', 'u')
+      .leftJoinAndSelect('s.variacoesServico', 'vs', 'vs.ativo = true')
+      .leftJoinAndSelect('vs.alternativas', 'a', 'a.ativo = true')
+      .where(
+        ':endereco = ANY (prestador.cidadesAtua) and prestador.ativo = TRUE and c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
+          TipoStatus.ativo,
+        { idCategoria, endereco: endereco },
       )
       .getMany()
 
