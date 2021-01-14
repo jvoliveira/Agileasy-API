@@ -30,6 +30,7 @@ export class InformacoesController {
     informacaoDto.prestador = { id: prestadorFull.id }
     const capa = informacaoDto.capa || prestadorFull.capa
     const logo = informacaoDto.logo || prestadorFull.logo
+    const cidadesAtua = informacaoDto.cidadesAtua || prestadorFull.cidadesAtua
     const nomePublico = informacaoDto.nomePublico || prestadorFull.nomePublico
     delete informacaoDto.capa
     delete informacaoDto.logo
@@ -39,6 +40,7 @@ export class InformacoesController {
       capa,
       logo,
       nomePublico,
+      cidadesAtua,
     )
     return {
       error_id: TipoErro.SEM_ERROS,

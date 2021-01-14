@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
+import { IsArray, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
 
 class UpdatePrestadorDto {
   id: number
@@ -48,6 +48,9 @@ export class CreateInformacaoDto {
   @IsString()
   @IsOptional()
   nomePublico: string
+  @IsArray()
+  @IsOptional()
+  cidadesAtua: string[]
   @IsOptional()
   portfolios: CreatePortfolioDto[]
   @IsOptional()

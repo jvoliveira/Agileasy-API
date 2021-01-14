@@ -23,6 +23,7 @@ export class InformacoesService extends BaseService<Informacao> {
     capa: string,
     logo: string,
     nomePublico: string,
+    cidadesAtua: string[],
   ): Promise<Informacao> {
     const queryRunner = this.repo.manager.connection.createQueryRunner()
 
@@ -41,6 +42,7 @@ export class InformacoesService extends BaseService<Informacao> {
           capa,
           logo,
           nomePublico,
+          cidadesAtua,
         },
       )
       const portfolios = informacao.portfolios
