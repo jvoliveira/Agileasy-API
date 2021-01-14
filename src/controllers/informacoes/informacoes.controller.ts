@@ -35,6 +35,7 @@ export class InformacoesController {
     delete informacaoDto.capa
     delete informacaoDto.logo
     delete informacaoDto.nomePublico
+    delete informacaoDto.cidadesAtua
     const informacaoSave = await this.serv.newInformacao(
       informacaoDto as any,
       capa,
