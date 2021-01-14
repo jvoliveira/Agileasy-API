@@ -28,7 +28,15 @@ export class InformacoesController {
     }
 
     informacaoDto.prestador = { id: prestadorFull.id }
-    const informacaoSave = await this.serv.newInformacao(informacaoDto as any)
+    const capa = informacaoDto.capa ?? prestadorFull.capa
+    const logo = informacaoDto.logo ?? prestadorFull.logo
+    delete informacaoDto.capa
+    delete informacaoDto.logo
+    const informacaoSave = await this.serv.newInformacao(
+      informacaoDto as any,
+      capa,
+      logo,
+    )
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',

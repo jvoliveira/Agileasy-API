@@ -39,6 +39,12 @@ export class CreateInformacaoDto {
   @IsString()
   @IsOptional()
   facebook: string
+  @IsString()
+  @IsOptional()
+  logo: string
+  @IsString()
+  @IsOptional()
+  capa: string
   @IsOptional()
   portfolios: CreatePortfolioDto[]
   @IsOptional()
