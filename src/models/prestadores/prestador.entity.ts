@@ -68,6 +68,13 @@ export class Prestador extends BaseModel<Prestador>
   @Column('text', { nullable: true })
   logo!: string
 
+  @Column('text', {
+    nullable: true,
+    name: 'cidades_atua',
+    array: true,
+  })
+  cidadesAtua!: string[]
+
   @Column('boolean', { nullable: false })
   delivery!: boolean
 
@@ -150,6 +157,7 @@ export class Prestador extends BaseModel<Prestador>
     logo: string,
     nota: number,
     capa: string,
+    cidadesAtua: string[],
     ativo = true,
   ) {
     super(id, ativo)
@@ -161,6 +169,7 @@ export class Prestador extends BaseModel<Prestador>
     this.razaoSocial = razaoSocial
     this.tipoPessoa = tipoPessoa
     this.logo = logo
+    this.cidadesAtua = cidadesAtua
     this.endereco = endereco
     this.servicos = servicos
     this.categorias = categorias
@@ -180,6 +189,7 @@ export class Prestador extends BaseModel<Prestador>
     this.nomePublico = json.nomePublico
     this.razaoSocial = json.razaoSocial
     this.tipoPessoa = json.tipoPessoa
+    this.cidadesAtua = json.cidadesAtua
     this.logo = json.logo
     this.nota = json.nota
     this.capa = json.capa
@@ -212,6 +222,7 @@ export class Prestador extends BaseModel<Prestador>
       this.logo,
       this.nota,
       this.capa,
+      this.cidadesAtua,
       this.ativo,
     )
     prestador.dados = this.dados
@@ -247,6 +258,7 @@ export class Prestador extends BaseModel<Prestador>
       '1',
       4.5,
       'a',
+      [],
     ).fillFromJson(json)
     return prestador
   }
