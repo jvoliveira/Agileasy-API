@@ -250,13 +250,19 @@ export class PrestadoresController {
   }
 
   @Roles(TipoUsuario.PRESTADOR)
-  @Post('/adicionar/documento')
+  @Put('/adicionar/documento')
   public async addDocumento(
     @Body() addDocumentoDto: AddDocumentoDto,
     @User() user: admin.auth.UserRecord,
   ): Promise<ResponseDefault> {
     const prestadorFull = await this.userService.getPrestadorByToken(user.uid)
     const id = prestadorFull.id
+    if (prestadorFull.documentoUrl) {
+      throw new AllException(
+        TipoErro.DADOS_INVALIDOS,
+        'Não é possível modificar a foto do documento, fale com a admnistração',
+      )
+    }
     const prestador = await this.serv.update(id, {
       documentoUrl: addDocumentoDto.documentoUrl,
     })
