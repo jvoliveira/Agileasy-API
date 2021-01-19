@@ -75,6 +75,7 @@ describe('Prestador', () => {
       4.2,
       'capa_legal',
       [],
+      [],
     )
 
     expect(JSON.parse(JSON.stringify(mockPrestador))).toStrictEqual(
@@ -94,6 +95,7 @@ function expectedJSON() {
     nomePublico: 'OLIVEIRA TECH',
     razaoSocial: 'Oliveira prestação de serviços',
     cidadesAtua: [],
+    metodosPagamentoAceitos: [],
     logo: 'logo_top',
     nota: 4.2,
     capa: 'capa_legal',

@@ -75,6 +75,13 @@ export class Prestador extends BaseModel<Prestador>
   })
   cidadesAtua!: string[]
 
+  @Column('int', {
+    nullable: true,
+    name: 'metodos_pagamento_aceitos',
+    array: true,
+  })
+  metodosPagamentoAceitos!: number[]
+
   @Column('boolean', { nullable: false })
   delivery!: boolean
 
@@ -158,6 +165,7 @@ export class Prestador extends BaseModel<Prestador>
     nota: number,
     capa: string,
     cidadesAtua: string[],
+    metodosPagamentoAceitos: number[],
     ativo = true,
   ) {
     super(id, ativo)
@@ -175,6 +183,7 @@ export class Prestador extends BaseModel<Prestador>
     this.categorias = categorias
     this.nota = nota
     this.capa = capa
+    this.metodosPagamentoAceitos = metodosPagamentoAceitos
   }
 
   fillFromJson(json: any, recursive?: string[] | undefined): Prestador {
@@ -189,6 +198,7 @@ export class Prestador extends BaseModel<Prestador>
     this.nomePublico = json.nomePublico
     this.razaoSocial = json.razaoSocial
     this.tipoPessoa = json.tipoPessoa
+    this.metodosPagamentoAceitos = json.metodosPagamentoAceitos
     this.cidadesAtua = json.cidadesAtua
     this.logo = json.logo
     this.nota = json.nota
@@ -223,6 +233,7 @@ export class Prestador extends BaseModel<Prestador>
       this.nota,
       this.capa,
       this.cidadesAtua,
+      this.metodosPagamentoAceitos,
       this.ativo,
     )
     prestador.dados = this.dados
@@ -258,6 +269,7 @@ export class Prestador extends BaseModel<Prestador>
       '1',
       4.5,
       'a',
+      [],
       [],
     ).fillFromJson(json)
     return prestador
