@@ -51,6 +51,9 @@ export class CreateInformacaoDto {
   @IsArray()
   @IsOptional()
   cidadesAtua: string[]
+  @IsArray()
+  @IsOptional()
+  metodosPagamentoAceitos: number[]
   @IsOptional()
   portfolios: CreatePortfolioDto[]
   @IsOptional()
