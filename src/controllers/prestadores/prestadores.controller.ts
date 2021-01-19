@@ -5,6 +5,7 @@ import { UserService } from '../../common/services/user.service'
 import { CreatePrestadorDto } from './dto/create-prestador.dto'
 import { UpdateTokenDto } from './dto/update-token.dto'
 import { AddCategoriaDto } from './dto/add-categoria.dto'
+import { AddDocumentoDto } from './dto/add-documento.dto'
 import { ResponseDefault } from '../../common/interfaces/response-default.interface'
 import { TipoErro } from '../../common/enums/tipo-erro.enum'
 import { TipoUsuario } from '../../common/enums/tipo-usuario.enum'
@@ -238,6 +239,27 @@ export class PrestadoresController {
       id,
       addCategoriasDto.categorias,
     )
+    return {
+      error_id: TipoErro.SEM_ERROS,
+      message: 'Sucesso!',
+      error: false,
+      data: {
+        prestador,
+      },
+    }
+  }
+
+  @Roles(TipoUsuario.PRESTADOR)
+  @Post('adicionar/documento')
+  public async addDocumento(
+    @Body() addDocumentoDto: AddDocumentoDto,
+    @User() user: admin.auth.UserRecord,
+  ): Promise<ResponseDefault> {
+    const prestadorFull = await this.userService.getPrestadorByToken(user.uid)
+    const id = prestadorFull.id
+    const prestador = await this.serv.update(id, {
+      documentoUrl: addDocumentoDto.documentoUrl,
+    })
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',
