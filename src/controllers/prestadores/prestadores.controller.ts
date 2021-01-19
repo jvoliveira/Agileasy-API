@@ -250,7 +250,7 @@ export class PrestadoresController {
   }
 
   @Roles(TipoUsuario.PRESTADOR)
-  @Post('adicionar/documento')
+  @Post('/adicionar/documento')
   public async addDocumento(
     @Body() addDocumentoDto: AddDocumentoDto,
     @User() user: admin.auth.UserRecord,
