@@ -118,7 +118,9 @@ export class PrestadoresService extends BaseService<Prestador> {
       .of(idPrestador)
       .addAndRemove(
         categorias,
-        prestador.categorias.map<number>(c => c.id),
+        !prestador.categorias
+          ? []
+          : prestador.categorias.map<number>(c => c.id),
       )
 
     const value = await this.repo.findOne(idPrestador, {
