@@ -106,13 +106,20 @@ export class PrestadoresService extends BaseService<Prestador> {
     idPrestador: number,
     categorias: number[],
   ): Promise<Prestador> {
+    const prestador = await this.repo.findOne({
+      where: { id: idPrestador, ativo: true },
+      relations: ['categorias'],
+    })
     await this.repo
       .createQueryBuilder()
       .where({ ativo: true })
       .limit(1)
       .relation(Prestador, 'categorias')
       .of(idPrestador)
-      .add(categorias)
+      .addAndRemove(
+        categorias,
+        prestador.categorias.map<number>(c => c.id),
+      )
 
     const value = await this.repo.findOne(idPrestador, {
       where: { ativo: true },
