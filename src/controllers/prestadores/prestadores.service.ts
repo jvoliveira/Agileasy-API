@@ -224,17 +224,8 @@ export class PrestadoresService extends BaseService<Prestador> {
 
   async getAllInformation(id: number): Promise<Prestador> {
     const prestador = await this.repo.findOneOrFail(id, {
-      relations: ['usuario', 'endereco', 'pedidos', 'servicos', 'categorias'],
+      relations: ['usuario', 'endereco', 'categorias'],
     })
-
-    const servicos = []
-    for (const s of prestador.servicos) {
-      if (s.ativo) {
-        servicos.push(s)
-      }
-    }
-
-    prestador.servicos = servicos
 
     return prestador
   }

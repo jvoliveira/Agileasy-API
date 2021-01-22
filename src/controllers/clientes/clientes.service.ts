@@ -12,7 +12,7 @@ export class ClientesService extends BaseService<Cliente> {
 
   async getAllInformation(id: number): Promise<Cliente> {
     return this.repo.findOneOrFail(id, {
-      relations: ['usuario', 'enderecos', 'pedidos', 'cartoes'],
+      relations: ['usuario', 'enderecos', 'cartoes'],
     })
   }
 }
