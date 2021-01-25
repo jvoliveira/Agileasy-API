@@ -51,8 +51,6 @@ export class ServicosController {
     createServicoDto.prestador = {
       id: prestadorIncompleto.id,
     }
-    createServicoDto.urlFoto =
-      'https://firebasestorage.googleapis.com/v0/b/delivery-servicos.appspot.com/o/imagens_padrao%2Ficone_servico.png?alt=media'
     const servico = await this.serv.create(createServicoDto)
     return {
       error_id: TipoErro.SEM_ERROS,

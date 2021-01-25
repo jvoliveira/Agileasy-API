@@ -28,7 +28,26 @@ export class InformacoesController {
     }
 
     informacaoDto.prestador = { id: prestadorFull.id }
-    const informacaoSave = await this.serv.newInformacao(informacaoDto as any)
+    const capa = informacaoDto.capa || prestadorFull.capa
+    const logo = informacaoDto.logo || prestadorFull.logo
+    const cidadesAtua = informacaoDto.cidadesAtua || prestadorFull.cidadesAtua
+    const nomePublico = informacaoDto.nomePublico || prestadorFull.nomePublico
+    const metodosPagamentoAceitos =
+      informacaoDto.metodosPagamentoAceitos ||
+      prestadorFull.metodosPagamentoAceitos
+    delete informacaoDto.capa
+    delete informacaoDto.logo
+    delete informacaoDto.nomePublico
+    delete informacaoDto.cidadesAtua
+    delete informacaoDto.metodosPagamentoAceitos
+    const informacaoSave = await this.serv.newInformacao(
+      informacaoDto as any,
+      capa,
+      logo,
+      nomePublico,
+      cidadesAtua,
+      metodosPagamentoAceitos,
+    )
     return {
       error_id: TipoErro.SEM_ERROS,
       message: 'Sucesso!',

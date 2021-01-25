@@ -40,7 +40,7 @@ describe('ClientesService', () => {
 
     expect(await service.getAllInformation(1)).toBe(shouldReturn)
     expect(repo.findOneOrFail).toHaveBeenCalledWith(1, {
-      relations: ['usuario', 'enderecos', 'pedidos', 'cartoes'],
+      relations: ['usuario', 'enderecos', 'cartoes'],
     })
 
     repo.findOneOrFail.mockClear()

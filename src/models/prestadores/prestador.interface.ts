@@ -18,4 +18,6 @@ export interface PrestadorInterface {
   taxa: number
   criadoEm: Date
   tokenNotificacao: string
+  cidadesAtua: string[]
+  metodosPagamentoAceitos: number[]
 }

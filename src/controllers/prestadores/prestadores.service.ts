@@ -30,6 +30,27 @@ export class PrestadoresService extends BaseService<Prestador> {
     return values
   }
 
+  async getAllPrestadorAtivosByEndereco(
+    endereco: string,
+  ): Promise<Prestador[]> {
+    const values: Array<Prestador> = await this.repo
+      .createQueryBuilder('prestador')
+      .leftJoinAndSelect('prestador.usuario', 'u')
+      .leftJoinAndSelect('prestador.categorias', 'c')
+      .where(
+        ':endereco = ANY (prestador.cidadesAtua) and prestador.ativo = TRUE and u.status = ' +
+          TipoStatus.ativo,
+        { endereco },
+      )
+      .getMany()
+
+    if (!values) {
+      throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
+    }
+
+    return values
+  }
+
   async getPrestadorWithEndereco(id: number): Promise<Prestador> {
     return this.repo.findOne(id, { relations: ['endereco'] })
   }
@@ -56,20 +77,50 @@ export class PrestadoresService extends BaseService<Prestador> {
     return values
   }
 
+  async getPrestadorByCategoriaAndEndereco(
+    idCategoria: number,
+    endereco: string,
+  ): Promise<Prestador[]> {
+    const values: Array<Prestador> = await this.repo
+      .createQueryBuilder('prestador')
+      .leftJoinAndSelect('prestador.categorias', 'c')
+      .leftJoinAndSelect('prestador.servicos', 's')
+      .leftJoinAndSelect('prestador.usuario', 'u')
+      .leftJoinAndSelect('s.variacoesServico', 'vs', 'vs.ativo = true')
+      .leftJoinAndSelect('vs.alternativas', 'a', 'a.ativo = true')
+      .where(
+        ':endereco = ANY (prestador.cidadesAtua) and prestador.ativo = TRUE and c.id = :idCategoria and prestador.ativo = true and s.ativo = true and c.ativo = true and u.status = ' +
+          TipoStatus.ativo,
+        { idCategoria, endereco: endereco },
+      )
+      .getMany()
+
+    if (!values) {
+      throw new AllException(TipoErro.ID_NAO_ENCONTRADO)
+    }
+
+    return values
+  }
+
   async addCategoria(
     idPrestador: number,
     categorias: number[],
   ): Promise<Prestador> {
+    const prestador = await this.repo.findOne({
+      where: { id: idPrestador },
+      relations: ['categorias'],
+    })
     await this.repo
       .createQueryBuilder()
-      .where({ ativo: true })
-      .limit(1)
       .relation(Prestador, 'categorias')
       .of(idPrestador)
-      .add(categorias)
-
+      .addAndRemove(
+        categorias,
+        !prestador.categorias
+          ? []
+          : prestador.categorias.map<number>(c => c.id),
+      )
     const value = await this.repo.findOne(idPrestador, {
-      where: { ativo: true },
       relations: ['categorias'],
     })
 
@@ -169,17 +220,8 @@ export class PrestadoresService extends BaseService<Prestador> {
 
   async getAllInformation(id: number): Promise<Prestador> {
     const prestador = await this.repo.findOneOrFail(id, {
-      relations: ['usuario', 'endereco', 'pedidos', 'servicos', 'categorias'],
+      relations: ['usuario', 'endereco', 'categorias'],
     })
-
-    const servicos = []
-    for (const s of prestador.servicos) {
-      if (s.ativo) {
-        servicos.push(s)
-      }
-    }
-
-    prestador.servicos = servicos
 
     return prestador
   }

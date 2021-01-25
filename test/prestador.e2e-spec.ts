@@ -172,6 +172,7 @@ describe('PrestadorController (e2e)', () => {
           nomePublico: 'OLIVEIRA TECH',
           razaoSocial: 'Oliveira prestação de serviços',
           tipoPessoa: 1,
+          categorias: [],
           endereco: {
             apelido: 'Casa',
             endereco: 'Rua Alvaro Tinoco Lanes',
@@ -196,15 +197,11 @@ describe('PrestadorController (e2e)', () => {
     } as any)
 
     const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
-    const mockQueryAtivo = createMock<SelectQueryBuilder<Prestador>>()
-    const mockQueryLimit = createMock<SelectQueryBuilder<Prestador>>()
     const mockRelation = createMock<RelationQueryBuilder<Categoria>>()
     const mockQueryBuilder = createMock<RelationQueryBuilder<Categoria>>()
-    mockQuery.where.mockReturnValue(mockQueryAtivo)
-    mockQueryAtivo.limit.mockReturnValue(mockQueryLimit)
     mockRelation.of.mockReturnValue(mockQueryBuilder)
-    mockQueryLimit.relation.mockReturnValue(mockRelation)
-    mockQueryBuilder.add.mockResolvedValue()
+    mockQuery.relation.mockReturnValue(mockRelation)
+    mockQueryBuilder.addAndRemove.mockResolvedValue()
 
     mockService.createQueryBuilder.mockReturnValue(mockQuery)
     mockService.findOne.mockResolvedValue(shouldReturn.data.prestador)
@@ -236,6 +233,7 @@ describe('PrestadorController (e2e)', () => {
           },
           cnpj: '30419000166',
           delivery: true,
+          categorias: [],
           documentoUrl: 'http://storage.google.com',
           nomePublico: 'OLIVEIRA TECH',
           razaoSocial: 'Oliveira prestação de serviços',
@@ -264,15 +262,11 @@ describe('PrestadorController (e2e)', () => {
     } as any)
 
     const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
-    const mockQueryAtivo = createMock<SelectQueryBuilder<Prestador>>()
-    const mockQueryLimit = createMock<SelectQueryBuilder<Prestador>>()
     const mockRelation = createMock<RelationQueryBuilder<Categoria>>()
     const mockQueryBuilder = createMock<RelationQueryBuilder<Categoria>>()
-    mockQuery.where.mockReturnValue(mockQueryAtivo)
-    mockQueryAtivo.limit.mockReturnValue(mockQueryLimit)
     mockRelation.of.mockReturnValue(mockQueryBuilder)
-    mockQueryLimit.relation.mockReturnValue(mockRelation)
-    mockQueryBuilder.add.mockResolvedValue()
+    mockQuery.relation.mockReturnValue(mockRelation)
+    mockQueryBuilder.addAndRemove.mockResolvedValue()
 
     mockService.createQueryBuilder.mockReturnValue(mockQuery)
     mockService.findOne.mockResolvedValue(shouldReturn.data.prestador)

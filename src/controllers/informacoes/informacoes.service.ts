@@ -6,6 +6,7 @@ import { AllException } from '../../common/exceptions/all.exception'
 import { BaseService } from '../../common/services/base.service'
 import { Informacao } from '../../models/informacao/informacao.entity'
 import { Portfolio } from '../../models/portfolio/portfolio.entity'
+import { Prestador } from '../../models/prestadores/prestador.entity'
 
 @Injectable()
 export class InformacoesService extends BaseService<Informacao> {
@@ -17,7 +18,14 @@ export class InformacoesService extends BaseService<Informacao> {
     return this.repo.findOne({ where: { prestador: { id: idPrestador } } })
   }
 
-  public async newInformacao(informacao: Informacao): Promise<Informacao> {
+  public async newInformacao(
+    informacao: Informacao,
+    capa: string,
+    logo: string,
+    nomePublico: string,
+    cidadesAtua: string[],
+    metodosPagamentoAceitos: number[],
+  ): Promise<Informacao> {
     const queryRunner = this.repo.manager.connection.createQueryRunner()
 
     await queryRunner.connect()
@@ -28,6 +36,17 @@ export class InformacoesService extends BaseService<Informacao> {
           informacao: { id: informacao.id },
         })
       }
+      await queryRunner.manager.update(
+        Prestador,
+        { id: informacao.prestador.id },
+        {
+          capa,
+          logo,
+          nomePublico,
+          cidadesAtua,
+          metodosPagamentoAceitos,
+        },
+      )
       const portfolios = informacao.portfolios
       delete informacao.portfolios
       const newInformacao = await queryRunner.manager.save(
