@@ -101,14 +101,10 @@ describe('Prestadores Service', () => {
   it('should add prestador with categoria', async () => {
     const shouldReturn = { nome: 'Vinicius', categorias: [] }
     const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
-    const mockQueryAtivo = createMock<SelectQueryBuilder<Prestador>>()
-    const mockQueryLimit = createMock<SelectQueryBuilder<Prestador>>()
     const mockRelation = createMock<RelationQueryBuilder<Categoria>>()
     const mockQueryBuilder = createMock<RelationQueryBuilder<Categoria>>()
-    mockQuery.where.mockReturnValue(mockQueryAtivo)
-    mockQueryAtivo.limit.mockReturnValue(mockQueryLimit)
     mockRelation.of.mockReturnValue(mockQueryBuilder)
-    mockQueryLimit.relation.mockReturnValue(mockRelation)
+    mockQuery.relation.mockReturnValue(mockRelation)
     mockQueryBuilder.addAndRemove.mockResolvedValue()
 
     repo.createQueryBuilder.mockReturnValue(mockQuery)
@@ -119,12 +115,7 @@ describe('Prestadores Service', () => {
       shouldReturn,
     )
 
-    expect(mockQuery.where).toHaveBeenCalledWith({ ativo: true })
     expect(mockRelation.of).toHaveBeenCalledWith(1)
-    expect(mockQueryLimit.relation).toHaveBeenCalledWith(
-      Prestador,
-      'categorias',
-    )
   })
 
   it('should add prestador with servicos', async () => {

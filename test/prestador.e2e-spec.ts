@@ -197,14 +197,10 @@ describe('PrestadorController (e2e)', () => {
     } as any)
 
     const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
-    const mockQueryAtivo = createMock<SelectQueryBuilder<Prestador>>()
-    const mockQueryLimit = createMock<SelectQueryBuilder<Prestador>>()
     const mockRelation = createMock<RelationQueryBuilder<Categoria>>()
     const mockQueryBuilder = createMock<RelationQueryBuilder<Categoria>>()
-    mockQuery.where.mockReturnValue(mockQueryAtivo)
-    mockQueryAtivo.limit.mockReturnValue(mockQueryLimit)
     mockRelation.of.mockReturnValue(mockQueryBuilder)
-    mockQueryLimit.relation.mockReturnValue(mockRelation)
+    mockQuery.relation.mockReturnValue(mockRelation)
     mockQueryBuilder.addAndRemove.mockResolvedValue()
 
     mockService.createQueryBuilder.mockReturnValue(mockQuery)
