@@ -101,12 +101,10 @@ describe('Prestadores Service', () => {
   it('should add prestador with categoria', async () => {
     const shouldReturn = { nome: 'Vinicius', categorias: [] }
     const mockQuery = createMock<SelectQueryBuilder<Prestador>>()
-    const mockQueryAtivo = createMock<SelectQueryBuilder<Prestador>>()
     const mockQueryLimit = createMock<SelectQueryBuilder<Prestador>>()
     const mockRelation = createMock<RelationQueryBuilder<Categoria>>()
     const mockQueryBuilder = createMock<RelationQueryBuilder<Categoria>>()
-    mockQuery.where.mockReturnValue(mockQueryAtivo)
-    mockQueryAtivo.limit.mockReturnValue(mockQueryLimit)
+    mockQuery.where.mockReturnValue(mockQueryLimit)
     mockRelation.of.mockReturnValue(mockQueryBuilder)
     mockQueryLimit.relation.mockReturnValue(mockRelation)
     mockQueryBuilder.addAndRemove.mockResolvedValue()
