@@ -1,75 +1,45 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Agileasy API
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### About the Project
 
-## Description
+Agileasy API was developed as the backend for **Agileasy**, a mobile application designed to connect customers with service providers, making it easier to find and hire professionals through a digital platform.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The API was built using **NestJS and TypeScript** to support the application's operations.
 
-## Installation
+### Technologies
 
-```bash
-$ npm install
-```
+- Node.js
+- NestJS
+- TypeScript
 
-## Running the app
+### Project Status
 
-```bash
-# development
-$ npm run start
+**Discontinued — No longer maintained.**
 
-# watch mode
-$ npm run start:dev
+The Agileasy application is no longer in use. As a result, development of this API has been discontinued, and no further updates are planned.
 
-# production mode
-$ npm run start:prod
-```
+This repository remains publicly available for documentation and portfolio purposes, serving as a record of the work developed during the project.
 
-## Test
+---
 
-```bash
-# unit tests
-$ npm run test
+## Português
 
-# e2e tests
-$ npm run test:e2e
+### Sobre o Projeto
 
-# test coverage
-$ npm run test:cov
-```
+A Agileasy API foi desenvolvida como backend do **Agileasy**, um aplicativo de contratação de serviços criado para conectar clientes a prestadores de serviços, facilitando a busca e a contratação de profissionais por meio de uma plataforma digital.
 
-## Support
+A API foi desenvolvida utilizando **NestJS e TypeScript** para dar suporte às operações do aplicativo.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Tecnologias
 
-## Stay in touch
+- Node.js
+- NestJS
+- TypeScript
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Status do Projeto
 
-## License
+**Descontinuado — Sem manutenção ativa.**
 
-  Nest is [MIT licensed](LICENSE).
+O aplicativo Agileasy não está mais em uso. Por esse motivo, o desenvolvimento desta API foi interrompido e não estão previstas novas atualizações.
+
+Este repositório permanece público para fins de documentação e portfólio, servindo como registro do trabalho desenvolvido durante o projeto.
